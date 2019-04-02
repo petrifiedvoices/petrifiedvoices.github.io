@@ -11,11 +11,10 @@ Hello, you have landed at my personal research site, dedicated to various experi
 You can follow me either on [Twitter](https://twitter.com/pettulda), my [Github](https://github.com/petrajanouchova), via [My ORCID](https://orcid.org/0000-0002-6349-0540) or [My project on OSF](https://osf.io/fjnw5/)
 
 ---
-## About the technology behind the scene:
+## The technology behind the scene:
 
 I am using a custom Jekyll theme - Centrarium, made by [Ben Centra](https://github.com/bencentra). Installation and configuration instructions can be found in the [GitHub repository](https://github.com/bencentra/centrarium).
 You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/). And you can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
 
----
 
 
