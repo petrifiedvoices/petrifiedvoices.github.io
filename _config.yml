@@ -18,7 +18,7 @@ description: >
 # Base URL of site (i.e. /blog). It should always start with a slash,
 # and never end with a slash. Set it to a blank value if hosting at the
 # root of your server.
-baseurl: "/pleasework" # the subpath of your site, e.g. /blog/
+baseurl: "/petrifiedvoices" # the subpath of your site, e.g. /blog/
 url: "http://petrajanouchova.github.io" # the base hostname & protocol for your site
 cover: "/assets/header_image.jpg"
 logo: "/assets/logo.png"
@@ -186,6 +186,6 @@ protocols:
 
     twitter_image: "/assets/logo.png"
 
-    os_repo: "https://github.com/petrajanouchova/pleasework"
+    os_repo: "https://github.com/petrajanouchova/petrifiedvoices"
     os_rcs_type: "git"
-    os_src: "git@github.com:petrajanouchova/pleasework.git"
+    os_src: "git@github.com:petrajanouchova/petrifiedvoices.git"
