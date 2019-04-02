@@ -4,7 +4,7 @@ title: About me
 permalink: /aboutme/
 ---
 
-<img src="{{ site.baseurl }}/assets/Petra_Epigrapher.JPG" title="Petra, the Epigrapher" class="profile">
+<img src="{{ site.baseurl }}/assets/profile.JPG" title="Petra in the field, Zagora on Andros in the background" class="profile">
 
 Hello, world!
 
