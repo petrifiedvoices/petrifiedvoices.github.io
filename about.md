@@ -12,6 +12,8 @@ You have landed on my personal research site, dedicated to various experiments w
 
 You can follow me either on [Twitter](https://twitter.com/pettulda), [Github](https://github.com/petrajanouchova), via [ORCID](https://orcid.org/0000-0002-6349-0540) or [my project on OSF](https://osf.io/fjnw5/).
 
+I love to talk about inscriptions, archaeology, history. Most days you can find me either staring at the computer screen, drinking coffee in the new cool hipster place, hiking outdoors, or in the gym!
+
 ---
 
 #### The technology behind the scene:
