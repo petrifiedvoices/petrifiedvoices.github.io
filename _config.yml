@@ -9,12 +9,12 @@ exclude:
   - "/vendor/"
 
 # Site settings
-title: Hello
-subtitle: "A simple yet classy theme for your Jekyll website or blog"
-email: blcentra@gmail.com
-name: Ben Centra
+title: "Petrified Voices"
+subtitle: "Petra's Research on digital epigraphy"
+email: petra.janouchova@gmail.com
+name: Petra Janouchova
 description: >
-  A simple yet classy theme for your Jekyll website or blog.
+  Petra's personal research on why people created thousands messages written into stone and what can we learn from them
 # Base URL of site (i.e. /blog). It should always start with a slash,
 # and never end with a slash. Set it to a blank value if hosting at the
 # root of your server.
@@ -72,29 +72,22 @@ descriptions:
 social:
   - name: Twitter
     icon: twitter
-    username: TheBenCentra
-    url: https://twitter.com/TheBenCentra
+    username: pettulda
+    url: https://twitter.com/pettulda
     desc: Follow me on Twitter
-    share: true
-
-  - name: Facebook
-    icon: facebook
-    username: thebencentra
-    url:
-    desc: Friend me on Facebook
     share: true
 
   - name: GitHub
     icon: github
-    username: bencentra
-    url: https://github.com/bencentra
+    username: petrajanouchova
+    url: https://github.com/petrajanouchova
     desc: Fork me on GitHub
     share: false
 
   - name: LinkedIn
     icon: linkedin
-    username: Ben Centra
-    url: https://www.linkedin.com/pub/ben-centra/47/769/60a
+    username: Petra Janouchova
+    url: https://linkedin.com/in/petra-janouchova/
     desc: Connect with me on LinkedIn
     share: true
 
@@ -193,6 +186,6 @@ protocols:
 
     twitter_image: "/assets/logo.png"
 
-    os_repo: "https://github.com/bencentra/centrarium.com"
+    os_repo: "https://github.com/petrajanouchova/pleasework"
     os_rcs_type: "git"
-    os_src: "git@github.com:bencentra/centrarium.com.git"
+    os_src: "git@github.com:petrajanouchova/pleasework.git"
