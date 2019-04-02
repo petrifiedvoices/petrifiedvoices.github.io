@@ -8,7 +8,7 @@ permalink: /aboutme/
 
 Hello, you have landed at my personal research site, dedicated to various experiments with digital epigraphy and quantitative analysis. I love to think about inscriptions as petrified voices coming from the past, delivering messages from people quite similar to us. By studying inscriptions in large quantities we can learn not only about our past, but also about our daily lives.
 
-You can follow me either on [Twitter](https://twitter.com/pettulda), my [Github](https://github.com/petrajanouchova), via [My ORCID](https://orcid.org/0000-0002-6349-0540) or [My project on OSF](https://osf.io/fjnw5/)
+You can follow me either on [Twitter](https://twitter.com/pettulda), [Github](https://github.com/petrajanouchova), via [ORCID](https://orcid.org/0000-0002-6349-0540) or [my project on OSF](https://osf.io/fjnw5/)
 
 ---
 ## The technology behind the scene:
