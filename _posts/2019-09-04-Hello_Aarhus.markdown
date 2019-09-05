@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Hello from Aarhus Unversity"
+title:  "Hello from Aarhus University"
 date:   2019-09-04 10:00:00
 author: Petra
 categories: News
@@ -8,7 +8,7 @@ categories: News
 
 Hello, folks!
 
-It has been a while since I have posted anything. As usual, there has been quite a development in the past few months. I got married and chnaged my last name from **Janouchová** to **Heřmánková**, so if you haven't recognized the name at first, you are not the only one confused.
+It has been a while since I have posted anything. As usual, there has been quite a development in the past few months. I got married and changed my last name from **Janouchová** to **Heřmánková**, so if you haven't recognized the name at first, you are not the only one confused.
 
 And for the news no. 2, I have been offred and accepted a Postdoc position at Aarhus University in Denmark! Yay!
 
