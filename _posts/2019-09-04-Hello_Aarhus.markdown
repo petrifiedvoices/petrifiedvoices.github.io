@@ -12,6 +12,6 @@ It has been a while since I have posted anything. As usual, there has been quite
 
 And for the news no. 2, I have been offred and accepted a Postdoc position at Aarhus University in Denmark! Yay!
 
-<a class='image-link' href='{{site.baseurl}}/assets/Aarhis_start.jpg' data-lightbox='Gallery-1' data-title='Petra in her new office at Aarhus University'><img class='image' src='{{site.baseurl}}/assets/Termessos_ruins.JPG'>Petra settling down in her new office at Aarhus University, Denmark</a>
+<a class='image-link' href='{{site.baseurl}}/assets/Aarhus_start.jpg' data-lightbox='Gallery-1' data-title='Petra in her new office at Aarhus University'><img class='image' src='{{site.baseurl}}/assets/Aarhus_start.jpg'>Petra settling down in her new office at Aarhus University, Denmark</a>
 
 In the next few days I will be posting more about the team and the project we all be working on for the next three years!
