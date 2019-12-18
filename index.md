@@ -2,6 +2,9 @@
 layout: default
 title: "Petrified voices"
 description: "Petra's personal research on why people created thousands messages written into stone and what can we learn from them"
+published: false
+
+
 
 ---
 
