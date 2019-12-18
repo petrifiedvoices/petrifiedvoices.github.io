@@ -30,6 +30,6 @@ Of course the answer depends on the nature of the dataset (EDH), but I am hoping
 Here is a simple visualisation of the dataset made Carto.com. Feel free to play with the data, ask me questions. Or reuse (under the CC Attribution-NonCommercial-ShareAlike 4.0 International license).
 
 <div align="center">
-<iframe width="150%" height="820" frameborder="3" src="https://petrajanouchova.carto.com/builder/e6536d2c-bfee-4eeb-9fcb-7de39bbf1265/embed" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen>
+<iframe width="100%" height="100%" frameborder="1" src="https://petrajanouchova.carto.com/builder/e6536d2c-bfee-4eeb-9fcb-7de39bbf1265/embed" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen>
 
 
