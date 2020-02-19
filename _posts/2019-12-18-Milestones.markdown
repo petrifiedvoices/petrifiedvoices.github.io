@@ -15,7 +15,7 @@ I am have finally got a little time to play with digital datasets and try some o
 3. We are using custom made scipts in Python via Google Colab to access the API, download the data (Thanks to hard work of my colleague Vojtech Kase)
 4. We are using additional custom Python scripts to interrogate the data based on the current research questions, such as in my case were the milestones.
 
-*My aim was to access the information about all milestones in the EDH database, plot them on the map with relation to the known Roman roads as published and digitized by the Barington Atlas (BA).*
+*My aim was to access the information about all milestones in the EDH database, plot them on the map with relation to the known Roman roads as published and digitized by the Barrington Atlas (BA).*
 
 I was puzzled by the following questions for a long time and hopefully I am now closer to finding a satisfactory answer to them.
 
@@ -30,6 +30,7 @@ Of course the answer depends on the nature of the dataset (EDH), but I am hoping
 Here is a simple visualisation of the dataset made Carto.com. Feel free to play with the data, ask me questions. Or reuse (under the CC Attribution-NonCommercial-ShareAlike 4.0 International license).
 
 <div align="center">
-<iframe width="150%" height="600" frameborder="1" src="https://petrajanouchova.carto.com/builder/e6536d2c-bfee-4eeb-9fcb-7de39bbf1265/embed" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen>
+<iframe width="150%" height="600" frameborder="1" src="https://petrajanouchova.carto.com/builder/3628ea38-a036-495b-8795-d36137f2b31e/embed"> </iframe> allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen>
+</div>
 
 
