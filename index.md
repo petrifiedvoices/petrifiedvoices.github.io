@@ -17,7 +17,7 @@ Text can be **bold**, _italic_, or ~~strikethrough~~.
 
 [Link to other page on Github](./another-page.md).
 
-![Thumbnail of Inscription](https://github.com/petrajanouchova/petrifiedvoices/blob/master/docs/photos/athens.jpg)
+![Thumbnail of Inscription](https://github.com/petrifiedvoices/blob/master/docs/photos/athens.jpg)
 
 There should be whitespace between paragraphs.
 
