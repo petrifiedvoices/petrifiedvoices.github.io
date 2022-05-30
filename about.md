@@ -2,6 +2,7 @@
 layout: page
 title: About me
 permalink: /aboutme/
+published: false
 ---
 
 <img src="{{ site.baseurl }}/assets/profile.jpg" title="Petra in the field, Zagora on Andros in the background" class="profile">
