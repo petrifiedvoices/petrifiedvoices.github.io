@@ -1,0 +1,3073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EpiAlign — Epigraphic Schema Alignment &amp; JSON Workbench</title>
+  <meta name="description" content="Transform heterogeneous EpiDoc XML and RDF epigraphic files into structured, Linked Open Data compliant JSON." />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React 18 & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel Standalone for JSX in browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.2s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#F6F5F1] text-slate-900 antialiased">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef } = React;
+
+    // Lightweight Lucide Icon wrapper using lucide.icons global
+    function Icon({ name, className = "w-4 h-4" }) {
+      const iconRef = useRef(null);
+      useEffect(() => {
+        if (iconRef.current && window.lucide) {
+          iconRef.current.innerHTML = `<i data-lucide="${name}" class="${className}"></i>`;
+          window.lucide.createIcons({
+            root: iconRef.current,
+            attrs: { class: className }
+          });
+        }
+      }, [name, className]);
+      return <span ref={iconRef} className="inline-flex items-center justify-center shrink-0" />;
+    }
+
+    // ============================================================================
+    // 1. BUILT-IN REALISTIC EPIGRAPHIC SAMPLE FILES (EpiDoc XML & RDF)
+    // ============================================================================
+
+       // ============================================================================
+    // 1. BUILT-IN REALISTIC EPIGRAPHIC SAMPLE FILES (EpiDoc XML & RDF)
+    // ============================================================================
+
+    const SAMPLE_FILES = [
+      {
+        id: 'edh-hd005915',
+        name: 'EDH_HD005915_Aquileia.xml',
+        format: 'EpiDoc XML',
+        description: 'EDH inscription from Aquileia / Grado (Venetia et Histria) with Pleiades & GeoNames URIs',
+        content: `<?xml version="1.0" encoding="UTF-8"?><?xml-model href="http://www.stoa.org/epidoc/schema/latest/tei-epidoc.rng" schematypens="http://relaxng.org/ns/structure/1.0"?><TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Inscription from Aquileia, bei – Grado (Venetia et Histria (Regio X))</title>
+            </titleStmt>
+            <publicationStmt>
+                <authority>Epigraphische Datenbank Heidelberg</authority>
+                <availability>
+                    <p>Heidelberger Akademie der Wissenschaften</p>
+                    <licence target="http://creativecommons.org/licenses/by-sa/4.0/">This file is licensed under the Creative Commons Attribution-ShareAlike 4.0 license.
+                    </licence>
+                </availability>
+            <idno type="localID">HD005915</idno><idno type="URI">https://edh-www.adw.uni-heidelberg.de/test/edh/inschrift/HD005915</idno></publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <repository/>
+                    </msIdentifier>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support><rs type="deccoration" ref="http://www.eagle-network.eu/voc/decor/lod/1000">no</rs></support>
+                            </supportDesc>
+                            <layoutDesc>
+                                <layout>description of text field/campus</layout>
+                            </layoutDesc>
+                        </objectDesc>
+                        <handDesc><ab/></handDesc>
+                    </physDesc>
+                    <history>
+                        <origin><origPlace><placeName type="province">Venetia et Histria (Regio X)</placeName><placeName type="ancient" ref="https://pleiades.stoa.org/places/118569">Aquileia, bei</placeName></origPlace><origDate><origDate datingMethod="http://en.wikipedia.org/wiki/Julian_calendar"/></origDate></origin>
+                        <provenance type="found"><placeName type="country" ref="https://www.geonames.org/3175395">Italy</placeName><placeName type="modern">Grado</placeName><placeName type="findspot"/></provenance>
+                    </history>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+             <p>Encoded following EpiDoc guidelines 9.2</p>
+        </encodingDesc>             
+        <profileDesc>
+            <langUsage>
+                <language ident="en">English</language>
+                <language ident="de">Deutsch</language>
+                <language ident="lat">Latin</language>
+            </langUsage>
+            <textClass>
+                <keywords><term ref="http://www.eagle-network.eu/voc/typeins/lod/143" xml:lang="en">unknown</term></keywords>
+            </textClass>
+            <particDesc><p/></particDesc>
+        </profileDesc>
+        <revisionDesc><change when="1997-07-29" who="Niquet">provisional</change></revisionDesc>
+    </teiHeader>
+    <facsimile><graphic url="#"/></facsimile>
+    <text>
+        <body>
+            <div type="edition" xml:space="preserve"><head>Text</head><ab><lb n="1"/>
+                <expan><abbr>Cui</abbr><ex>us</ex></expan> nom<lb break="no" n="2"/>en D<expan><ex>eu</ex><abbr>s</abbr></expan> scit <lb n="3"/>votum s<lb break="no" n="4"/>olvit
+            </ab></div>
+            <div type="commentary">
+                <p/>
+            </div>
+            <div type="bibliography">
+                <listBibl><bibl>AE 1975, 0419b.</bibl><bibl/></listBibl>
+            </div>
+        </body>
+    </text>
+</TEI>`
+      },
+      {
+        id: 'isic-000009',
+        name: 'ISic000009_Panhormus.xml',
+        format: 'EpiDoc XML',
+        description: 'I.Sicily dedication by L. Cornelius Marcellus from Panhormus (Palermo) with <geo> & EAGLE URIs',
+        content: `<?xml version='1.0' encoding='UTF-8'?>
+<?xml-model href="https://epidoc.stoa.org/schema/latest/tei-epidoc.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="../schematron/ircyr-checking.sch" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xml:lang="en">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Dedication by the quaestor propraetore L. Cornelius Marcellus</title>
+                <editor ref="#JP">Jonathan Prag</editor>
+                <principal ref="#JP">Jonathan Prag</principal>
+                <funder>John Fell OUP Research Fund</funder>
+                <funder>
+                    <ref target="https://cordis.europa.eu/project/id/885040">ERC Advanced Grant no.885040</ref>
+                </funder>
+                <respStmt>
+                    <name xml:id="JP" ref="http://orcid.org/0000-0003-3819-8537">Jonathan Prag</name>
+                    <resp>original data collection and editing</resp>
+                </respStmt>
+                <respStmt>
+                    <name xml:id="JCu" ref="http://orcid.org/0000-0002-6686-3728">James Cummings</name>
+                    <resp>conversion to EpiDoc</resp>
+                </respStmt>
+                <respStmt>
+                    <name xml:id="TA" ref="https://orcid.org/0000-0001-8417-7089">Tuuli Ahlholm</name>
+                    <resp>EpiDoc editing</resp>
+                </respStmt>
+                <respStmt>
+                    <name xml:id="SS" ref="https://orcid.org/0000-0003-3914-9569">Simona Stoyanova</name>
+                    <resp>standardisation of template and tidying up encoding</resp>
+                </respStmt>
+                <respStmt>
+                    <name xml:id="RC" ref="https://orcid.org/0000-0002-0100-7437">Robert Crellin</name>
+                    <resp>Lemmatization</resp>
+                </respStmt>
+            <respStmt><name xml:id="Coccato" ref="https://orcid.org/0000-0002-6641-2820">Alessia Coccato</name><resp>Petrographic observation and analysis</resp></respStmt>
+            </titleStmt>
+            <publicationStmt>
+                <authority>I.Sicily</authority>
+                <idno type="filename">ISic000009</idno>
+                <idno type="TM">491768</idno>
+                <idno type="EDR">137592</idno>
+                <idno type="EDH"/>
+                <idno type="EDCS">22000852</idno>
+                <idno type="PHI"/>
+                <idno type="URI">http://sicily.classics.ox.ac.uk/inscription/ISic000009</idno>
+                <idno type="DOI" when="2020-12-17">10.5281/zenodo.4333753</idno>
+                <availability>
+                    <licence target="http://creativecommons.org/licenses/by/4.0/">Licensed under a Creative Commons-Attribution 4.0 licence.</licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <country>Italy</country>
+                        <region>Sicily</region>
+                        <settlement>Palermo</settlement>
+                        <repository role="museum" ref="http://sicily.classics.ox.ac.uk/museum/064">Museo Archeologico Regionale Antonino Salinas</repository>
+                        <idno type="inventory">3509</idno>
+                        <altIdentifier>
+                            <settlement/>
+                            <repository/>
+                            <idno type="old"/>
+                        </altIdentifier>
+                    </msIdentifier>
+                    <msContents>
+                        <textLang mainLang="la">Latin</textLang>
+                    </msContents>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support>
+                                    <material ana="#material.inorganic.stone.sedimentary_rock.limestone.calcite_limestone.grey.calcare-lucidabile_grigio_sicilia-occidentale" type="stone.limestone.polishable.grey" subtype="calcare_grigio_SiciliaOCC" resp="#Coccato" ref="http://www.eagle-network.eu/voc/material/lod/66.html">grey crystalline limestone with pink veins, likely lattimusa (?) (microcrystalline limestone (wackestone) with foraminifera, sparitic patches and fine calcite veins) (identification based on XRD, optical microscopy)<note> Petrographic imagery at <ref target="https://iiif.csad.ox.ac.uk/viewer/isicily/ISic000009">https://iiif.csad.ox.ac.uk/viewer/isicily/ISic000009</ref></note></material>
+                                    <objectType ana="#object.plaque" ref="http://www.eagle-network.eu/voc/objtyp/lod/259.html">plaque</objectType>
+                                    <objectType/>
+                                    <dimensions>
+                                        <height unit="cm">58</height>
+                                        <width unit="cm">48</width>
+                                        <depth unit="cm">5</depth>
+                                    </dimensions>
+                                </support>
+                                <condition/>
+                            </supportDesc>
+                            <layoutDesc>
+                                <layout>
+                                    <rs ana="#execution.chiselled" ref="http://www.eagle-network.eu/voc/writing/lod/1">chiselled</rs>
+                                    <damage/>
+                                </layout>
+                            </layoutDesc>
+                        </objectDesc>
+                        <handDesc>
+                            <handNote>
+                                <locus from="line1" to="line1">Line 1</locus>
+                                <dimensions type="letterHeight">
+                                    <height unit="mm"/>
+                                </dimensions>
+                                <locus from="line1" to="line2">Interlineation line 1 to 2</locus>
+                                <dimensions type="interlinear">
+                                    <height unit="mm"/>
+                                </dimensions>
+                            </handNote>
+                        </handDesc>
+                    </physDesc>
+                    <history>
+                        <origin>
+                            <origPlace><region>Sicilia</region>
+                                <placeName type="ancient" ref="http://pleiades.stoa.org/places/462410" cert="low">Panhormus</placeName>
+                                <placeName type="modern" ref="http://sws.geonames.org/2523920">Palermo</placeName>
+                                <geo>38.13205, 13.33561</geo>
+                            </origPlace>
+                            <origDate datingMethod="#julian" notBefore-custom="0051" notAfter-custom="0100">Neronian</origDate>
+                        </origin>
+                        <provenance type="found">Original discovery not recorded.</provenance>
+                        <provenance type="observed" subtype="autopsied">None</provenance>
+                        <acquisition/>
+                    </history>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <p>Encoded following the latest EpiDoc guidelines</p>
+        </encodingDesc>
+        <profileDesc>
+            <calendarDesc>
+                <calendar xml:id="julian">
+                    <p>Julian Calendar</p>
+                </calendar>
+            </calendarDesc>
+            <langUsage>
+                <language ident="en">English</language>
+                <language ident="it">Italian</language>
+                <language ident="grc">Ancient Greek</language>
+                <language ident="la">Latin</language>
+                <language ident="he">Hebrew</language>
+                <language ident="phn">Phoenician</language>
+                <language ident="xpu">Punic</language>
+                <language ident="osc">Oscan</language>
+                <language ident="xly">Elymian</language>
+                <language ident="scx">Sikel</language>
+                <language ident="sxc">Sikan</language>
+            </langUsage>
+            <textClass>
+                <keywords scheme="https://ontology.inscriptiones.org/type_of_inscription">
+                    <term ana="#function.dedication" ref="https://ontology.inscriptiones.org/type_of_inscription/Dedication">dedication</term>
+                </keywords>
+            </textClass>
+        </profileDesc>
+        <revisionDesc status="draft">
+            <listChange>
+                <change when="2016-12-03" who="#JCu">James Cummings autogenerated EpiDoc output from database</change>
+                <change when="2017-07-31" who="#JP">Jonathan Prag revised the EpiDoc</change>
+                <change when="2018-03-27" who="#TA">Tuuli Ahlholm revised the Epidoc, added an apparatus and AE bibl ref</change>
+                <change when="2020-10-05" who="#SS">Simona Stoyanova normalised Unicode</change>
+                <change when="2020-10-08" who="#SS">Simona Stoyanova updated list of languages</change>
+                <change when="2020-11-20" who="#SS">Simona Stoyanova added EDCS numbers</change>
+                <change when="2020-11-26" who="#SS">Simona Stoyanova restructured bibliography</change>
+                <change when="2020-12-17" who="#JP">Updated Zenodo DOI</change>
+                <change when="2021-01-19" who="#SS">renumbered files, uris and references</change>
+                <change when="2023-08-23" who="#JP">Jonathan Prag tagged names, added image and some metadata</change>
+                <change when="2025-05-01" who="#RC">Robert Crellin tokenized, lemmatized and added ids</change>
+            </listChange>
+        </revisionDesc>
+    </teiHeader>
+    <facsimile>
+        <surface type="front">
+            <graphic n="screen" url="ISic000009_tiled.tif" height="5520px" width="3680px">
+                <desc>I.Sicily with the permission of the Assessorato Regionale dei Beni Culturali e dell’Identità Siciliana - Dipartimento dei Beni Culturali e dell’Identità Siciliana</desc>
+            </graphic>
+            <graphic n="print" url="ISic000009.jpg" height="5520px" width="3680px">
+                <desc>I.Sicily with the permission of the Assessorato Regionale dei Beni Culturali e dell’Identità Siciliana - Dipartimento dei Beni Culturali e dell’Identità Siciliana</desc>
+            </graphic>
+        </surface>
+    </facsimile>
+    <text>
+        <body>
+            <div type="edition" subtype="primary" xml:space="preserve" xml:lang="la" resp="#TA">
+                <ab>
+                    <lb n="1"/><persName type="divine"><name><w n="5"><supplied reason="lost">Ce</supplied><unclear>rer</unclear><supplied reason="lost">i</supplied></w></name></persName>
+                    <lb n="2"/><persName type="attested"><name><w n="10"><expan><abbr>L</abbr><ex>ucius</ex></expan></w></name> <g ref="#interpunct" n="15">·</g> <name><w n="20">Cor<unclear>n</unclear><supplied reason="lost">elius</supplied></w></name>
+                    <lb n="3"/><name><w n="25">Marcellu<unclear>s</unclear></w></name></persName> <roleName type="supracivic" subtype="quaestor.pro.praetore"><w n="30"><supplied reason="lost"><expan><abbr>q</abbr><ex>uaestor</ex></expan></supplied></w> <w n="35"><supplied reason="lost"><expan><abbr>pr</abbr><ex>o</ex></expan></supplied></w>
+                    <lb n="4"/><w n="40"><expan><abbr>pr</abbr><ex>aetore</ex></expan></w></roleName> <g ref="#interpunct" n="45">·</g> <w n="50"><expan><abbr>prov</abbr><ex>inciae</ex></expan></w> <g ref="#interpunct" n="55">·</g> <placeName type="ancient"><w n="60"><expan><abbr>Sicil</abbr><ex>iae</ex></expan></w></placeName> <g ref="#interpunct" n="65">·</g> <roleName type="supracivic" subtype="legatus.pro.praetore"><w n="70"><expan><abbr>l<supplied reason="lost">eg</supplied></abbr><supplied reason="lost"><ex>atus</ex></supplied></expan></w> <w n="75"><supplied reason="lost"><expan><abbr>pr</abbr><ex>o</ex></expan></supplied></w>
+                    <lb n="5"/><w n="80"><expan><abbr>pr</abbr><ex>aetore</ex></expan></w></roleName> <g ref="#interpunct" n="85">·</g> <w n="90"><expan><abbr>prov</abbr><ex>inciae</ex></expan></w> <g ref="#interpunct" n="95">·</g> <w n="100"><expan><abbr>eiusd</abbr><ex>em</ex></expan></w> <g ref="#interpunct" n="105">·</g> <roleName type="supracivic" subtype="praetor.designatus"><w n="110"><expan><abbr>pr</abbr><ex>aetor</ex></expan></w> <unclear><g ref="#interpunct" n="115">·</g></unclear> <w n="120"><expan><abbr>d<supplied reason="lost">es</supplied></abbr><supplied reason="lost"><ex>ignatus</ex></supplied></expan></w></roleName>
+                    <lb n="6"/><w n="125">ex</w> <g ref="#interpunct" n="130">·</g> <w n="135">multis</w>
+                </ab>
+            </div>
+            <div type="edition" subtype="simple-lemmatized" resp="#RC">
+                <ab>
+                    <w n="5" lemma="Ceres">Cereri</w>
+                    <w n="10" lemma="Lucius">Lucius</w>
+                    <w n="20" lemma="Cornelius">Cornelius</w>
+                    <w n="25" lemma="Marcellus">Marcellus</w>
+                    <w n="30" lemma="quaestor">quaestor</w>
+                    <w n="35" lemma="pro">pro</w>
+                    <w n="40" lemma="praetor">praetore</w>
+                    <w n="50" lemma="provincia">provinciae</w>
+                    <w n="60" lemma="Sicilia">Siciliae</w>
+                    <w n="70" lemma="legatus">legatus</w>
+                    <w n="75" lemma="pro">pro</w>
+                    <w n="80" lemma="praetor">praetore</w>
+                    <w n="90" lemma="provincia">provinciae</w>
+                    <w n="100" lemma="idem">eiusdem</w>
+                    <w n="110" lemma="praetor">praetor</w>
+                    <w n="120" lemma="designatus">designatus</w>
+                    <w n="125" lemma="ex">ex</w>
+                    <w n="135" lemma="multus">multis</w>
+                </ab>
+            </div>
+            <div type="apparatus">
+                <listApp>
+                    <app>
+                        <note>Text of ILMusPalermo</note>
+                    </app>
+                </listApp>
+            </div>
+            <div type="translation">
+                <p/>
+            </div>
+            <div type="commentary">
+                <p/>
+            </div>
+            <div type="bibliography">
+                <listBibl type="edition">
+                    <bibl>
+                        <author>Gualtherus</author>
+                        <date>1624</date>
+                        <citedRange>18</citedRange>
+                        <ptr target="https://www.zotero.org/groups/382445/items/GIN6NANU"/>
+                        <ref target="https://biblio.inscriptiones.org/epig10002388">https://biblio.inscriptiones.org/epig10002388</ref>
+                    </bibl>
+                    <bibl type="corpus" n="CIL">
+                        <author>Mommsen</author>
+                        <date>1883</date>
+                        <citedRange>
+                            <ref target="http://arachne.uni-koeln.de/item/buchseite/650787">7266</ref>
+                        </citedRange>
+                        <ptr target="https://www.zotero.org/groups/382445/items/GQN8UZSI"/>
+                        <ref target="https://biblio.inscriptiones.org/epig10000589">https://biblio.inscriptiones.org/epig10000589</ref>
+                    </bibl>
+                </listBibl>
+            </div>
+        </body>
+    </text>
+</TEI>`
+      },
+      {
+        id: 'edh-hd000001-rdf',
+        name: 'EDH_HD000001_Cumae.ttl',
+        format: 'RDF (Turtle)',
+        description: 'Official EDH Linked Open Data Turtle triples for HD000001 (Cumae)',
+        content: `@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix nmo: <http://nomisma.org/ontology#> .
+@prefix epi: <http://edh-www.adw.uni-heidelberg.de/lod/ontology#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix lawd: <http://lawd.info/ontology/1.0/> .
+
+<http://edh-www.adw.uni-heidelberg.de/edh/inschrift/HD000001> a epi:Inscription ;
+	skos:prefLabel "epitaph found at 'Cumae, bei' / 'Cuma, bei' (Roman province: Latium et Campania (Regio I))"@en;
+	dc:publisher <http://edh-www.adw.uni-heidelberg.de>;
+	dc:contributor <http://edh-www.adw.uni-heidelberg.de/lod/contributor/feraudi>;
+	dcterms:date "2014-04-07"^^xsd:date;
+	epi:representsTypeOfMonument <http://edh-www.adw.uni-heidelberg.de/lod/type_of_monument/tabula>;
+	epi:representsTypeOfInscription <http://edh-www.adw.uni-heidelberg.de/lod/type_of_inscription/epitaph>;
+	nmo:hasMaterial <http://edh-www.adw.uni-heidelberg.de/lod/material/Marmor_geaedert___farbig>;
+	lawd:foundAt <http://edh-www.adw.uni-heidelberg.de/edh/geographie/11843>;
+	nmo:hasStartDate "0071";
+	nmo:hasEndDate "0130";
+	epi:editionText "D(is) M(anibus) / Noniae P(ubli) f(iliae) Optatae / et C(aio) Iulio Artemoni / parentibus / libertis libertabusque / posterisque eorum / C(aius) Iulius C(ai) f(ilius) Optatus / filius"@lat;
+	epi:diplomaticText "D M / NONIAE P F OPTATAE / ET C IVLIO ARTEMONI / PARENTIBVS / LIBERTIS LIBERTABVSQVE / POSTERISQVE EORVM / C IVLIVS C F OPTATVS / FILIVS"@lat;
+.`
+      },
+      {
+        id: 'rib-00014-rdf',
+        name: 'RIB_00014_Londinium.ttl',
+        format: 'RDF (Turtle)',
+        description: 'Official RIB Linked Open Data Turtle triples for RIB 14 (Titus Licinius Ascanius, Londinium)',
+        content: `@prefix rib: <https://romaninscriptionsofbritain.org/inscriptions/> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix crmtex: <http://www.cidoc-crm.org/crmtex/> .
+@prefix crmsci: <http://www.cidoc-crm.org/crmsci/> .
+@prefix epont: <https://w3id.org/epont/ontology/> .
+@prefix epnet: <http://eagle-network.eu/ontology/> .
+@prefix lawd: <http://lawd.info/ontology/1.0/> .
+@prefix nmo: <http://nomisma.org/ontology#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+rib:RIB00014 a crm:E22_Human-Made_Object ;
+    rdfs:label "RIB 14. Funerary inscription for Titus Licinius Ascanius"^^xsd:string ;
+    epont:carriesText <https://romaninscriptionsofbritain.org/inscriptions/RIB00014/WrittenText> ;
+    lawd:foundAt <https://pleiades.stoa.org/places/79574> ;
+    nmo:Material "Oolite"^^xsd:string ;
+    nmo:hasObjectType "Statue base"^^xsd:string ;
+    pav:authoredBy "Roman Inscriptions of Britain" ;
+    pav:license <http://creativecommons.org/licenses/by/3.0/> ;
+    epnet:isDocumentedBy <http://any23.org/tmp/bibA00130>,
+        <http://any23.org/tmp/bibC00597>,
+        <http://any23.org/tmp/bibC01335>,
+        <http://any23.org/tmp/bibC01651>,
+        <http://any23.org/tmp/bibC01657> ;
+    geo:SpatialThing <https://romaninscriptionsofbritain.org/inscriptions/RIB00014#this> .
+
+<https://romaninscriptionsofbritain.org/inscriptions/RIB00014#this> geo:lat_long "51.513335,-0.088949" .
+
+<https://romaninscriptionsofbritain.org/inscriptions/RIB00014/Reading> a crmtex:TX5_Reading ;
+    crm:P20_had_specific_purpose <https://romaninscriptionsofbritain.org/inscriptions/RIB00014/Transcription> ;
+    crmtex:TXP3_is_rendered_by <https://romaninscriptionsofbritain.org/inscriptions/RIB00014/Transcription> .
+
+<https://romaninscriptionsofbritain.org/inscriptions/RIB00014/TranscriptionText> a crm:E33_Linguistic_Object ;
+    epnet:hasTEI-annotatedTranscription """
+                
+                
+                    Dis
+                    Manibus
+                    Titi Licini
+                    Ascani
+                    vivus sibi fecit
+                
+            """^^xsd:string .
+
+<https://romaninscriptionsofbritain.org/inscriptions/RIB00014/Writing> a crmtex:TX2_Writing ;
+    crm:P92_brought_into_existence <https://romaninscriptionsofbritain.org/inscriptions/RIB00014/WrittenWork> ;
+    crmtex:TXP1_used_writing_system "la"^^xsd:string .
+
+<https://romaninscriptionsofbritain.org/inscriptions/RIB00014/WrittenText> a crmtex:TX1_Written_text ;
+    crm:P108_was_produced_by <https://romaninscriptionsofbritain.org/inscriptions/RIB00014/Writing> ;
+    crm:P56_is_found_on rib:RIB00014 ;
+    nmo:hasEndDate "0410-01-01"^^xsd:date ;
+    nmo:hasStartDate "0043-01-01"^^xsd:date ;
+    crmsci:O6_observed_by <https://romaninscriptionsofbritain.org/inscriptions/RIB00014/Reading> ;
+    foaf:page <https://romaninscriptionsofbritain.org/inscriptions/14> .
+
+<https://romaninscriptionsofbritain.org/inscriptions/RIB00014/WrittenWork> a lawd:WrittenWork .`
+      }
+    ];
+
+    // ============================================================================
+    // 2. TARGET JSON SCHEMA DEFINITION
+    // ============================================================================
+
+    const TARGET_FIELDS = [
+      {
+        key: 'id',
+        label: 'ID',
+        group: 'mandatory',
+        description: 'Primary inscription identifier (e.g. TM, EDH, RIB, or URI)',
+        multiValue: false,
+        isTextField: false
+      },
+      {
+        key: 'provenance_corpus',
+        label: 'Provenance / Corpus',
+        group: 'mandatory',
+        description: 'Source corpus, publication collection, or holding repository',
+        multiValue: true,
+        isTextField: false
+      },
+      {
+        key: 'interpretive_text',
+        label: 'Interpretive text',
+        group: 'mandatory',
+        description: 'Edited transcription with expanded abbreviations & restorations',
+        multiValue: false,
+        isTextField: true
+      },
+      {
+        key: 'diplomatic_text',
+        label: 'Diplomatic text',
+        group: 'optional',
+        description: 'Raw epigraphic transcription preserving surviving letters without editorial expansions',
+        multiValue: false,
+        isTextField: true
+      },
+      {
+        key: 'start_date',
+        label: 'Start date',
+        group: 'optional',
+        description: 'Terminus post quem (numeric year, e.g. 71 or -50)',
+        multiValue: false,
+        isTextField: false
+      },
+      {
+        key: 'end_date',
+        label: 'End date',
+        group: 'optional',
+        description: 'Terminus ante quem (numeric year, e.g. 150 or 25)',
+        multiValue: false,
+        isTextField: false
+      },
+      {
+        key: 'material',
+        label: 'Material',
+        group: 'optional',
+        description: 'Physical support material with EAGLE / AAT vocabulary URI',
+        multiValue: true,
+        isTextField: false
+      },
+      {
+        key: 'type_of_object',
+        label: 'Type of object',
+        group: 'optional',
+        description: 'Monument or carrier form (e.g. altar, tombstone, statue base)',
+        multiValue: true,
+        isTextField: false
+      },
+      {
+        key: 'type_of_inscription',
+        label: 'Type of inscription',
+        group: 'optional',
+        description: 'Functional classification (e.g. epitaph, honorific, dedicatory)',
+        multiValue: true,
+        isTextField: false
+      },
+      {
+        key: 'geography_province',
+        label: 'Geography: Province',
+        group: 'geography',
+        description: 'Roman province or administrative region (e.g. Baetica, Britannia) with LOD URI',
+        multiValue: true,
+        isTextField: false
+      },
+      {
+        key: 'geography_ancient_place_name',
+        label: 'Geography: Ancient Place Name',
+        group: 'geography',
+        description: 'Ancient findspot / origin toponym (e.g. Roma, Arbeia) with Pleiades/GeoNames LOD',
+        multiValue: true,
+        isTextField: false
+      },
+      {
+        key: 'geography_latitude',
+        label: 'Geography: Latitude',
+        group: 'geography',
+        description: 'Decimal latitude coordinate (or combined <geo> lat/long node)',
+        multiValue: false,
+        isTextField: false
+      },
+      {
+        key: 'geography_longitude',
+        label: 'Geography: Longitude',
+        group: 'geography',
+        description: 'Decimal longitude coordinate (or combined <geo> lat/long node)',
+        multiValue: false,
+        isTextField: false
+      }
+    ];
+
+    // ============================================================================
+    // 3. PARSING & SCHEMA DISCOVERY UTILITIES (EpiDoc XML & RDF)
+    // ============================================================================
+
+    const DISTINGUISHING_ATTRS = ['type', 'subtype', 'decls'];
+
+    function buildSemanticXPath(el) {
+      const parts = [];
+      let curr = el;
+      while (curr && curr.nodeType === 1) {
+        const localName = curr.localName || curr.nodeName.replace(/^.*:/, '');
+        const prefix = curr.namespaceURI && curr.namespaceURI.includes('tei-c.org') ? 'tei:' : '';
+        let step = `${prefix}${localName}`;
+
+        const qualifiers = [];
+        for (const attr of DISTINGUISHING_ATTRS) {
+          if (curr.hasAttribute && curr.hasAttribute(attr)) {
+            qualifiers.push(`@${attr}='${curr.getAttribute(attr)}'`);
+          }
+        }
+        if (qualifiers.length > 0) {
+          step += `[${qualifiers.join(' and ')}]`;
+        }
+        parts.unshift(step);
+        curr = curr.parentElement;
+      }
+      return '//' + parts.join('/');
+    }
+
+    function cleanEpigraphicText(el, editionStyle = 'interpretive') {
+      const clone = el.cloneNode(true);
+      clone.querySelectorAll('head').forEach((h) => h.remove());
+
+      if (editionStyle === 'diplomatic') {
+        clone.querySelectorAll('ex, supplied, corr, reg, note, desc, g').forEach((node) => node.remove());
+      } else {
+        clone.querySelectorAll('choice').forEach((choice) => {
+          if (choice.querySelector('corr')) {
+            choice.querySelectorAll('sic').forEach((n) => n.remove());
+          }
+          if (choice.querySelector('reg')) {
+            choice.querySelectorAll('orig').forEach((n) => n.remove());
+          }
+        });
+      }
+
+      const lbs = clone.querySelectorAll('lb');
+      lbs.forEach((lb, idx) => {
+        const breakAttr = lb.getAttribute('break');
+        const replacement = document.createTextNode(breakAttr === 'no' ? '' : idx === 0 ? '' : ' ');
+        lb.parentNode.replaceChild(replacement, lb);
+      });
+      const text = (clone.textContent || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/^Text(?:\s*:|\s+(?=[A-Z0-9\[(⟨<]))/i, '')
+        .trim();
+
+      return editionStyle === 'diplomatic' ? text.toUpperCase() : text;
+    }
+
+    function extractXmlFieldsFromDoc(doc) {
+      const fieldsMap = new Map();
+      const allElements = doc.getElementsByTagName('*');
+
+      for (let i = 0; i < allElements.length; i++) {
+        const el = allElements[i];
+        const basePath = buildSemanticXPath(el);
+        const localName = el.localName || el.nodeName;
+        const isEditionContainer =
+          (localName === 'div' && (el.getAttribute('type') === 'edition' || el.getAttribute('type') === 'diplomatic')) ||
+          localName === 'ab';
+        const hasChildElements = Array.from(el.childNodes).some((n) => n.nodeType === 1);
+        const cleanedText = cleanEpigraphicText(el);
+
+        if ((!hasChildElements || isEditionContainer || localName === 'expan') && cleanedText) {
+          const refUri =
+            el.getAttribute('ref') || el.getAttribute('corresp') || el.getAttribute('ana') || null;
+          const certVal =
+            el.getAttribute('cert') || el.getAttribute('precision') || el.getAttribute('evidence') || null;
+
+          if (!fieldsMap.has(basePath)) {
+            fieldsMap.set(basePath, {
+              path: basePath,
+              format: 'EpiDoc XML',
+              count: 0,
+              samples: [],
+              hasUri: false,
+              hasCertainty: false,
+              sampleUri: null,
+              sampleCertainty: null
+            });
+          }
+          const entry = fieldsMap.get(basePath);
+          entry.count += 1;
+          if (entry.samples.length < 3 && !entry.samples.includes(cleanedText)) {
+            entry.samples.push(cleanedText);
+          }
+          if (refUri) {
+            entry.hasUri = true;
+            if (!entry.sampleUri) entry.sampleUri = refUri;
+          }
+          if (certVal) {
+            entry.hasCertainty = true;
+            if (!entry.sampleCertainty) entry.sampleCertainty = certVal;
+          }
+        }
+
+        const valueAttrs = [
+          'notBefore-custom',
+          'notAfter-custom',
+          'notBefore',
+          'notAfter',
+          'when-custom',
+          'when',
+          'from',
+          'to',
+          'value',
+          'ref'
+        ];
+        for (const attrName of valueAttrs) {
+          if (el.hasAttribute(attrName)) {
+            const attrPath = `${basePath}/@${attrName}`;
+            const attrVal = el.getAttribute(attrName);
+            const certVal = el.getAttribute('cert') || el.getAttribute('precision') || null;
+            if (!fieldsMap.has(attrPath)) {
+              fieldsMap.set(attrPath, {
+                path: attrPath,
+                format: 'EpiDoc XML',
+                count: 0,
+                samples: [],
+                hasUri: attrName === 'ref',
+                hasCertainty: Boolean(certVal),
+                sampleUri: attrName === 'ref' ? attrVal : null,
+                sampleCertainty: certVal
+              });
+            }
+            const entry = fieldsMap.get(attrPath);
+            entry.count += 1;
+            if (entry.samples.length < 3 && !entry.samples.includes(attrVal)) {
+              entry.samples.push(attrVal);
+            }
+            if (certVal) {
+              entry.hasCertainty = true;
+              if (!entry.sampleCertainty) entry.sampleCertainty = certVal;
+            }
+          }
+        }
+      }
+
+      return Array.from(fieldsMap.values());
+    }
+
+    function parseTurtleSimple(ttlText) {
+      const prefixes = {};
+      const lines = ttlText.split(/\r?\n/);
+      const bodyLines = [];
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const prefixMatch = trimmed.match(/^@?prefix\s+([a-zA-Z0-9_-]*:)\s*<([^>]+)>\s*\.?$/i);
+        if (prefixMatch) {
+          prefixes[prefixMatch[1]] = prefixMatch[2];
+        } else {
+          bodyLines.push(trimmed);
+        }
+      }
+
+      const record = { '@id': null, _triples: {} };
+      const joined = bodyLines.join(' ');
+      const subjectMatch = joined.match(/^\s*<([^>]+)>/);
+      if (subjectMatch) {
+        record['@id'] = subjectMatch[1];
+      }
+
+      const withoutSubject = joined.replace(/^\s*<[^>]+>\s*/, '');
+      const statements = withoutSubject.split(/\s*;\s*|\s+\.\s*$/).filter(Boolean);
+
+      for (const stmt of statements) {
+        const parts = stmt.trim().match(/^([^\s]+)\s+(.+)$/);
+        if (!parts) continue;
+        let pred = parts[1];
+        let objRaw = parts[2].replace(/\s*\.\s*$/, '').trim();
+        if (pred === 'a') pred = 'rdf:type';
+
+        let value = objRaw;
+        let uri = null;
+
+        if (objRaw.startsWith('<') && objRaw.endsWith('>')) {
+          uri = objRaw.slice(1, -1);
+          value = uri.split('/').pop() || uri;
+        } else if (objRaw.startsWith('"')) {
+          const litMatch = objRaw.match(/^"([^"]*)"/);
+          if (litMatch) value = litMatch[1];
+        }
+
+        if (!record._triples[pred]) record._triples[pred] = [];
+        record._triples[pred].push({ value, uri });
+      }
+
+      return record;
+    }
+
+    function extractRdfFieldsFromFile(file) {
+      const fieldsMap = new Map();
+
+      const registerField = (pred, sampleVal, uri, certainty) => {
+        if (!fieldsMap.has(pred)) {
+          fieldsMap.set(pred, {
+            path: pred,
+            format: file.format,
+            count: 0,
+            samples: [],
+            hasUri: false,
+            hasCertainty: false,
+            sampleUri: null,
+            sampleCertainty: null
+          });
+        }
+        const entry = fieldsMap.get(pred);
+        entry.count += 1;
+        const strVal = String(sampleVal);
+        if (entry.samples.length < 3 && !entry.samples.includes(strVal)) {
+          entry.samples.push(strVal);
+        }
+        if (uri) {
+          entry.hasUri = true;
+          if (!entry.sampleUri) entry.sampleUri = uri;
+        }
+        if (certainty) {
+          entry.hasCertainty = true;
+          if (!entry.sampleCertainty) entry.sampleCertainty = certainty;
+        }
+      };
+
+      if (file.format.includes('JSON-LD')) {
+        try {
+          const data = JSON.parse(file.content);
+          const graphs = Array.isArray(data['@graph']) ? data['@graph'] : [data];
+
+          const walkObject = (obj, prefix = '') => {
+            if (!obj || typeof obj !== 'object') return;
+            const localCert = obj['epont:certainty'] || obj['certainty'] || null;
+            const localId = obj['@id'] || obj['owl:sameAs'] || null;
+
+            for (const [key, val] of Object.entries(obj)) {
+              if (key === '@context' || key === '@type') continue;
+              const fullPred = prefix ? `${prefix} → ${key}` : key;
+
+              if (key === '@id' && !prefix) {
+                registerField('@id', val, val, null);
+                continue;
+              }
+
+              const items = Array.isArray(val) ? val : [val];
+              for (const item of items) {
+                if (item && typeof item === 'object') {
+                  const label =
+                    item['skos:prefLabel'] ||
+                    item['@value'] ||
+                    item['rdfs:label'] ||
+                    item['@id'] ||
+                    null;
+                  const itemUri = item['@id'] || item['owl:sameAs'] || localId;
+                  const itemCert = item['epont:certainty'] || localCert;
+                  if (label) {
+                    registerField(fullPred, label, itemUri, itemCert);
+                  }
+                  walkObject(item, fullPred);
+                } else if (item !== null && item !== undefined) {
+                  registerField(fullPred, item, localId, localCert);
+                }
+              }
+            }
+          };
+
+          graphs.forEach((g) => walkObject(g));
+        } catch (e) {
+          console.error('JSON-LD parse error', e);
+        }
+      } else {
+        const parsed = parseTurtleSimple(file.content);
+        if (parsed['@id']) {
+          registerField('@id (Subject URI)', parsed['@id'], parsed['@id'], null);
+        }
+        const globalCert =
+          parsed._triples['epont:certainty']?.[0]?.value || null;
+        for (const [pred, entries] of Object.entries(parsed._triples)) {
+          for (const ent of entries) {
+            registerField(pred, ent.value, ent.uri, globalCert);
+          }
+        }
+      }
+
+      return Array.from(fieldsMap.values());
+    }
+
+    // ============================================================================
+    // 4. TRANSFORMATION ENGINE (Files + User Alignments -> Target JSON)
+    // ============================================================================
+
+    function evaluateXmlXPathLike(doc, xpathExpr, options) {
+      const isAttr = xpathExpr.includes('/@');
+      let elemPath = xpathExpr;
+      let targetAttr = null;
+
+      if (isAttr) {
+        const splitIdx = xpathExpr.lastIndexOf('/@');
+        elemPath = xpathExpr.slice(0, splitIdx);
+        targetAttr = xpathExpr.slice(splitIdx + 2);
+      }
+
+      const allElements = doc.getElementsByTagName('*');
+      const results = [];
+
+      for (let i = 0; i < allElements.length; i++) {
+        const el = allElements[i];
+        const currentPath = buildSemanticXPath(el);
+        if (currentPath !== elemPath) continue;
+
+        let rawValue = null;
+        if (targetAttr) {
+          rawValue = el.getAttribute(targetAttr);
+        } else if (options.textMode === 'raw') {
+          rawValue = el.innerHTML.trim();
+        } else if (options.textMode === 'diplomatic') {
+          rawValue = cleanEpigraphicText(el, 'diplomatic');
+        } else {
+          rawValue = cleanEpigraphicText(el, 'interpretive');
+        }
+
+        if (!rawValue) continue;
+
+        const uri =
+          el.getAttribute('ref') ||
+          el.getAttribute('corresp') ||
+          el.getAttribute('ana') ||
+          (targetAttr === 'ref' ? rawValue : null);
+        const certainty =
+          el.getAttribute('cert') ||
+          el.getAttribute('precision') ||
+          el.getAttribute('evidence') ||
+          null;
+        const placeType = !targetAttr ? el.getAttribute('type') || null : null;
+
+        const item = { value: rawValue };
+        if (placeType) {
+          item.type = placeType;
+        }
+        if (options.includeUri && uri) {
+          item.uri = uri;
+        }
+        if (options.includeCertainty && certainty) {
+          item.certainty = certainty;
+        }
+        results.push(item);
+      }
+
+      return results;
+    }
+
+    function evaluateRdfPredicate(file, predPath, options) {
+      const results = [];
+
+      if (file.format.includes('JSON-LD')) {
+        try {
+          const data = JSON.parse(file.content);
+          const graphs = Array.isArray(data['@graph']) ? data['@graph'] : [data];
+
+          const searchNode = (obj, prefix = '') => {
+            if (!obj || typeof obj !== 'object') return;
+            const localCert = obj['epont:certainty'] || obj['certainty'] || null;
+            const localId = obj['@id'] || obj['owl:sameAs'] || null;
+
+            for (const [key, val] of Object.entries(obj)) {
+              if (key === '@context' || key === '@type') continue;
+              const fullPred = prefix ? `${prefix} → ${key}` : key;
+              const items = Array.isArray(val) ? val : [val];
+
+              if (fullPred === predPath) {
+                for (const item of items) {
+                  if (item && typeof item === 'object') {
+                    const label =
+                      item['skos:prefLabel'] ||
+                      item['@value'] ||
+                      item['rdfs:label'] ||
+                      item['@id'];
+                    const uri = item['@id'] || item['owl:sameAs'] || localId;
+                    const cert = item['epont:certainty'] || localCert;
+                    if (label !== undefined && label !== null) {
+                      const resObj = { value: label };
+                      if (options.includeUri && uri) resObj.uri = uri;
+                      if (options.includeCertainty && cert) resObj.certainty = cert;
+                      results.push(resObj);
+                    }
+                  } else if (item !== null && item !== undefined) {
+                    const resObj = { value: item };
+                    if (options.includeUri && localId) resObj.uri = localId;
+                    if (options.includeCertainty && localCert) resObj.certainty = localCert;
+                    results.push(resObj);
+                  }
+                }
+              }
+
+              for (const item of items) {
+                if (item && typeof item === 'object') {
+                  searchNode(item, fullPred);
+                }
+              }
+            }
+          };
+
+          graphs.forEach((g) => searchNode(g));
+        } catch (e) {
+          console.error(e);
+        }
+      } else {
+        const parsed = parseTurtleSimple(file.content);
+        const globalCert = parsed._triples['epont:certainty']?.[0]?.value || null;
+        if (predPath === '@id (Subject URI)' && parsed['@id']) {
+          const resObj = { value: parsed['@id'] };
+          if (options.includeUri) resObj.uri = parsed['@id'];
+          results.push(resObj);
+        } else if (parsed._triples[predPath]) {
+          for (const ent of parsed._triples[predPath]) {
+            const resObj = { value: ent.value };
+            if (options.includeUri && ent.uri) resObj.uri = ent.uri;
+            if (options.includeCertainty && globalCert) resObj.certainty = globalCert;
+            results.push(resObj);
+          }
+        }
+      }
+
+      return results;
+    }
+
+    function transformFileToTargetJson(file, mappings) {
+      const parser = new DOMParser();
+      const xmlDoc =
+        file.format === 'EpiDoc XML' ? parser.parseFromString(file.content, 'application/xml') : null;
+
+      const extractForTarget = (targetKey) => {
+        const rules = mappings[targetKey] || [];
+        const collected = [];
+
+        for (const rule of rules) {
+          if (file.format === 'EpiDoc XML' && xmlDoc) {
+            const matches = evaluateXmlXPathLike(xmlDoc, rule.sourcePath, rule);
+            collected.push(...matches);
+          } else if (file.format !== 'EpiDoc XML') {
+            const matches = evaluateRdfPredicate(file, rule.sourcePath, rule);
+            collected.push(...matches);
+          }
+        }
+        return collected;
+      };
+
+      const formatSingleOrArray = (items, allowArray, isText = false, isNumeric = false) => {
+        if (!items || items.length === 0) return 'N/A';
+        if (isText) {
+          return items[0].value;
+        }
+        if (isNumeric) {
+          const first = { ...items[0] };
+          const str = String(first.value).trim();
+          if (/^[+-]?\d+(\.\d+)?$/.test(str)) {
+            first.value = Number(str);
+          }
+          return allowArray ? [first] : first;
+        }
+        if (!allowArray) {
+          return items[0];
+        }
+        return items;
+      };
+
+      const provinceItems = extractForTarget('geography_province');
+      const placeItems = extractForTarget('geography_ancient_place_name');
+      const latItems = extractForTarget('geography_latitude');
+      const lonItems = extractForTarget('geography_longitude');
+
+      let parsedLat = null;
+      let parsedLon = null;
+
+      if (latItems.length > 0) {
+        const rawLat = String(latItems[0].value).trim();
+        if (rawLat.includes(' ')) {
+          const parts = rawLat.split(/\s+/);
+          parsedLat = parseFloat(parts[0]);
+          if (lonItems.length === 0 && parts[1]) {
+            parsedLon = parseFloat(parts[1]);
+          }
+        } else {
+          parsedLat = isNaN(parseFloat(rawLat)) ? rawLat : parseFloat(rawLat);
+        }
+      }
+
+      if (lonItems.length > 0) {
+        const rawLon = String(lonItems[0].value).trim();
+        if (rawLon.includes(' ')) {
+          const parts = rawLon.split(/\s+/);
+          parsedLon = parseFloat(parts[1] || parts[0]);
+        } else {
+          parsedLon = isNaN(parseFloat(rawLon)) ? rawLon : parseFloat(rawLon);
+        }
+      }
+
+      const formattedProvinces = provinceItems.map((p) => {
+        const obj = { value: p.value };
+        if (p.type) obj.type = p.type;
+        if (p.uri) obj.uri = p.uri;
+        if (p.certainty) obj.certainty = p.certainty;
+        return obj;
+      });
+
+      const formattedAncientPlaces = placeItems.map((p) => {
+        const obj = { value: p.value };
+        if (p.type) obj.type = p.type;
+        if (p.uri) obj.uri = p.uri;
+        if (p.certainty) obj.certainty = p.certainty;
+        return obj;
+      });
+
+      const hasGeoData =
+        formattedProvinces.length > 0 ||
+        formattedAncientPlaces.length > 0 ||
+        (parsedLat !== null && !Number.isNaN(parsedLat)) ||
+        (parsedLon !== null && !Number.isNaN(parsedLon));
+
+      const geographyOutput = hasGeoData
+        ? {
+            province: formattedProvinces.length > 0 ? formattedProvinces : 'N/A',
+            ancient_place_name: formattedAncientPlaces.length > 0 ? formattedAncientPlaces : 'N/A',
+            latitude: parsedLat !== null && !Number.isNaN(parsedLat) ? parsedLat : 'N/A',
+            longitude: parsedLon !== null && !Number.isNaN(parsedLon) ? parsedLon : 'N/A'
+          }
+        : 'N/A';
+
+      return {
+        _source_file: file.name,
+        _source_format: file.format,
+        id: formatSingleOrArray(extractForTarget('id'), false),
+        provenance_corpus: formatSingleOrArray(extractForTarget('provenance_corpus'), true),
+        interpretive_text: formatSingleOrArray(extractForTarget('interpretive_text'), false, true),
+        diplomatic_text: formatSingleOrArray(extractForTarget('diplomatic_text'), false, true),
+        start_date: formatSingleOrArray(extractForTarget('start_date'), false, false, true),
+        end_date: formatSingleOrArray(extractForTarget('end_date'), false, false, true),
+        material: formatSingleOrArray(extractForTarget('material'), true),
+        type_of_object: formatSingleOrArray(extractForTarget('type_of_object'), true),
+        type_of_inscription: formatSingleOrArray(extractForTarget('type_of_inscription'), true),
+        geography: geographyOutput
+      };
+    }
+
+    // ============================================================================
+    // 5. DEFAULT SUGGESTED MAPPINGS HELPER
+    // ============================================================================
+
+    const AUTO_SUGGEST_RULES = {
+      id: [
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno',
+        'dcterms:identifier'
+      ],
+      provenance_corpus: [
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:authority',
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:publisher',
+        'dcterms:isPartOf → skos:prefLabel',
+        'dcterms:isPartOf'
+      ],
+      interpretive_text: [
+        "//tei:TEI/tei:text/tei:body/tei:div[@type='edition']",
+        "//tei:TEI/tei:text/tei:body/tei:div[@type='edition' and @subtype='interpretive']",
+        'epont:hasInterpretiveText'
+      ],
+      diplomatic_text: [
+        "//tei:TEI/tei:text/tei:body/tei:div[@type='edition']",
+        "//tei:TEI/tei:text/tei:body/tei:div[@type='edition' and @subtype='interpretive']",
+        "//tei:TEI/tei:text/tei:body/tei:div[@type='diplomatic']",
+        "//tei:TEI/tei:text/tei:body/tei:div[@type='edition' and @subtype='diplomatic']",
+        'epont:hasDiplomaticText'
+      ],
+      start_date: [
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origDate/@notBefore-custom',
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origDate/@notBefore',
+        'crm:P4_has_time-span → crm:P82a_begin_of_the_begin',
+        'crm:P82a_begin_of_the_begin'
+      ],
+      end_date: [
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origDate/@notAfter-custom',
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origDate/@notAfter',
+        'crm:P4_has_time-span → crm:P82b_end_of_the_end',
+        'crm:P82b_end_of_the_end'
+      ],
+      material: [
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:support/tei:material',
+        "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:support/tei:rs[@type='material']",
+        'crm:P45_consists_of',
+        'epont:materialLabel'
+      ],
+      type_of_object: [
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:support/tei:objectType',
+        "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:support/tei:rs[@type='objectType']",
+        'epont:hasObjectType',
+        'epont:objectTypeLabel'
+      ],
+      type_of_inscription: [
+        "//tei:TEI/tei:teiHeader/tei:profileDesc/tei:textClass/tei:keywords/tei:term[@type='inscriptionType']",
+        "//tei:TEI/tei:teiHeader/tei:profileDesc/tei:textClass/tei:keywords/tei:term[@type='genre']",
+        'epont:hasInscriptionType',
+        'epont:inscriptionTypeLabel'
+      ],
+      geography_province: [
+        "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:placeName[@type='province']",
+        "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:provenance[@type='found']/tei:placeName[@type='province']",
+        "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:region",
+        'epont:hasProvince'
+      ],
+      geography_ancient_place_name: [
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:placeName',
+        "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:provenance[@type='found']/tei:placeName",
+        'dcterms:spatial → skos:prefLabel',
+        'skos:prefLabel'
+      ],
+      geography_latitude: [
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:geo',
+        "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:provenance[@type='found']/tei:location/tei:geo[@decls='#lat']",
+        'dcterms:spatial → geo:lat',
+        'geo:lat'
+      ],
+      geography_longitude: [
+        '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:geo',
+        "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:provenance[@type='found']/tei:location/tei:geo[@decls='#long']",
+        'dcterms:spatial → geo:long',
+        'geo:long'
+      ]
+    };
+
+    // ============================================================================
+    // 6. MAIN REACT DASHBOARD COMPONENT
+    // ============================================================================
+
+    function App() {
+      const [inputMode, setInputMode] = useState('XML');
+      const [filesByMode, setFilesByMode] = useState({ XML: [], RDF: [] });
+      const [mappingsByMode, setMappingsByMode] = useState({ XML: {}, RDF: {} });
+
+      const files = filesByMode[inputMode] || [];
+      const mappings = mappingsByMode[inputMode] || {};
+
+      const [lodGeoCache, setLodGeoCache] = useState({
+        'https://pleiades.stoa.org/places/423025': { lat: 41.89193, lon: 12.51133, source: 'Pleiades LOD' },
+        'https://pleiades.stoa.org/places/89105': { lat: 55.0033, lon: -1.4317, source: 'Pleiades LOD' },
+        'https://pleiades.stoa.org/places/89132': { lat: 52.5, lon: -1.5, source: 'Pleiades LOD' },
+        'https://pleiades.stoa.org/places/462503': { lat: 37.0755, lon: 15.2866, source: 'Pleiades LOD' },
+        'https://pleiades.stoa.org/places/462492': { lat: 37.5, lon: 14.0, source: 'Pleiades LOD' }
+      });
+      const [resolvingLodUris, setResolvingLodUris] = useState(false);
+      const inFlightLodUrisRef = useRef(new Set());
+
+      const [fieldSearch, setFieldSearch] = useState('');
+      const [draggedField, setDraggedField] = useState(null);
+      const [dragOverTarget, setDragOverTarget] = useState(null);
+      const [openDropdownTarget, setOpenDropdownTarget] = useState(null);
+      const [dropdownSearch, setDropdownSearch] = useState('');
+      const [selectedPreviewIdx, setSelectedPreviewIdx] = useState('ALL');
+      const [inspectedRule, setInspectedRule] = useState(null);
+      const [copiedJson, setCopiedJson] = useState(false);
+      const [toastMessage, setToastMessage] = useState(null);
+      const [uploadError, setUploadError] = useState(null);
+      const [activeTabMobile, setActiveTabMobile] = useState('workspace');
+      const [verifierViewMode, setVerifierViewMode] = useState('split');
+      const [selectedVerifierFile, setSelectedVerifierFile] = useState('ALL');
+
+      const fileInputRef = useRef(null);
+      const profileInputRef = useRef(null);
+
+      const showToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 3200);
+      };
+
+      const discoveredFields = useMemo(() => {
+        const combined = new Map();
+        const parser = new DOMParser();
+
+        for (const file of files) {
+          let extracted = [];
+          if (inputMode === 'XML' && file.format === 'EpiDoc XML') {
+            const doc = parser.parseFromString(file.content, 'application/xml');
+            if (!doc.querySelector('parsererror')) {
+              extracted = extractXmlFieldsFromDoc(doc, file.name);
+            }
+          } else if (inputMode === 'RDF' && file.format !== 'EpiDoc XML') {
+            extracted = extractRdfFieldsFromFile(file);
+          }
+
+          for (const item of extracted) {
+            const key = `${item.format}::${item.path}`;
+            if (!combined.has(key)) {
+              combined.set(key, {
+                ...item,
+                key,
+                files: [file.name]
+              });
+            } else {
+              const existing = combined.get(key);
+              existing.count += item.count;
+              if (!existing.files.includes(file.name)) {
+                existing.files.push(file.name);
+              }
+              for (const s of item.samples) {
+                if (existing.samples.length < 3 && !existing.samples.includes(s)) {
+                  existing.samples.push(s);
+                }
+              }
+              existing.hasUri = existing.hasUri || item.hasUri;
+              existing.hasCertainty = existing.hasCertainty || item.hasCertainty;
+            }
+          }
+        }
+
+        return Array.from(combined.values());
+      }, [files, inputMode]);
+
+      const discoveredFieldLookup = useMemo(() => {
+        const map = new Map();
+        discoveredFields.forEach((f) => {
+          map.set(`${f.format}::${f.path}`, f);
+        });
+        return map;
+      }, [discoveredFields]);
+
+      const filteredDiscoveredFields = useMemo(() => {
+        const q = fieldSearch.toLowerCase().trim();
+        if (!q) return discoveredFields;
+        return discoveredFields.filter(
+          (f) =>
+            f.path.toLowerCase().includes(q) ||
+            f.samples.some((s) => s.toLowerCase().includes(q))
+        );
+      }, [discoveredFields, fieldSearch]);
+
+      const buildSuggestedMappingsForFields = (fieldsList) => {
+        const nextMappings = {};
+        for (const target of TARGET_FIELDS) {
+          const candidatePaths = AUTO_SUGGEST_RULES[target.key] || [];
+          const matchedRules = [];
+          for (const cand of candidatePaths) {
+            const found = fieldsList.find((df) => df.path === cand);
+            if (found) {
+              matchedRules.push({
+                id: `${target.key}-${found.path}-${Math.random().toString(36).slice(2, 7)}`,
+                sourcePath: found.path,
+                format: found.format,
+                includeUri: true,
+                includeCertainty: true,
+                textMode: target.key === 'diplomatic_text' ? 'diplomatic' : 'clean'
+              });
+            }
+          }
+          if (matchedRules.length > 0) {
+            nextMappings[target.key] = matchedRules;
+          }
+        }
+        return nextMappings;
+      };
+
+      const handleModeSwitch = (nextMode) => {
+        if (nextMode === inputMode) return;
+        setInputMode(nextMode);
+        setSelectedPreviewIdx('ALL');
+        setInspectedRule(null);
+        setFieldSearch('');
+        setOpenDropdownTarget(null);
+        setUploadError(null);
+        showToast(
+          `Switched to ${
+            nextMode === 'XML' ? 'EpiDoc XML (.xml)' : 'RDF (JSON-LD / Turtle)'
+          } workflow.`
+        );
+      };
+
+      const applyAutoSuggest = (notify = true) => {
+        const suggested = buildSuggestedMappingsForFields(discoveredFields);
+        setMappingsByMode((prev) => ({
+          ...prev,
+          [inputMode]: suggested
+        }));
+        const firstKey = Object.keys(suggested)[0];
+        if (firstKey && suggested[firstKey]?.[0]) {
+          setInspectedRule({ targetKey: firstKey, rule: suggested[firstKey][0] });
+        }
+        if (notify) {
+          showToast(
+            `Auto-aligned standard ${
+              inputMode === 'XML' ? 'EpiDoc TEI XPaths' : 'RDF predicates'
+            } to target attributes.`
+          );
+        }
+      };
+
+      const addMappingRule = (targetKey, fieldObj) => {
+        const newRule = {
+          id: `${targetKey}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          sourcePath: fieldObj.path,
+          format: fieldObj.format,
+          includeUri: true,
+          includeCertainty: true,
+          textMode: targetKey === 'diplomatic_text' ? 'diplomatic' : 'clean'
+        };
+
+        setMappingsByMode((prev) => {
+          const modeMappings = prev[inputMode] || {};
+          const current = modeMappings[targetKey] || [];
+          if (current.some((r) => r.sourcePath === fieldObj.path && r.format === fieldObj.format)) {
+            showToast('This input path is already aligned to this target field.');
+            return prev;
+          }
+          return {
+            ...prev,
+            [inputMode]: {
+              ...modeMappings,
+              [targetKey]: [...current, newRule]
+            }
+          };
+        });
+        setInspectedRule({ targetKey, rule: newRule });
+        setOpenDropdownTarget(null);
+        setDropdownSearch('');
+      };
+
+      const removeMappingRule = (targetKey, ruleId) => {
+        setMappingsByMode((prev) => {
+          const modeMappings = prev[inputMode] || {};
+          const updated = (modeMappings[targetKey] || []).filter((r) => r.id !== ruleId);
+          const nextModeMappings = { ...modeMappings };
+          if (updated.length === 0) {
+            delete nextModeMappings[targetKey];
+          } else {
+            nextModeMappings[targetKey] = updated;
+          }
+          return {
+            ...prev,
+            [inputMode]: nextModeMappings
+          };
+        });
+        setInspectedRule((prev) => (prev?.rule?.id === ruleId ? null : prev));
+      };
+
+      const updateRuleOption = (targetKey, ruleId, patch) => {
+        setMappingsByMode((prev) => {
+          const modeMappings = prev[inputMode] || {};
+          return {
+            ...prev,
+            [inputMode]: {
+              ...modeMappings,
+              [targetKey]: (modeMappings[targetKey] || []).map((r) =>
+                r.id === ruleId ? { ...r, ...patch } : r
+              )
+            }
+          };
+        });
+        setInspectedRule((prev) =>
+          prev?.rule?.id === ruleId
+            ? { ...prev, rule: { ...prev.rule, ...patch } }
+            : prev
+        );
+      };
+
+      const handleFileUpload = (e) => {
+        const uploaded = Array.from(e.target.files || []);
+        if (uploaded.length === 0) return;
+        setUploadError(null);
+
+        uploaded.forEach((file) => {
+          const lower = file.name.toLowerCase();
+          const isXmlExt = lower.endsWith('.xml');
+          const isRdfExt =
+            lower.endsWith('.jsonld') ||
+            lower.endsWith('.ttl') ||
+            lower.endsWith('.rdf') ||
+            lower.endsWith('.json');
+
+          if (inputMode === 'XML' && !isXmlExt) {
+            setUploadError(
+              `Rejected "${file.name}": EpiDoc XML mode accepts only .xml files. Switch Step 1 to RDF to upload RDF datasets.`
+            );
+            return;
+          }
+
+          if (inputMode === 'RDF' && !isRdfExt) {
+            setUploadError(
+              `Rejected "${file.name}": RDF mode accepts only .jsonld, .ttl, or .rdf files. Switch Step 1 to EpiDoc XML for TEI XML files.`
+            );
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const content = ev.target?.result;
+            if (typeof content !== 'string') return;
+
+            let format = 'EpiDoc XML';
+            if (inputMode === 'RDF') {
+              if (lower.endsWith('.jsonld') || lower.endsWith('.json')) {
+                format = 'RDF (JSON-LD)';
+              } else if (lower.endsWith('.ttl')) {
+                format = 'RDF (Turtle)';
+              } else {
+                format = 'RDF (RDF-XML)';
+              }
+            }
+
+            setFilesByMode((prev) => ({
+              ...prev,
+              [inputMode]: [
+                ...(prev[inputMode] || []),
+                {
+                  id: `upload-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                  name: file.name,
+                  format,
+                  description: 'Uploaded researcher dataset',
+                  content
+                }
+              ]
+            }));
+            showToast(`Loaded ${file.name} (${format})`);
+          };
+          reader.readAsText(file);
+        });
+        e.target.value = '';
+      };
+
+      const removeFile = (fileId) => {
+        setFilesByMode((prev) => ({
+          ...prev,
+          [inputMode]: (prev[inputMode] || []).filter((f) => f.id !== fileId)
+        }));
+        setSelectedPreviewIdx('ALL');
+      };
+
+      const loadTestDatasets = () => {
+        setUploadError(null);
+        const sampleSubset = SAMPLE_FILES.filter((f) =>
+          inputMode === 'XML' ? f.format === 'EpiDoc XML' : f.format !== 'EpiDoc XML'
+        );
+        setFilesByMode((prev) => ({
+          ...prev,
+          [inputMode]: sampleSubset
+        }));
+        setSelectedPreviewIdx('ALL');
+        showToast(
+          `Loaded built-in ${
+            inputMode === 'XML' ? 'EpiDoc XML' : 'RDF (JSON-LD & Turtle)'
+          } test datasets.`
+        );
+      };
+
+      const handleExportProfile = () => {
+        const profile = {
+          schema_version: '1.1',
+          input_format: inputMode === 'XML' ? 'EpiDoc XML' : 'RDF',
+          exported_at: new Date().toISOString(),
+          description: `Epigraphic Data (${
+            inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'
+          }) to JSON Field Alignment Profile`,
+          mappings
+        };
+        const blob = new Blob([JSON.stringify(profile, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `epigraphic-${inputMode.toLowerCase()}-alignment-profile.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast(`Exported ${inputMode} alignment profile (.json).`);
+      };
+
+      const handleImportProfile = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const parsed = JSON.parse(ev.target?.result);
+            if (parsed && parsed.mappings && typeof parsed.mappings === 'object') {
+              const profileMode =
+                parsed.input_format === 'RDF'
+                  ? 'RDF'
+                  : parsed.input_format === 'EpiDoc XML'
+                  ? 'XML'
+                  : inputMode;
+              setInputMode(profileMode);
+              setMappingsByMode((prev) => ({
+                ...prev,
+                [profileMode]: parsed.mappings
+              }));
+              showToast(`Imported ${profileMode} alignment profile from ${file.name}`);
+            } else {
+              showToast('Invalid profile JSON: missing "mappings" object.');
+            }
+          } catch (err) {
+            showToast('Could not parse profile JSON file.');
+          }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+      };
+
+      const mandatoryFields = TARGET_FIELDS.filter((f) => f.group === 'mandatory');
+      const unmappedMandatory = mandatoryFields.filter(
+        (f) => !mappings[f.key] || mappings[f.key].length === 0
+      );
+      const isValidForExport = unmappedMandatory.length === 0 && files.length > 0;
+
+      useEffect(() => {
+        const candidateUris = new Set();
+        files.forEach((file) => {
+          const baseRec = transformFileToTargetJson(file, mappings);
+          if (baseRec.geography && typeof baseRec.geography === 'object') {
+            const places = Array.isArray(baseRec.geography.ancient_place_name)
+              ? baseRec.geography.ancient_place_name
+              : [];
+            const provinces = Array.isArray(baseRec.geography.province)
+              ? baseRec.geography.province
+              : [];
+            [...places, ...provinces].forEach((entry) => {
+              if (entry && entry.uri) {
+                const normalized = entry.uri.replace(/^http:\/\//i, 'https://').replace(/\/$/, '');
+                const alreadyCached = normalized in lodGeoCache || entry.uri in lodGeoCache;
+                const alreadyRequested = inFlightLodUrisRef.current.has(normalized);
+                if (!alreadyCached && !alreadyRequested) {
+                  candidateUris.add(normalized);
+                }
+              }
+            });
+          }
+        });
+
+        if (candidateUris.size === 0) return;
+
+        candidateUris.forEach((u) => inFlightLodUrisRef.current.add(u));
+        let cancelled = false;
+        setResolvingLodUris(true);
+
+        const resolveUri = async (uri) => {
+          try {
+            const pleiadesMatch = uri.match(/^https?:\/\/pleiades\.stoa\.org\/places\/(\d+)/i);
+            if (pleiadesMatch) {
+              const resp = await fetch(`https://pleiades.stoa.org/places/${pleiadesMatch[1]}/json`);
+              if (resp.ok) {
+                const data = await resp.json();
+                const reprPoint = Array.isArray(data.reprPoint) ? data.reprPoint : null;
+                if (reprPoint && reprPoint.length >= 2) {
+                  return {
+                    uri,
+                    coords: {
+                      lon: Number(reprPoint[0]),
+                      lat: Number(reprPoint[1]),
+                      source: 'Pleiades LOD'
+                    }
+                  };
+                }
+              }
+            }
+
+            const geonamesMatch = uri.match(/^https?:\/\/(?:www\.)?geonames\.org\/(\d+)/i);
+            if (geonamesMatch) {
+              const resp = await fetch(
+                `https://secure.geonames.org/getJSON?geonameId=${geonamesMatch[1]}&username=demo`
+              );
+              if (resp.ok) {
+                const data = await resp.json();
+                if (data.lat !== undefined && data.lng !== undefined) {
+                  return {
+                    uri,
+                    coords: {
+                      lat: Number(data.lat),
+                      lon: Number(data.lng),
+                      source: 'GeoNames LOD'
+                    }
+                  };
+                }
+              }
+            }
+          } catch (err) {}
+          return { uri, coords: null };
+        };
+
+        Promise.all(Array.from(candidateUris).map(resolveUri)).then((results) => {
+          if (cancelled) return;
+          setLodGeoCache((prev) => {
+            const next = { ...prev };
+            results.forEach(({ uri, coords }) => {
+              next[uri] = coords;
+            });
+            return next;
+          });
+          setResolvingLodUris(false);
+        });
+
+        return () => {
+          cancelled = true;
+        };
+      }, [files, mappings]);
+
+      const transformedRecords = useMemo(() => {
+        return files.map((file) => {
+          const rec = transformFileToTargetJson(file, mappings);
+          if (
+            rec.geography &&
+            typeof rec.geography === 'object' &&
+            (rec.geography.latitude === 'N/A' || rec.geography.longitude === 'N/A')
+          ) {
+            const ancientPlaces = Array.isArray(rec.geography.ancient_place_name)
+              ? rec.geography.ancient_place_name
+              : [];
+            const provinces = Array.isArray(rec.geography.province)
+              ? rec.geography.province
+              : [];
+            const candidateEntries = [...ancientPlaces, ...provinces];
+
+            for (const entry of candidateEntries) {
+              if (!entry?.uri) continue;
+              const normalized = entry.uri.replace(/^http:\/\//i, 'https://').replace(/\/$/, '');
+              const resolved = lodGeoCache[normalized] || lodGeoCache[entry.uri];
+              if (resolved && resolved.lat !== undefined && resolved.lon !== undefined) {
+                rec.geography = {
+                  ...rec.geography,
+                  latitude: rec.geography.latitude === 'N/A' ? resolved.lat : rec.geography.latitude,
+                  longitude: rec.geography.longitude === 'N/A' ? resolved.lon : rec.geography.longitude,
+                  coordinate_source: `${resolved.source} (${normalized})`
+                };
+                break;
+              }
+            }
+          }
+          return rec;
+        });
+      }, [files, mappings, lodGeoCache]);
+
+      const previewJsonString = useMemo(() => {
+        if (selectedPreviewIdx === 'ALL') {
+          return JSON.stringify(transformedRecords, null, 2);
+        }
+        const idx = Number(selectedPreviewIdx);
+        const single = transformedRecords[idx] || transformedRecords[0] || null;
+        return JSON.stringify(single ? [single] : [], null, 2);
+      }, [transformedRecords, selectedPreviewIdx]);
+
+      const handleCopyJson = () => {
+        navigator.clipboard?.writeText(previewJsonString);
+        setCopiedJson(true);
+        showToast('Copied JSON output to clipboard.');
+        setTimeout(() => setCopiedJson(false), 2000);
+      };
+
+      const handleDownloadJson = () => {
+        if (!isValidForExport) return;
+        const blob = new Blob([JSON.stringify(transformedRecords, null, 2)], {
+          type: 'application/json'
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `epigraphic-transformed-${inputMode.toLowerCase()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Downloaded transformed epigraphic JSON.');
+      };
+
+      const mappedPathsSet = useMemo(() => {
+        const s = new Set();
+        Object.values(mappings).forEach((rules) => {
+          (rules || []).forEach((r) => s.add(`${r.format}::${r.sourcePath}`));
+        });
+        return s;
+      }, [mappings]);
+
+      const activeInspectedEntry = useMemo(() => {
+        if (inspectedRule) {
+          const currentRules = mappings[inspectedRule.targetKey] || [];
+          const stillExists = currentRules.find((r) => r.id === inspectedRule.rule.id);
+          if (stillExists) {
+            return { targetKey: inspectedRule.targetKey, rule: stillExists };
+          }
+        }
+        for (const target of TARGET_FIELDS) {
+          const rules = mappings[target.key] || [];
+          if (rules.length > 0) {
+            return { targetKey: target.key, rule: rules[0] };
+          }
+        }
+        return null;
+      }, [inspectedRule, mappings]);
+
+      const inspectedSnippetsByFile = useMemo(() => {
+        if (!activeInspectedEntry) return [];
+        const { rule } = activeInspectedEntry;
+        const parser = new DOMParser();
+
+        return files
+          .map((file) => {
+            if (file.format === 'EpiDoc XML' && rule.format === 'EpiDoc XML') {
+              const doc = parser.parseFromString(file.content, 'application/xml');
+              const isAttr = rule.sourcePath.includes('/@');
+              let elemPath = rule.sourcePath;
+              let targetAttr = null;
+              if (isAttr) {
+                const splitIdx = rule.sourcePath.lastIndexOf('/@');
+                elemPath = rule.sourcePath.slice(0, splitIdx);
+                targetAttr = rule.sourcePath.slice(splitIdx + 2);
+              }
+
+              const allElements = doc.getElementsByTagName('*');
+              const matches = [];
+              const serializer = new XMLSerializer();
+
+              for (let i = 0; i < allElements.length; i++) {
+                const el = allElements[i];
+                if (buildSemanticXPath(el) !== elemPath) continue;
+
+                let val = null;
+                if (targetAttr) {
+                  val = el.getAttribute(targetAttr);
+                } else if (rule.textMode === 'raw') {
+                  val = el.innerHTML.trim();
+                } else if (rule.textMode === 'diplomatic') {
+                  val = cleanEpigraphicText(el, 'diplomatic');
+                } else {
+                  val = cleanEpigraphicText(el, 'interpretive');
+                }
+                if (!val) continue;
+
+                matches.push({
+                  value: String(val),
+                  rawSource: serializer.serializeToString(el),
+                  uri:
+                    el.getAttribute('ref') ||
+                    el.getAttribute('corresp') ||
+                    el.getAttribute('ana') ||
+                    (targetAttr === 'ref' ? val : null),
+                  certainty:
+                    el.getAttribute('cert') ||
+                    el.getAttribute('precision') ||
+                    el.getAttribute('evidence') ||
+                    null,
+                  placeType: !targetAttr ? el.getAttribute('type') || null : null
+                });
+              }
+
+              return {
+                fileName: file.name,
+                format: file.format,
+                matches
+              };
+            }
+
+            if (file.format !== 'EpiDoc XML' && rule.format !== 'EpiDoc XML') {
+              const matches = evaluateRdfPredicate(file, rule.sourcePath, {
+                includeUri: true,
+                includeCertainty: true
+              }).map((m) => ({
+                value: String(m.value),
+                rawSource: `${rule.sourcePath} → ${JSON.stringify(m.value)}`,
+                uri: m.uri || null,
+                certainty: m.certainty || null
+              }));
+
+              return {
+                fileName: file.name,
+                format: file.format,
+                matches
+              };
+            }
+
+            return null;
+          })
+          .filter(Boolean);
+      }, [activeInspectedEntry, files]);
+
+      return (
+        <div className="min-h-screen bg-[#F6F5F1] text-slate-900 flex flex-col font-sans selection:bg-indigo-100 selection:text-indigo-950">
+          {/* Top Scholarly Header */}
+          <header className="bg-[#162136] text-stone-100 border-b border-slate-800 px-4 lg:px-6 py-3.5 shadow-sm sticky top-0 z-30">
+            <div className="max-w-[1680px] mx-auto flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                  <Icon name="book-open" className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-base sm:text-lg font-semibold tracking-tight text-white">
+                      EpiAlign
+                    </h1>
+                    <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-800 text-amber-300 border border-slate-700">
+                      {inputMode === 'XML' ? 'EpiDoc XML → JSON' : 'RDF → JSON'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-300 hidden sm:block">
+                    Epigraphic Schema Alignment &amp; Linked Open Data Transformation Workbench
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href="/"
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium text-slate-300 hover:text-white transition"
+                >
+                  ← Back to Petrified Voices
+                </a>
+
+                <button
+                  onClick={() => applyAutoSuggest(true)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-slate-800 hover:bg-slate-700 text-stone-100 border border-slate-600 transition cursor-pointer"
+                >
+                  <Icon name="sparkles" className="w-3.5 h-3.5 text-amber-400" />
+                  Auto-suggest Alignments
+                </button>
+
+                <button
+                  onClick={() => {
+                    setMappingsByMode((prev) => ({
+                      ...prev,
+                      [inputMode]: {}
+                    }));
+                    showToast(`Cleared ${inputMode} field alignments.`);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-800/70 hover:bg-slate-700 text-slate-300 border border-slate-700 transition cursor-pointer"
+                >
+                  <Icon name="rotate-ccw" className="w-3.5 h-3.5" />
+                  Reset
+                </button>
+
+                <div className="h-4 w-px bg-slate-700 mx-0.5 hidden md:block" />
+
+                <button
+                  onClick={handleExportProfile}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer"
+                >
+                  <Icon name="download" className="w-3.5 h-3.5 text-sky-400" />
+                  Save Profile
+                </button>
+
+                <button
+                  onClick={() => profileInputRef.current?.click()}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer"
+                >
+                  <Icon name="folder-open" className="w-3.5 h-3.5 text-sky-400" />
+                  Load Profile
+                </button>
+                <input
+                  ref={profileInputRef}
+                  type="file"
+                  accept=".json"
+                  onChange={handleImportProfile}
+                  className="hidden"
+                />
+              </div>
+            </div>
+          </header>
+
+          {/* STEP 1: EXCLUSIVE INPUT FORMAT MODE BAR */}
+          <div className="bg-white border-b border-stone-200/90 px-4 lg:px-6 py-3 shadow-2xs">
+            <div className="max-w-[1680px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-[#162136] text-amber-300">
+                  Step 1
+                </span>
+                <div>
+                  <h2 className="text-xs sm:text-sm font-semibold text-slate-900">
+                    Select Input Data Format
+                  </h2>
+                  <p className="text-[11px] text-stone-500">
+                    Choose a single source representation for this session—either EpiDoc TEI XML or RDF triples.
+                  </p>
+                </div>
+              </div>
+
+              <div
+                role="radiogroup"
+                aria-label="Input data format"
+                className="grid grid-cols-2 gap-2 sm:w-auto w-full"
+              >
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={inputMode === 'XML'}
+                  onClick={() => handleModeSwitch('XML')}
+                  className={`flex items-center gap-2.5 px-3.5 py-2 rounded-lg border text-left transition cursor-pointer ${
+                    inputMode === 'XML'
+                      ? 'bg-amber-50/90 border-amber-500 ring-2 ring-amber-500/20 text-amber-950 shadow-2xs'
+                      : 'bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100'
+                  }`}
+                >
+                  <Icon
+                    name="file-code-2"
+                    className={`w-4 h-4 ${
+                      inputMode === 'XML' ? 'text-amber-700' : 'text-stone-400'
+                    }`}
+                  />
+                  <div>
+                    <div className="text-xs font-semibold flex items-center gap-1.5">
+                      EpiDoc XML
+                      {inputMode === 'XML' && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
+                      )}
+                    </div>
+                    <div className="text-[10px] opacity-80">TEI XML files (.xml)</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={inputMode === 'RDF'}
+                  onClick={() => handleModeSwitch('RDF')}
+                  className={`flex items-center gap-2.5 px-3.5 py-2 rounded-lg border text-left transition cursor-pointer ${
+                    inputMode === 'RDF'
+                      ? 'bg-sky-50/90 border-sky-600 ring-2 ring-sky-500/20 text-sky-950 shadow-2xs'
+                      : 'bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100'
+                  }`}
+                >
+                  <Icon
+                    name="layers"
+                    className={`w-4 h-4 ${
+                      inputMode === 'RDF' ? 'text-sky-700' : 'text-stone-400'
+                    }`}
+                  />
+                  <div>
+                    <div className="text-xs font-semibold flex items-center gap-1.5">
+                      RDF Triples
+                      {inputMode === 'RDF' && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-600" />
+                      )}
+                    </div>
+                    <div className="text-[10px] opacity-80">JSON-LD / Turtle (.jsonld, .ttl)</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {toastMessage && (
+            <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-xs px-4 py-2.5 rounded-lg shadow-lg border border-slate-700 flex items-center gap-2 animate-fade-in">
+              <Icon name="check-circle-2" className="w-4 h-4 text-emerald-400" />
+              <span>{toastMessage}</span>
+            </div>
+          )}
+
+          {/* Mobile Navigation Tabs */}
+          <div className="lg:hidden bg-white border-b border-stone-200 px-3 py-2 flex gap-1.5 sticky top-[57px] z-20 overflow-x-auto">
+            <button
+              onClick={() => setActiveTabMobile('sources')}
+              className={`flex-1 py-1.5 px-2 rounded text-xs font-medium whitespace-nowrap ${
+                activeTabMobile === 'sources'
+                  ? 'bg-[#162136] text-white'
+                  : 'bg-stone-100 text-stone-700'
+              }`}
+            >
+              1. Sources ({discoveredFields.length})
+            </button>
+            <button
+              onClick={() => setActiveTabMobile('workspace')}
+              className={`flex-1 py-1.5 px-2 rounded text-xs font-medium whitespace-nowrap ${
+                activeTabMobile === 'workspace'
+                  ? 'bg-[#162136] text-white'
+                  : 'bg-stone-100 text-stone-700'
+              }`}
+            >
+              2. Align ({Object.keys(mappings).length}/13)
+            </button>
+            <button
+              onClick={() => setActiveTabMobile('verifier')}
+              className={`flex-1 py-1.5 px-2 rounded text-xs font-medium whitespace-nowrap ${
+                activeTabMobile === 'verifier'
+                  ? 'bg-[#162136] text-white'
+                  : 'bg-stone-100 text-stone-700'
+              }`}
+            >
+              3. Verify Snippets
+            </button>
+            <button
+              onClick={() => setActiveTabMobile('output')}
+              className={`flex-1 py-1.5 px-2 rounded text-xs font-medium whitespace-nowrap ${
+                activeTabMobile === 'output'
+                  ? 'bg-[#162136] text-white'
+                  : 'bg-stone-100 text-stone-700'
+              }`}
+            >
+              4. JSON ({transformedRecords.length})
+            </button>
+          </div>
+
+          {/* Main Workspace */}
+          <main className="flex-1 max-w-[1680px] w-full mx-auto flex flex-col gap-5 p-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+              {/* LEFT COLUMN (3 cols): LOADED FILES & DISCOVERED SOURCE FIELDS */}
+              <section
+                className={`lg:col-span-3 flex flex-col gap-4 ${
+                  activeTabMobile !== 'sources' ? 'hidden lg:flex' : 'flex'
+                }`}
+              >
+                <div className="bg-white rounded-xl border border-stone-200/90 shadow-xs overflow-hidden">
+                  <div className="px-4 py-3 bg-stone-50/80 border-b border-stone-200 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Icon name="database" className="w-4 h-4 text-[#162136]" />
+                      <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-700">
+                        {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} Files ({files.length})
+                      </h2>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={loadTestDatasets}
+                        className="text-[11px] font-medium text-slate-600 hover:text-slate-900 px-2 py-1 rounded border border-stone-300/80 bg-white hover:bg-stone-100 transition cursor-pointer"
+                      >
+                        Load Test Data
+                      </button>
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className="inline-flex items-center gap-1 text-xs font-medium bg-[#162136] hover:bg-slate-800 text-white px-2.5 py-1 rounded-md transition cursor-pointer"
+                      >
+                        <Icon name="upload" className="w-3 h-3" />
+                        Upload
+                      </button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        accept={inputMode === 'XML' ? '.xml' : '.jsonld,.ttl,.rdf'}
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
+                    </div>
+                  </div>
+
+                  {uploadError && (
+                    <div className="mx-3 mt-3 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-900 text-[11px] flex items-start justify-between gap-2">
+                      <div className="flex items-start gap-1.5">
+                        <Icon name="alert-circle" className="w-3.5 h-3.5 text-rose-600 mt-0.5" />
+                        <span>{uploadError}</span>
+                      </div>
+                      <button
+                        onClick={() => setUploadError(null)}
+                        className="text-rose-500 hover:text-rose-800 font-semibold cursor-pointer"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="p-3 space-y-2 max-h-44 overflow-y-auto">
+                    {files.length === 0 ? (
+                      <div className="text-center py-4 px-3 border border-dashed border-stone-300 rounded-lg bg-stone-50/60">
+                        <p className="text-xs font-medium text-slate-700 mb-1">
+                          No {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} files uploaded yet
+                        </p>
+                        <p className="text-[11px] text-stone-500 mb-3">
+                          Upload {inputMode === 'XML' ? '.xml' : '.jsonld, .ttl, or .rdf'} files or load sample data.
+                        </p>
+                        <div className="flex flex-wrap items-center justify-center gap-2">
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="inline-flex items-center gap-1 text-xs font-medium bg-[#162136] hover:bg-slate-800 text-white px-3 py-1.5 rounded-md transition cursor-pointer"
+                          >
+                            <Icon name="upload" className="w-3 h-3" />
+                            Upload Files
+                          </button>
+                          <button
+                            onClick={loadTestDatasets}
+                            className="inline-flex items-center gap-1 text-xs font-medium bg-white hover:bg-stone-100 text-slate-700 border border-stone-300 px-3 py-1.5 rounded-md transition cursor-pointer"
+                          >
+                            Load Test Data
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      files.map((file) => (
+                        <div
+                          key={file.id}
+                          className="flex items-start justify-between gap-2 p-2 rounded-lg bg-stone-50 border border-stone-200/80 group"
+                        >
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span
+                                className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0 ${
+                                  inputMode === 'XML'
+                                    ? 'bg-amber-100 text-amber-900 border border-amber-200'
+                                    : 'bg-sky-100 text-sky-900 border border-sky-200'
+                                }`}
+                              >
+                                {inputMode === 'XML' ? 'XML' : 'RDF'}
+                              </span>
+                              <span className="text-xs font-medium text-slate-800 truncate">
+                                {file.name}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-stone-500 truncate mt-0.5">
+                              {file.description}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => removeFile(file.id)}
+                            className="text-stone-400 hover:text-rose-600 p-1 rounded opacity-70 group-hover:opacity-100 transition cursor-pointer"
+                            title="Remove file"
+                          >
+                            <Icon name="trash-2" className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                {/* Discovered Source Schema Explorer */}
+                <div className="bg-white rounded-xl border border-stone-200/90 shadow-xs flex-1 flex flex-col min-h-[500px]">
+                  <div className="px-4 py-3 bg-stone-50/80 border-b border-stone-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Icon name="code-2" className="w-4 h-4 text-[#162136]" />
+                        <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-700">
+                          {inputMode === 'XML' ? 'XML XPaths' : 'RDF Predicates'} (
+                          {filteredDiscoveredFields.length})
+                        </h2>
+                      </div>
+                      <span className="text-[11px] text-stone-500">Drag or select →</span>
+                    </div>
+
+                    <div className="relative">
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400">
+                        <Icon name="search" className="w-3.5 h-3.5" />
+                      </span>
+                      <input
+                        type="text"
+                        value={fieldSearch}
+                        onChange={(e) => setFieldSearch(e.target.value)}
+                        placeholder={
+                          inputMode === 'XML'
+                            ? 'Filter XPaths or values...'
+                            : 'Filter predicates or values...'
+                        }
+                        className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-stone-300 rounded-md focus:outline-none focus:border-[#162136]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 space-y-2 overflow-y-auto flex-1 max-h-[540px]">
+                    {filteredDiscoveredFields.length === 0 ? (
+                      <div className="text-center py-8 px-4 text-xs text-stone-500">
+                        {files.length === 0
+                          ? `Upload ${
+                              inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'
+                            } files or click "Load Test Data" above to discover available ${
+                              inputMode === 'XML' ? 'XPaths' : 'predicates'
+                            }.`
+                          : `No matching ${inputMode === 'XML' ? 'XPath' : 'RDF predicate'} found.`}
+                      </div>
+                    ) : (
+                      filteredDiscoveredFields.map((field) => {
+                        const isMapped = mappedPathsSet.has(field.key);
+                        const displayPath = field.path.replace(
+                          '//tei:TEI/tei:teiHeader/tei:fileDesc/',
+                          '…/fileDesc/'
+                        );
+
+                        return (
+                          <div
+                            key={field.key}
+                            draggable
+                            onDragStart={() => setDraggedField(field)}
+                            onDragEnd={() => {
+                              setDraggedField(null);
+                              setDragOverTarget(null);
+                            }}
+                            title={`Drag to target field\nFull path: ${field.path}`}
+                            className={`p-2.5 rounded-lg border transition cursor-grab active:cursor-grabbing select-none ${
+                              isMapped
+                                ? 'bg-emerald-50/50 border-emerald-200/90 hover:border-emerald-400'
+                                : 'bg-white border-stone-200 hover:border-[#162136] hover:shadow-xs'
+                            }`}
+                          >
+                            <div className="flex items-start gap-1.5">
+                              <span className="mt-0.5 text-stone-400">
+                                <Icon name="grip-vertical" className="w-3.5 h-3.5" />
+                              </span>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between gap-1.5 mb-1">
+                                  <span
+                                    className={`inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-semibold ${
+                                      inputMode === 'XML'
+                                        ? 'bg-amber-100/90 text-amber-900'
+                                        : 'bg-sky-100/90 text-sky-900'
+                                    }`}
+                                  >
+                                    {inputMode === 'XML' ? 'XPath' : 'Predicate'}
+                                  </span>
+                                  <div className="flex items-center gap-1">
+                                    {field.hasUri && (
+                                      <span
+                                        className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200"
+                                        title={`Contains LOD URI: ${field.sampleUri}`}
+                                      >
+                                        <Icon name="link" className="w-2.5 h-2.5" />
+                                        LOD
+                                      </span>
+                                    )}
+                                    {field.hasCertainty && (
+                                      <span
+                                        className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] bg-purple-50 text-purple-700 border border-purple-200"
+                                        title={`Contains uncertainty attribute: ${field.sampleCertainty}`}
+                                      >
+                                        <Icon name="help-circle" className="w-2.5 h-2.5" />
+                                        cert
+                                      </span>
+                                    )}
+                                    <span className="text-[10px] text-stone-400 font-mono">
+                                      ×{field.count}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div className="font-mono text-[11px] text-slate-800 break-all leading-snug">
+                                  {displayPath}
+                                </div>
+
+                                {field.samples.length > 0 && (
+                                  <div className="mt-1.5 text-[11px] text-stone-600 bg-stone-100/80 px-2 py-1 rounded truncate font-serif italic">
+                                    “{field.samples[0]}”
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              </section>
+
+              {/* CENTRE COLUMN (4 cols): TARGET ATTRIBUTE ALIGNMENT WORKSPACE */}
+              <section
+                className={`lg:col-span-4 flex flex-col gap-3 ${
+                  activeTabMobile !== 'workspace' ? 'hidden lg:flex' : 'flex'
+                }`}
+              >
+                <div
+                  className={`rounded-xl border px-4 py-3 flex items-center justify-between gap-3 ${
+                    isValidForExport
+                      ? 'bg-emerald-50/90 border-emerald-200 text-emerald-950'
+                      : 'bg-amber-50/90 border-amber-300 text-amber-950'
+                  }`}
+                >
+                  <div className="flex items-start gap-2.5">
+                    {isValidForExport ? (
+                      <Icon name="check-circle-2" className="w-4 h-4 text-emerald-600 mt-0.5" />
+                    ) : (
+                      <Icon name="alert-circle" className="w-4 h-4 text-amber-600 mt-0.5" />
+                    )}
+                    <div>
+                      <p className="text-xs font-semibold">
+                        {isValidForExport
+                          ? 'All mandatory target attributes aligned'
+                          : `Mandatory alignments required (${3 - unmappedMandatory.length}/3 complete)`}
+                      </p>
+                      <p className="text-[11px] opacity-85 mt-0.5">
+                        {isValidForExport
+                          ? 'Click any aligned field to verify full snippets on the right.'
+                          : `Please map: ${unmappedMandatory.map((f) => f.label).join(', ')}.`}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 overflow-y-auto pr-1 max-h-[680px]">
+                  {[
+                    {
+                      title: 'Mandatory Target Attributes',
+                      subtitle: 'Required to form valid epigraphic JSON records',
+                      groupKey: 'mandatory'
+                    },
+                    {
+                      title: 'Optional Descriptive & Chronological',
+                      subtitle: 'Supports multiple values, LOD hyperlinks & uncertainty',
+                      groupKey: 'optional'
+                    },
+                    {
+                      title: 'Geography & Spatial Coordinates',
+                      subtitle: 'Province, ancient place name, LOD URIs, latitude & longitude',
+                      groupKey: 'geography'
+                    }
+                  ].map((section) => {
+                    const sectionFields = TARGET_FIELDS.filter((f) => f.group === section.groupKey);
+                    return (
+                      <div key={section.groupKey} className="space-y-2">
+                        <div className="px-1">
+                          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+                            {section.title}
+                          </h3>
+                          <p className="text-[11px] text-stone-500">{section.subtitle}</p>
+                        </div>
+
+                        <div className="space-y-2">
+                          {sectionFields.map((target) => {
+                            const assignedRules = mappings[target.key] || [];
+                            const isMandatoryUnmapped =
+                              target.group === 'mandatory' && assignedRules.length === 0;
+                            const isDragTarget = dragOverTarget === target.key;
+
+                            return (
+                              <div
+                                key={target.key}
+                                onDragOver={(e) => {
+                                  e.preventDefault();
+                                  setDragOverTarget(target.key);
+                                }}
+                                onDragLeave={() => setDragOverTarget(null)}
+                                onDrop={(e) => {
+                                  e.preventDefault();
+                                  setDragOverTarget(null);
+                                  if (draggedField) {
+                                    addMappingRule(target.key, draggedField);
+                                    setDraggedField(null);
+                                  }
+                                }}
+                                className={`rounded-xl border bg-white p-3 transition-all ${
+                                  isDragTarget
+                                    ? 'border-[#162136] ring-2 ring-indigo-500/25 bg-indigo-50/30'
+                                    : isMandatoryUnmapped
+                                    ? 'border-amber-300 shadow-xs'
+                                    : assignedRules.length > 0
+                                    ? 'border-stone-300 shadow-xs'
+                                    : 'border-stone-200'
+                                }`}
+                              >
+                                <div className="flex items-start justify-between gap-2 mb-1.5">
+                                  <div>
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <span className="text-sm font-semibold text-slate-900">
+                                        {target.label}
+                                      </span>
+                                      {target.group === 'mandatory' ? (
+                                        <span
+                                          className={`px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide ${
+                                            assignedRules.length > 0
+                                              ? 'bg-emerald-100 text-emerald-800'
+                                              : 'bg-amber-100 text-amber-900'
+                                          }`}
+                                        >
+                                          Mandatory
+                                        </span>
+                                      ) : (
+                                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-stone-100 text-stone-600">
+                                          Optional
+                                        </span>
+                                      )}
+                                      {target.multiValue && (
+                                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">
+                                          [ ]
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="text-[11px] text-stone-500 mt-0.5">
+                                      {target.description}
+                                    </p>
+                                  </div>
+
+                                  <div className="relative">
+                                    <button
+                                      onClick={() => {
+                                        setOpenDropdownTarget(
+                                          openDropdownTarget === target.key ? null : target.key
+                                        );
+                                        setDropdownSearch('');
+                                      }}
+                                      className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-stone-100 hover:bg-stone-200/80 text-slate-800 border border-stone-300 transition cursor-pointer shrink-0"
+                                    >
+                                      <Icon name="plus" className="w-3.5 h-3.5" />
+                                      Align
+                                      <Icon name="chevron-down" className="w-3 h-3 text-stone-500" />
+                                    </button>
+
+                                    {openDropdownTarget === target.key && (
+                                      <div className="absolute right-0 mt-1.5 w-[28rem] sm:w-[36rem] max-w-[92vw] bg-white rounded-xl shadow-2xl border border-stone-300 z-30 overflow-hidden">
+                                        <div className="p-2.5 border-b border-stone-200 bg-stone-50">
+                                          <div className="relative">
+                                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400">
+                                              <Icon name="search" className="w-3.5 h-3.5" />
+                                            </span>
+                                            <input
+                                              type="text"
+                                              autoFocus
+                                              value={dropdownSearch}
+                                              onChange={(e) => setDropdownSearch(e.target.value)}
+                                              placeholder="Search XPath, RDF predicate, or sample snippet..."
+                                              className="w-full pl-8 pr-2.5 py-1.5 text-xs bg-white border border-stone-300 rounded-md focus:outline-none focus:border-[#162136]"
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="max-h-96 overflow-y-auto divide-y divide-stone-200/80">
+                                          {discoveredFields
+                                            .filter((df) => {
+                                              const q = dropdownSearch.toLowerCase();
+                                              return (
+                                                !q ||
+                                                df.path.toLowerCase().includes(q) ||
+                                                df.samples.some((s) => s.toLowerCase().includes(q))
+                                              );
+                                            })
+                                            .map((df) => {
+                                              const conciseFiles =
+                                                df.files.length > 2
+                                                  ? `${df.files.slice(0, 2).join(', ')}...`
+                                                  : df.files.join(', ');
+                                              return (
+                                                <button
+                                                  key={df.key}
+                                                  onClick={() => addMappingRule(target.key, df)}
+                                                  className="w-full text-left px-3.5 py-3 hover:bg-indigo-50/70 transition flex flex-col gap-1.5 cursor-pointer"
+                                                >
+                                                  <div className="flex items-center justify-between gap-2">
+                                                    <span
+                                                      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${
+                                                        df.format === 'EpiDoc XML'
+                                                          ? 'bg-amber-100 text-amber-900'
+                                                          : 'bg-sky-100 text-sky-900'
+                                                      }`}
+                                                    >
+                                                      {df.format}
+                                                    </span>
+                                                    <span
+                                                      className="text-[11px] text-stone-500 font-mono truncate"
+                                                      title={df.files.join(', ')}
+                                                    >
+                                                      {conciseFiles}
+                                                    </span>
+                                                  </div>
+                                                  <span className="font-mono text-xs text-slate-900 break-all leading-snug">
+                                                    {df.path}
+                                                  </span>
+                                                  {df.samples.length > 0 && (
+                                                    <div className="mt-0.5 text-xs text-slate-800 bg-amber-50/70 border border-stone-200/90 px-2.5 py-1.5 rounded-md font-serif leading-relaxed line-clamp-3">
+                                                      “{df.samples.join('” | “')}”
+                                                    </div>
+                                                  )}
+                                                </button>
+                                              );
+                                            })}
+                                        </div>
+                                        <div className="px-3.5 py-2 bg-stone-50 border-t border-stone-200 flex justify-end">
+                                          <button
+                                            onClick={() => setOpenDropdownTarget(null)}
+                                            className="text-xs font-medium text-stone-600 hover:text-slate-900 cursor-pointer"
+                                          >
+                                            Close
+                                          </button>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {assignedRules.length === 0 ? (
+                                  <div className="border border-dashed border-stone-300 rounded-lg py-2 px-3 text-center text-[11px] text-stone-400 bg-stone-50/50">
+                                    Drop {inputMode === 'XML' ? 'XPath' : 'predicate'} here or click{' '}
+                                    <span className="font-medium text-stone-600">+ Align</span>
+                                  </div>
+                                ) : (
+                                  <div className="space-y-2 mt-2">
+                                    {assignedRules.map((rule) => {
+                                      const fieldMeta = discoveredFieldLookup.get(
+                                        `${rule.format}::${rule.sourcePath}`
+                                      );
+                                      const isInspected =
+                                        activeInspectedEntry?.rule?.id === rule.id;
+                                      return (
+                                        <div
+                                          key={rule.id}
+                                          onClick={() =>
+                                            setInspectedRule({ targetKey: target.key, rule })
+                                          }
+                                          className={`rounded-lg border p-2.5 transition cursor-pointer ${
+                                            isInspected
+                                              ? 'bg-indigo-50/80 border-indigo-500 ring-2 ring-indigo-500/20'
+                                              : 'bg-stone-50 border-stone-200/90 hover:border-indigo-300'
+                                          }`}
+                                        >
+                                          <div className="flex items-start justify-between gap-2">
+                                            <div className="min-w-0 flex-1">
+                                              <div className="flex items-center flex-wrap gap-1.5 mb-1">
+                                                <span
+                                                  className={`px-1.5 py-0.2 rounded text-[10px] font-semibold ${
+                                                    rule.format === 'EpiDoc XML'
+                                                      ? 'bg-amber-100 text-amber-900'
+                                                      : 'bg-sky-100 text-sky-900'
+                                                  }`}
+                                                >
+                                                  {rule.format}
+                                                </span>
+                                                {fieldMeta?.files?.length > 0 && (
+                                                  <span className="text-[10px] text-stone-500 font-mono truncate">
+                                                    {fieldMeta.files.join(', ')}
+                                                  </span>
+                                                )}
+                                                <span
+                                                  className={`ml-auto text-[10px] font-semibold px-1.5 py-0.2 rounded ${
+                                                    isInspected
+                                                      ? 'bg-indigo-600 text-white'
+                                                      : 'bg-white text-indigo-700 border border-indigo-200'
+                                                  }`}
+                                                >
+                                                  {isInspected ? 'Viewing in Verifier →' : 'Verify →'}
+                                                </span>
+                                              </div>
+                                              <div className="font-mono text-[11px] text-slate-800 break-all">
+                                                {rule.sourcePath}
+                                              </div>
+                                            </div>
+                                            <button
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                removeMappingRule(target.key, rule.id);
+                                              }}
+                                              className="text-stone-400 hover:text-rose-600 p-1 rounded transition cursor-pointer"
+                                              title="Remove alignment"
+                                            >
+                                              <Icon name="trash-2" className="w-3.5 h-3.5" />
+                                            </button>
+                                          </div>
+
+                                          <div
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="mt-2 pt-2 border-t border-stone-200/70 flex flex-wrap items-center gap-2 text-[11px]"
+                                          >
+                                            {target.isTextField ? (
+                                              <div className="flex flex-wrap items-center gap-1.5">
+                                                <span className="text-stone-500">Render:</span>
+                                                <button
+                                                  type="button"
+                                                  onClick={() =>
+                                                    updateRuleOption(target.key, rule.id, {
+                                                      textMode: 'clean'
+                                                    })
+                                                  }
+                                                  className={`px-2 py-0.5 rounded font-medium cursor-pointer ${
+                                                    rule.textMode === 'clean' || !rule.textMode
+                                                      ? 'bg-[#162136] text-white'
+                                                      : 'bg-white text-stone-600 border border-stone-300'
+                                                  }`}
+                                                >
+                                                  Interpretive
+                                                </button>
+                                                {inputMode === 'XML' && (
+                                                  <>
+                                                    <button
+                                                      type="button"
+                                                      onClick={() =>
+                                                        updateRuleOption(target.key, rule.id, {
+                                                          textMode: 'diplomatic'
+                                                        })
+                                                      }
+                                                      className={`px-2 py-0.5 rounded font-medium cursor-pointer ${
+                                                        rule.textMode === 'diplomatic'
+                                                          ? 'bg-[#162136] text-white'
+                                                          : 'bg-white text-stone-600 border border-stone-300'
+                                                      }`}
+                                                    >
+                                                      Diplomatic (No Edits)
+                                                    </button>
+                                                    <button
+                                                      type="button"
+                                                      onClick={() =>
+                                                        updateRuleOption(target.key, rule.id, {
+                                                          textMode: 'raw'
+                                                        })
+                                                      }
+                                                      className={`px-2 py-0.5 rounded font-medium cursor-pointer ${
+                                                        rule.textMode === 'raw'
+                                                          ? 'bg-[#162136] text-white'
+                                                          : 'bg-white text-stone-600 border border-stone-300'
+                                                      }`}
+                                                    >
+                                                      Raw XML
+                                                    </button>
+                                                  </>
+                                                )}
+                                              </div>
+                                            ) : (
+                                              <>
+                                                <label className="inline-flex items-center gap-1.5 text-stone-600 cursor-pointer select-none">
+                                                  <input
+                                                    type="checkbox"
+                                                    checked={rule.includeUri}
+                                                    onChange={(e) =>
+                                                      updateRuleOption(target.key, rule.id, {
+                                                        includeUri: e.target.checked
+                                                      })
+                                                    }
+                                                    className="rounded border-stone-300 text-[#162136] focus:ring-0"
+                                                  />
+                                                  <span>
+                                                    {inputMode === 'XML'
+                                                      ? 'LOD URI (@ref)'
+                                                      : 'LOD URI (@id)'}
+                                                  </span>
+                                                </label>
+
+                                                <label className="inline-flex items-center gap-1.5 text-stone-600 cursor-pointer select-none">
+                                                  <input
+                                                    type="checkbox"
+                                                    checked={rule.includeCertainty}
+                                                    onChange={(e) =>
+                                                      updateRuleOption(target.key, rule.id, {
+                                                        includeCertainty: e.target.checked
+                                                      })
+                                                    }
+                                                    className="rounded border-stone-300 text-[#162136] focus:ring-0"
+                                                  />
+                                                  <span>
+                                                    {inputMode === 'XML'
+                                                      ? 'Uncertainty (@cert)'
+                                                      : 'Uncertainty (cert)'}
+                                                  </span>
+                                                </label>
+                                              </>
+                                            )}
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+
+              {/* RIGHT COLUMN (5 cols): DEDICATED FULL-HEIGHT SNIPPET VERIFIER */}
+              <section
+                className={`lg:col-span-5 flex flex-col bg-white rounded-xl border-2 border-indigo-200/80 shadow-sm overflow-hidden min-h-[680px] ${
+                  activeTabMobile !== 'verifier' ? 'hidden lg:flex' : 'flex'
+                }`}
+              >
+                <div className="px-4 py-3.5 bg-indigo-950 text-white border-b border-indigo-900 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-200 shrink-0">
+                      <Icon name="book-open" className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h2 className="text-sm font-semibold tracking-tight text-white">
+                        Alignment Snippet &amp; Source Verifier
+                      </h2>
+                      <p className="text-[11px] text-indigo-200">
+                        Side-by-side extracted text &amp; raw {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} context
+                      </p>
+                    </div>
+                  </div>
+
+                  {activeInspectedEntry && (
+                    <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-400 text-slate-950 shadow-2xs">
+                      Target: {TARGET_FIELDS.find((t) => t.key === activeInspectedEntry.targetKey)?.label}
+                    </span>
+                  )}
+                </div>
+
+                {Object.keys(mappings).length > 0 && (
+                  <div className="px-4 py-2.5 bg-stone-50 border-b border-stone-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-1.5 flex-1 min-w-[200px]">
+                      <span className="text-stone-500 font-medium shrink-0">Inspecting:</span>
+                      <select
+                        value={activeInspectedEntry?.rule?.id || ''}
+                        onChange={(e) => {
+                          const chosenId = e.target.value;
+                          for (const target of TARGET_FIELDS) {
+                            const found = (mappings[target.key] || []).find((r) => r.id === chosenId);
+                            if (found) {
+                              setInspectedRule({ targetKey: target.key, rule: found });
+                              break;
+                            }
+                          }
+                        }}
+                        className="flex-1 bg-white border border-stone-300 text-slate-800 font-medium rounded-md px-2 py-1 text-xs focus:outline-none focus:border-indigo-600"
+                      >
+                        {TARGET_FIELDS.flatMap((target) =>
+                          (mappings[target.key] || []).map((rule) => (
+                            <option key={rule.id} value={rule.id}>
+                              {target.label} ← {rule.sourcePath.split('/').pop()}
+                            </option>
+                          ))
+                        )}
+                      </select>
+                    </div>
+
+                    <div className="flex items-center gap-1 bg-stone-200/80 p-0.5 rounded-md">
+                      {[
+                        { id: 'split', label: 'Split View' },
+                        { id: 'extracted', label: 'Extracted Text' },
+                        { id: 'raw', label: 'Raw Source' }
+                      ].map((tab) => (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          onClick={() => setVerifierViewMode(tab.id)}
+                          className={`px-2 py-1 rounded text-[11px] font-medium transition cursor-pointer ${
+                            verifierViewMode === tab.id
+                              ? 'bg-white text-slate-900 shadow-2xs'
+                              : 'text-stone-600 hover:text-slate-900'
+                          }`}
+                        >
+                          {tab.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {files.length > 1 && activeInspectedEntry && (
+                  <div className="px-4 py-2 bg-white border-b border-stone-200 flex items-center gap-1.5 overflow-x-auto text-[11px]">
+                    <span className="text-stone-500 shrink-0">File:</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedVerifierFile('ALL')}
+                      className={`px-2 py-0.5 rounded-full font-medium cursor-pointer shrink-0 ${
+                        selectedVerifierFile === 'ALL'
+                          ? 'bg-[#162136] text-white'
+                          : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                      }`}
+                    >
+                      All Files ({files.length})
+                    </button>
+                    {files.map((f) => (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => setSelectedVerifierFile(f.name)}
+                        className={`px-2 py-0.5 rounded-full font-medium cursor-pointer shrink-0 ${
+                          selectedVerifierFile === f.name
+                            ? 'bg-[#162136] text-white'
+                            : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                        }`}
+                      >
+                        {f.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {!activeInspectedEntry ? (
+                  <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-stone-50/40">
+                    <div className="w-12 h-12 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mb-3">
+                      <Icon name="book-open" className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-sm font-semibold text-slate-800 mb-1">
+                      No Alignment Selected Yet
+                    </h3>
+                    <p className="text-xs text-stone-500 max-w-sm leading-relaxed">
+                      Align any {inputMode === 'XML' ? 'EpiDoc XML XPath' : 'RDF predicate'} to a target field in the middle column. Full extracted snippets, raw source markup, and LOD metadata will appear here immediately for verification.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex-1 p-4 space-y-4 overflow-y-auto max-h-[590px]">
+                    <div className="rounded-lg bg-slate-900 text-stone-100 p-3 border border-slate-800">
+                      <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mb-1">
+                        Aligned Source {inputMode === 'XML' ? 'XPath Expression' : 'RDF Predicate'}
+                      </div>
+                      <div className="font-mono text-xs text-amber-300 break-all leading-relaxed">
+                        {activeInspectedEntry.rule.sourcePath}
+                      </div>
+                    </div>
+
+                    {inspectedSnippetsByFile.length === 0 ? (
+                      <div className="p-4 rounded-lg border border-dashed border-stone-300 text-center text-xs text-stone-500">
+                        Upload or load test files to inspect extracted values for this alignment.
+                      </div>
+                    ) : (
+                      inspectedSnippetsByFile
+                        .filter(
+                          (fg) =>
+                            selectedVerifierFile === 'ALL' || fg.fileName === selectedVerifierFile
+                        )
+                        .map((fileGroup) => (
+                          <div
+                            key={fileGroup.fileName}
+                            className="rounded-xl border border-stone-200 bg-stone-50/70 p-3.5 space-y-3 shadow-2xs"
+                          >
+                            <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+                              <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-white border border-stone-300 text-slate-700">
+                                  {fileGroup.format}
+                                </span>
+                                <span className="text-xs font-bold text-slate-900">
+                                  {fileGroup.fileName}
+                                </span>
+                              </div>
+                              <span
+                                className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                                  fileGroup.matches.length > 0
+                                    ? 'bg-emerald-100 text-emerald-800'
+                                    : 'bg-amber-100 text-amber-800'
+                                }`}
+                              >
+                                {fileGroup.matches.length}{' '}
+                                {fileGroup.matches.length === 1 ? 'match' : 'matches'}
+                              </span>
+                            </div>
+
+                            {fileGroup.matches.length === 0 ? (
+                              <div className="space-y-2">
+                                <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2.5">
+                                  This file does not contain a value at this path — outputting <code className="font-mono font-bold">N/A</code> in JSON. You can align an additional fallback {inputMode === 'XML' ? 'XPath' : 'predicate'} to the same target field.
+                                </p>
+                              </div>
+                            ) : (
+                              fileGroup.matches.map((m, idx) => (
+                                <div
+                                  key={idx}
+                                  className="space-y-2.5 bg-white rounded-lg border border-stone-200 p-3"
+                                >
+                                  {(verifierViewMode === 'split' ||
+                                    verifierViewMode === 'extracted') && (
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-600">
+                                          Extracted JSON Value {fileGroup.matches.length > 1 ? `#${idx + 1}` : ''}
+                                        </span>
+                                        <span className="text-[10px] text-stone-400">
+                                          {activeInspectedEntry.rule.textMode === 'raw'
+                                            ? 'Raw XML preserved'
+                                            : activeInspectedEntry.rule.textMode === 'diplomatic'
+                                            ? 'Diplomatic (editorial <ex>/<supplied> stripped)'
+                                            : 'Interpretive (normalized text)'}
+                                        </span>
+                                      </div>
+                                      <textarea
+                                        readOnly
+                                        rows={Math.min(6, Math.max(2, Math.ceil(m.value.length / 48)))}
+                                        value={m.value}
+                                        className="w-full text-sm font-serif text-slate-950 bg-amber-50/40 border border-stone-300 rounded-lg p-2.5 leading-relaxed resize-y focus:outline-none focus:border-indigo-500"
+                                      />
+                                    </div>
+                                  )}
+
+                                  {(verifierViewMode === 'split' || verifierViewMode === 'raw') && (
+                                    <div>
+                                      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                                        Original {inputMode === 'XML' ? 'EpiDoc XML Element' : 'RDF Triple'} Context
+                                      </div>
+                                      <pre className="p-2.5 rounded-lg bg-slate-900 text-stone-100 font-mono text-[11px] leading-relaxed whitespace-pre-wrap break-all overflow-x-auto max-h-44">
+                                        {m.rawSource}
+                                      </pre>
+                                    </div>
+                                  )}
+
+                                  {(m.uri || m.certainty || m.placeType) && (
+                                    <div className="pt-1 flex flex-wrap items-center gap-2 text-xs">
+                                      {m.placeType && (
+                                        <span className="inline-flex items-center gap-1.5 text-amber-900 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200 font-medium text-[11px]">
+                                          type: {m.placeType}
+                                        </span>
+                                      )}
+                                      {m.uri && (
+                                        <span className="inline-flex items-center gap-1.5 text-indigo-800 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200 break-all font-mono text-[11px]">
+                                          <Icon name="link" className="w-3 h-3 text-indigo-600" />
+                                          {m.uri}
+                                        </span>
+                                      )}
+                                      {m.certainty && (
+                                        <span className="inline-flex items-center gap-1.5 text-purple-800 bg-purple-50 px-2.5 py-1 rounded-md border border-purple-200 font-medium text-[11px]">
+                                          <Icon name="help-circle" className="w-3 h-3 text-purple-600" />
+                                          certainty: {m.certainty}
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        ))
+                    )}
+                  </div>
+                )}
+              </section>
+            </div>
+
+            {/* BOTTOM FULL-WIDTH PANEL: LIVE GENERATED JSON OUTPUT */}
+            <section
+              className={`bg-[#121927] text-stone-100 rounded-xl border border-slate-800 shadow-sm flex flex-col overflow-hidden min-h-[300px] ${
+                activeTabMobile !== 'output' ? 'hidden lg:flex' : 'flex'
+              }`}
+            >
+              <div className="px-4 py-3 bg-[#192336] border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <Icon name="file-json" className="w-4 h-4 text-emerald-400" />
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
+                    Live Generated JSON Output
+                  </h2>
+                  <span className="text-[11px] text-slate-400 hidden sm:inline">
+                    — Preserves LOD <code className="text-sky-300">uri</code>,{' '}
+                    <code className="text-purple-300">certainty</code> &amp; LOD-resolved coordinates (
+                    {transformedRecords.length} record{transformedRecords.length === 1 ? '' : 's'})
+                  </span>
+                  {resolvingLodUris && (
+                    <span className="text-[11px] text-amber-300 animate-pulse">
+                      Resolving LOD coordinates...
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <span className="text-slate-400">Preview scope:</span>
+                    <select
+                      value={selectedPreviewIdx}
+                      onChange={(e) => setSelectedPreviewIdx(e.target.value)}
+                      className="bg-slate-900 border border-slate-700 text-stone-200 rounded px-2.5 py-1 text-xs focus:outline-none focus:border-sky-500 max-w-[230px]"
+                    >
+                      <option value="ALL">All Records ({transformedRecords.length} files)</option>
+                      {files.map((f, idx) => (
+                        <option key={f.id} value={idx}>
+                          Record {idx + 1}: {f.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={handleCopyJson}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer"
+                  >
+                    {copiedJson ? (
+                      <>
+                        <Icon name="check" className="w-3.5 h-3.5 text-emerald-400" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <Icon name="copy" className="w-3.5 h-3.5" />
+                        Copy
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={handleDownloadJson}
+                    disabled={!isValidForExport}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-semibold transition ${
+                      isValidForExport
+                        ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-xs'
+                        : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
+                    }`}
+                  >
+                    <Icon name="download" className="w-3.5 h-3.5" />
+                    Download JSON
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-relaxed max-h-[360px]">
+                <pre className="text-stone-200 whitespace-pre-wrap break-words">
+                  {previewJsonString}
+                </pre>
+              </div>
+            </section>
+          </main>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
