@@ -406,4 +406,3522 @@
                                 <placeName type="modern" ref="http://sws.geonames.org/2523920">Palermo</placeName>
                                 <geo>38.13205, 13.33561</geo>
                             </origPlace>
-                            <origDate datingMethod="#julian" notBefore-custom="0051" notAfter-
+                            <origDate datingMethod="#julian" notBefore-custom="0051" notAfter-custom="0100">Neronian</origDate>
+                        </origin>
+                    </history>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+        <profileDesc>
+            <textClass>
+                <keywords scheme="https://ontology.inscriptiones.org/type_of_inscription">
+                    <term ana="#function.dedication" ref="https://ontology.inscriptiones.org/type_of_inscription/Dedication">dedication</term>
+                </keywords>
+            </textClass>
+        </profileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="edition" subtype="primary" xml:space="preserve" xml:lang="la" resp="#TA">
+                <ab>
+                    <lb n="1"/><persName type="divine"><name><w n="5"><supplied reason="lost">Ce</supplied><unclear>rer</unclear><supplied reason="lost">i</supplied></w></name></persName>
+                    <lb n="2"/><persName type="attested"><name><w n="10"><expan><abbr>L</abbr><ex>ucius</ex></expan></w></name> <g ref="#interpunct" n="15">·</g> <name><w n="20">Cor<unclear>n</unclear><supplied reason="lost">elius</supplied></w></name>
+                    <lb n="3"/><name><w n="25">Marcellu<unclear>s</unclear></w></name></persName> <roleName type="supracivic" subtype="quaestor.pro.praetore"><w n="30"><supplied reason="lost"><expan><abbr>q</abbr><ex>uaestor</ex></expan></supplied></w> <w n="35"><supplied reason="lost"><expan><abbr>pr</abbr><ex>o</ex></expan></supplied></w>
+                    <lb n="4"/><w n="40"><expan><abbr>pr</abbr><ex>aetore</ex></expan></w></roleName> <g ref="#interpunct" n="45">·</g> <w n="50"><expan><abbr>prov</abbr><ex>inciae</ex></expan></w> <g ref="#interpunct" n="55">·</g> <placeName type="ancient"><w n="60"><expan><abbr>Sicil</abbr><ex>iae</ex></expan></w></placeName> <g ref="#interpunct" n="65">·</g> <roleName type="supracivic" subtype="legatus.pro.praetore"><w n="70"><expan><abbr>l<supplied reason="lost">eg</supplied></abbr><supplied reason="lost"><ex>atus</ex></supplied></expan></w> <w n="75"><supplied reason="lost"><expan><abbr>pr</abbr><ex>o</ex></expan></supplied></w>
+                    <lb n="5"/><w n="80"><expan><abbr>pr</abbr><ex>aetore</ex></expan></w></roleName> <g ref="#interpunct" n="85">·</g> <w n="90"><expan><abbr>prov</abbr><ex>inciae</ex></expan></w> <g ref="#interpunct" n="95">·</g> <w n="100"><expan><abbr>eiusd</abbr><ex>em</ex></expan></w> <g ref="#interpunct" n="105">·</g> <roleName type="supracivic" subtype="praetor.designatus"><w n="110"><expan><abbr>pr</abbr><ex>aetor</ex></expan></w> <unclear><g ref="#interpunct" n="115">·</g></unclear> <w n="120"><expan><abbr>d<supplied reason="lost">es</supplied></abbr><supplied reason="lost"><ex>ignatus</ex></supplied></expan></w></roleName>
+                    <lb n="6"/><w n="125">ex</w> <g ref="#interpunct" n="130">·</g> <w n="135">multis</w>
+                </ab>
+            </div>
+        </body>
+    </text>
+</TEI>`
+        },
+        {
+          id: 'edh-hd000001-ttl',
+          name: 'EDH_HD000001_Cumae.ttl',
+          format: 'RDF (Turtle)',
+          description: 'Authentic EDH Linked Open Data Turtle export for HD000001 (Epitaph from Cumae)',
+          content: `@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix nmo: <http://nomisma.org/ontology#> .
+@prefix epi: <http://edh-www.adw.uni-heidelberg.de/lod/ontology#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix lawd: <http://lawd.info/ontology/1.0/> .
+
+<http://edh-www.adw.uni-heidelberg.de/edh/inschrift/HD000001> a epi:Inscription ;
+    skos:prefLabel "epitaph found at 'Cumae, bei' / 'Cuma, bei' (Roman province: Latium et Campania (Regio I))"@en;
+    dc:publisher <http://edh-www.adw.uni-heidelberg.de>;
+    dc:contributor <http://edh-www.adw.uni-heidelberg.de/lod/contributor/feraudi>;
+    dcterms:date "2014-04-07"^^xsd:date;
+    epi:representsTypeOfMonument <http://edh-www.adw.uni-heidelberg.de/lod/type_of_monument/tabula>;
+    epi:representsTypeOfInscription <http://edh-www.adw.uni-heidelberg.de/lod/type_of_inscription/epitaph>;
+    nmo:hasMaterial <http://edh-www.adw.uni-heidelberg.de/lod/material/Marmor_geaedert___farbig>;
+    lawd:foundAt <http://edh-www.adw.uni-heidelberg.de/edh/geographie/11843>;
+    nmo:hasStartDate "0071";
+    nmo:hasEndDate "0130";
+    epi:editionText "D(is) M(anibus) / Noniae P(ubli) f(iliae) Optatae / et C(aio) Iulio Artemoni / parentibus / libertis libertabusque / posterisque eorum / C(aius) Iulius C(ai) f(ilius) Optatus / filius"@lat;
+    epi:diplomaticText "D M / NONIAE P F OPTATAE / ET C IVLIO ARTEMONI / PARENTIBVS / LIBERTIS LIBERTABVSQVE / POSTERISQVE EORVM / C IVLIVS C F OPTATVS / FILIVS"@lat;
+.`
+        },
+        {
+          id: 'rib-00014-ttl',
+          name: 'RIB_00014_Londinium.ttl',
+          format: 'RDF (Turtle)',
+          description: 'Authentic Roman Inscriptions of Britain (RIB 14) Turtle RDF using CIDOC CRM, CRMtex & epont',
+          content: `@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix crmsci: <http://www.ics.forth.gr/isl/CRMsci/> .
+@prefix crmtex: <http://www.cidoc-crm.org/crmtex/> .
+@prefix epnet: <http://www.eagle-network.eu/ont/epnet/> .
+@prefix epont: <https://w3id.org/epont/ontology/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix lawd: <http://lawd.info/ontology/1.0/> .
+@prefix nmo: <http://nomisma.org/ontology#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rib: <https://romaninscriptionsofbritain.org/inscriptions/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+rib:RIB00014 a crm:E22_Human-Made_Object ;
+    rdfs:label "RIB 14. Funerary inscription for Titus Licinius Ascanius"^^xsd:string ;
+    epont:carriesText <https://romaninscriptionsofbritain.org/inscriptions/RIB00014/WrittenText> ;
+    lawd:foundAt <https://pleiades.stoa.org/places/79574> ;
+    nmo:Material "Oolite"^^xsd:string ;
+    nmo:hasObjectType "Statue base"^^xsd:string ;
+    pav:authoredBy "Roman Inscriptions of Britain" ;
+    pav:license <http://creativecommons.org/licenses/by/3.0/> ;
+    geo:SpatialThing <https://romaninscriptionsofbritain.org/inscriptions/RIB00014#this> .
+
+<https://romaninscriptionsofbritain.org/inscriptions/RIB00014#this> geo:lat_long "51.513335,-0.088949" .
+
+<https://romaninscriptionsofbritain.org/inscriptions/RIB00014/TranscriptionText> a crm:E33_Linguistic_Object ;
+    epnet:hasTEI-annotatedTranscription """
+                    Dis
+                    Manibus
+                    Titi Licini
+                    Ascani
+                    vivus sibi fecit
+            """^^xsd:string .
+
+<https://romaninscriptionsofbritain.org/inscriptions/RIB00014/WrittenText> a crmtex:TX1_Written_text ;
+    crm:P56_is_found_on rib:RIB00014 ;
+    nmo:hasEndDate "0410-01-01"^^xsd:date ;
+    nmo:hasStartDate "0043-01-01"^^xsd:date ;
+    foaf:page <https://romaninscriptionsofbritain.org/inscriptions/14> .`
+        }
+      ];
+
+      // ============================================================================
+      // 2. TARGET JSON SCHEMA DEFINITION
+      // ============================================================================
+
+      const TARGET_FIELDS = [
+        {
+          key: 'id',
+          label: 'ID',
+          group: 'mandatory',
+          description: 'Primary inscription identifier (e.g. TM, EDH, RIB, or URI)',
+          multiValue: false,
+          isTextField: false,
+          placeholder: 'Map primary identifier XPath or predicate...'
+        },
+        {
+          key: 'provenance_corpus',
+          label: 'Provenance / Corpus',
+          group: 'mandatory',
+          description: 'Source corpus, publication collection, or holding repository',
+          multiValue: true,
+          isTextField: false,
+          placeholder: 'Map corpus / repository authority...'
+        },
+        {
+          key: 'interpretive_text',
+          label: 'Interpretive text',
+          group: 'mandatory',
+          description: 'Edited transcription with expanded abbreviations & restorations',
+          multiValue: false,
+          isTextField: true,
+          placeholder: 'Map edition div or interpretive text predicate...'
+        },
+        {
+          key: 'diplomatic_text',
+          label: 'Diplomatic text',
+          group: 'optional',
+          description: 'Raw epigraphic transcription preserving surviving letters without editorial expansions',
+          multiValue: false,
+          isTextField: true,
+          placeholder: 'Map edition div (set to Diplomatic mode) or diplomatic predicate...'
+        },
+        {
+          key: 'start_date',
+          label: 'Start date',
+          group: 'optional',
+          description: 'Terminus post quem (numeric year, e.g. 71 or -50)',
+          multiValue: false,
+          isTextField: false,
+          placeholder: 'Map @notBefore-custom / @notBefore or begin date predicate...'
+        },
+        {
+          key: 'end_date',
+          label: 'End date',
+          group: 'optional',
+          description: 'Terminus ante quem (numeric year, e.g. 150 or 25)',
+          multiValue: false,
+          isTextField: false,
+          placeholder: 'Map @notAfter-custom / @notAfter or end date predicate...'
+        },
+        {
+          key: 'material',
+          label: 'Material',
+          group: 'optional',
+          description: 'Physical support material with EAGLE / AAT vocabulary URI',
+          multiValue: true,
+          isTextField: false,
+          placeholder: 'Map material element or crm:P45_consists_of...'
+        },
+        {
+          key: 'type_of_object',
+          label: 'Type of object',
+          group: 'optional',
+          description: 'Monument or carrier form (e.g. altar, tombstone, statue base)',
+          multiValue: true,
+          isTextField: false,
+          placeholder: 'Map objectType element or predicate...'
+        },
+        {
+          key: 'type_of_inscription',
+          label: 'Type of inscription',
+          group: 'optional',
+          description: 'Functional classification (e.g. epitaph, honorific, dedicatory)',
+          multiValue: true,
+          isTextField: false,
+          placeholder: 'Map inscriptionType term or predicate...'
+        },
+        {
+          key: 'geography_province',
+          label: 'Geography: Province',
+          group: 'geography',
+          description: 'Roman province or administrative region (e.g. Baetica, Britannia) with LOD URI',
+          multiValue: true,
+          isTextField: false,
+          placeholder: 'Map province <placeName type="province"> or region predicate...'
+        },
+        {
+          key: 'geography_ancient_place_name',
+          label: 'Geography: Ancient Place Name',
+          group: 'geography',
+          description: 'Ancient findspot / origin toponym (e.g. Roma, Arbeia) with Pleiades/GeoNames LOD',
+          multiValue: true,
+          isTextField: false,
+          placeholder: 'Map ancient placeName or spatial label...'
+        },
+        {
+          key: 'geography_latitude',
+          label: 'Geography: Latitude',
+          group: 'geography',
+          description: 'Decimal latitude coordinate (or combined <geo> lat/long node)',
+          multiValue: false,
+          isTextField: false,
+          placeholder: 'Map latitude or combined geo node...'
+        },
+        {
+          key: 'geography_longitude',
+          label: 'Geography: Longitude',
+          group: 'geography',
+          description: 'Decimal longitude coordinate (or combined <geo> lat/long node)',
+          multiValue: false,
+          isTextField: false,
+          placeholder: 'Map longitude or combined geo node...'
+        }
+      ];
+
+      // ============================================================================
+      // 3. EFFICIENT PARSING & CACHED SCHEMA DISCOVERY ENGINE
+      // ============================================================================
+
+      const DISTINGUISHING_ATTRS = ['type', 'subtype', 'decls'];
+
+      const elementXPathCache = new WeakMap();
+
+      function buildSemanticXPath(el) {
+        if (!el || el.nodeType !== 1) return '';
+        const cached = elementXPathCache.get(el);
+        if (cached) return cached;
+
+        const parts = [];
+        let curr = el;
+        while (curr && curr.nodeType === 1) {
+          const localName = curr.localName || curr.nodeName.replace(/^.*:/, '');
+          const prefix = curr.namespaceURI && curr.namespaceURI.includes('tei-c.org') ? 'tei:' : '';
+          let step = `${prefix}${localName}`;
+
+          const qualifiers = [];
+          for (let i = 0; i < DISTINGUISHING_ATTRS.length; i++) {
+            const attr = DISTINGUISHING_ATTRS[i];
+            if (curr.hasAttribute && curr.hasAttribute(attr)) {
+              qualifiers.push(`@${attr}='${curr.getAttribute(attr)}'`);
+            }
+          }
+          if (qualifiers.length > 0) {
+            step += `[${qualifiers.join(' and ')}]`;
+          }
+          parts.unshift(step);
+          curr = curr.parentElement;
+        }
+        const xpath = '//' + parts.join('/');
+        elementXPathCache.set(el, xpath);
+        return xpath;
+      }
+
+      function cleanEpigraphicText(el, editionStyle = 'interpretive') {
+        const clone = el.cloneNode(true);
+        clone.querySelectorAll('head').forEach((h) => h.remove());
+
+        if (editionStyle === 'diplomatic') {
+          clone.querySelectorAll('ex, supplied, corr, reg, note, desc, g').forEach((node) => node.remove());
+        } else {
+          clone.querySelectorAll('choice').forEach((choice) => {
+            if (choice.querySelector('corr')) {
+              choice.querySelectorAll('sic').forEach((n) => n.remove());
+            }
+            if (choice.querySelector('reg')) {
+              choice.querySelectorAll('orig').forEach((n) => n.remove());
+            }
+          });
+        }
+
+        const lbs = clone.querySelectorAll('lb');
+        for (let i = 0; i < lbs.length; i++) {
+          const lb = lbs[i];
+          const breakAttr = lb.getAttribute('break');
+          const replacement = document.createTextNode(breakAttr === 'no' ? '' : i === 0 ? '' : ' ');
+          lb.parentNode.replaceChild(replacement, lb);
+        }
+        const text = (clone.textContent || '')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .replace(/^Text(?:\s*:|\s+(?=[A-Z0-9\[(⟨<]))/i, '')
+          .trim();
+
+        return editionStyle === 'diplomatic' ? text.toUpperCase() : text;
+      }
+
+      const VALUE_ATTRS = [
+        'notBefore-custom',
+        'notAfter-custom',
+        'notBefore',
+        'notAfter',
+        'when-custom',
+        'when',
+        'from',
+        'to',
+        'value',
+        'ref'
+      ];
+
+      function indexXmlDocument(doc) {
+        const pathIndex = new Map();
+        const allElements = doc.getElementsByTagName('*');
+        for (let i = 0; i < allElements.length; i++) {
+          const el = allElements[i];
+          const path = buildSemanticXPath(el);
+          let bucket = pathIndex.get(path);
+          if (!bucket) {
+            bucket = [];
+            pathIndex.set(path, bucket);
+          }
+          bucket.push(el);
+        }
+        return pathIndex;
+      }
+
+      function extractXmlFieldsFromDoc(doc) {
+        const fieldsMap = new Map();
+        const allElements = doc.getElementsByTagName('*');
+
+        for (let i = 0; i < allElements.length; i++) {
+          const el = allElements[i];
+          const basePath = buildSemanticXPath(el);
+
+          const localName = el.localName || el.nodeName;
+          const isEditionContainer =
+            (localName === 'div' &&
+              (el.getAttribute('type') === 'edition' || el.getAttribute('type') === 'diplomatic')) ||
+            localName === 'ab';
+          let hasChildElements = false;
+          for (let c = 0; c < el.childNodes.length; c++) {
+            if (el.childNodes[c].nodeType === 1) {
+              hasChildElements = true;
+              break;
+            }
+          }
+
+          if (!hasChildElements || isEditionContainer || localName === 'expan') {
+            const cleanedText = cleanEpigraphicText(el);
+            if (cleanedText) {
+              const refUri =
+                el.getAttribute('ref') || el.getAttribute('corresp') || el.getAttribute('ana') || null;
+              const certVal =
+                el.getAttribute('cert') ||
+                el.getAttribute('precision') ||
+                el.getAttribute('evidence') ||
+                null;
+
+              let entry = fieldsMap.get(basePath);
+              if (!entry) {
+                entry = {
+                  path: basePath,
+                  format: 'EpiDoc XML',
+                  count: 0,
+                  samples: [],
+                  hasUri: false,
+                  hasCertainty: false,
+                  sampleUri: null,
+                  sampleCertainty: null
+                };
+                fieldsMap.set(basePath, entry);
+              }
+              entry.count += 1;
+              if (entry.samples.length < 3 && !entry.samples.includes(cleanedText)) {
+                entry.samples.push(cleanedText);
+              }
+              if (refUri) {
+                entry.hasUri = true;
+                if (!entry.sampleUri) entry.sampleUri = refUri;
+              }
+              if (certVal) {
+                entry.hasCertainty = true;
+                if (!entry.sampleCertainty) entry.sampleCertainty = certVal;
+              }
+            }
+          }
+
+          for (let a = 0; a < VALUE_ATTRS.length; a++) {
+            const attrName = VALUE_ATTRS[a];
+            if (el.hasAttribute(attrName)) {
+              const attrPath = `${basePath}/@${attrName}`;
+              const attrVal = el.getAttribute(attrName);
+              const certVal = el.getAttribute('cert') || el.getAttribute('precision') || null;
+              let entry = fieldsMap.get(attrPath);
+              if (!entry) {
+                entry = {
+                  path: attrPath,
+                  format: 'EpiDoc XML',
+                  count: 0,
+                  samples: [],
+                  hasUri: attrName === 'ref',
+                  hasCertainty: Boolean(certVal),
+                  sampleUri: attrName === 'ref' ? attrVal : null,
+                  sampleCertainty: certVal
+                };
+                fieldsMap.set(attrPath, entry);
+              }
+              entry.count += 1;
+              if (entry.samples.length < 3 && !entry.samples.includes(attrVal)) {
+                entry.samples.push(attrVal);
+              }
+              if (certVal) {
+                entry.hasCertainty = true;
+                if (!entry.sampleCertainty) entry.sampleCertainty = certVal;
+              }
+            }
+          }
+        }
+
+        return Array.from(fieldsMap.values());
+      }
+
+      function parseTurtleSimple(ttlText) {
+        const prefixes = {};
+        const lines = ttlText.split(/\r?\n/);
+        const bodyLines = [];
+
+        for (let i = 0; i < lines.length; i++) {
+          const trimmed = lines[i].trim();
+          if (!trimmed || trimmed.startsWith('#')) continue;
+          const prefixMatch = trimmed.match(/^@?prefix\s+([a-zA-Z0-9_-]*:)\s*<([^>]+)>\s*\.?$/i);
+          if (prefixMatch) {
+            prefixes[prefixMatch[1]] = prefixMatch[2];
+          } else {
+            bodyLines.push(lines[i]);
+          }
+        }
+
+        const record = { '@id': null, _triples: {} };
+        const joined = bodyLines.join('\n').trim();
+
+        const blocks = [];
+        let current = '';
+        let inQuotes = false;
+        let inTripleQuotes = false;
+        let inAngle = false;
+
+        for (let i = 0; i < joined.length; i++) {
+          const ch = joined[i];
+          const nextThree = joined.slice(i, i + 3);
+          if (!inAngle && nextThree === '"""') {
+            inTripleQuotes = !inTripleQuotes;
+            current += '"""';
+            i += 2;
+            continue;
+          }
+          if (!inTripleQuotes && !inAngle && ch === '"' && joined[i - 1] !== '\\') {
+            inQuotes = !inQuotes;
+          } else if (!inTripleQuotes && !inQuotes && ch === '<') {
+            inAngle = true;
+          } else if (!inTripleQuotes && !inQuotes && ch === '>') {
+            inAngle = false;
+          }
+
+          if (!inQuotes && !inTripleQuotes && !inAngle && ch === '.') {
+            if (current.trim()) blocks.push(current.trim());
+            current = '';
+          } else {
+            current += ch;
+          }
+        }
+        if (current.trim()) blocks.push(current.trim());
+
+        const parseObjectTerm = (rawTerm) => {
+          const objRaw = rawTerm.trim();
+          let value = objRaw;
+          let uri = null;
+
+          if (objRaw.startsWith('<') && objRaw.endsWith('>')) {
+            uri = objRaw.slice(1, -1);
+            const slug = uri.split('/').filter(Boolean).pop() || uri;
+            value = decodeURIComponent(slug).replace(/___/g, ' / ').replace(/_/g, ' ');
+          } else if (objRaw.startsWith('"""')) {
+            const endIdx = objRaw.indexOf('"""', 3);
+            if (endIdx !== -1) {
+              value = objRaw.slice(3, endIdx).replace(/\s+/g, ' ').trim();
+            }
+          } else if (objRaw.startsWith('"')) {
+            const litMatch = objRaw.match(/^"((?:[^"\\]|\\.)*)"/);
+            if (litMatch) value = litMatch[1].replace(/\s+/g, ' ').trim();
+          } else if (/^[a-zA-Z0-9_-]+:[^\s]+$/.test(objRaw)) {
+            const [pfx, local] = objRaw.split(':');
+            if (prefixes[`${pfx}:`]) {
+              uri = `${prefixes[`${pfx}:`]}${local}`;
+            }
+            value = local;
+          }
+          return { value, uri };
+        };
+
+        blocks.forEach((block, blockIdx) => {
+          const subjMatch = block.match(/^(<[^>]+>|[a-zA-Z0-9_-]+:[^\s;]+)\s+([\s\S]+)$/);
+          if (!subjMatch) return;
+          let subjRaw = subjMatch[1];
+          if (subjRaw.startsWith('<') && subjRaw.endsWith('>')) {
+            subjRaw = subjRaw.slice(1, -1);
+          } else if (subjRaw.includes(':')) {
+            const [pfx, local] = subjRaw.split(':');
+            if (prefixes[`${pfx}:`]) subjRaw = `${prefixes[`${pfx}:`]}${local}`;
+          }
+          if (blockIdx === 0 && !record['@id']) {
+            record['@id'] = subjRaw;
+          }
+
+          const rest = subjMatch[2];
+          const statements = [];
+          let stmtBuf = '';
+          let q = false;
+          let tq = false;
+          let ang = false;
+          for (let i = 0; i < rest.length; i++) {
+            const ch = rest[i];
+            if (!ang && rest.slice(i, i + 3) === '"""') {
+              tq = !tq;
+              stmtBuf += '"""';
+              i += 2;
+              continue;
+            }
+            if (!tq && !ang && ch === '"' && rest[i - 1] !== '\\') q = !q;
+            else if (!tq && !q && ch === '<') ang = true;
+            else if (!tq && !q && ch === '>') ang = false;
+
+            if (!q && !tq && !ang && ch === ';') {
+              if (stmtBuf.trim()) statements.push(stmtBuf.trim());
+              stmtBuf = '';
+            } else {
+              stmtBuf += ch;
+            }
+          }
+          if (stmtBuf.trim()) statements.push(stmtBuf.trim());
+
+          for (const stmt of statements) {
+            const parts = stmt.trim().match(/^([^\s]+)\s+([\s\S]+)$/);
+            if (!parts) continue;
+            let pred = parts[1];
+            const objListRaw = parts[2].trim();
+            if (pred === 'a') pred = 'rdf:type';
+
+            const objItems = [];
+            let oBuf = '';
+            let oq = false;
+            let otq = false;
+            let oang = false;
+            for (let i = 0; i < objListRaw.length; i++) {
+              const ch = objListRaw[i];
+              if (!oang && objListRaw.slice(i, i + 3) === '"""') {
+                otq = !otq;
+                oBuf += '"""';
+                i += 2;
+                continue;
+              }
+              if (!otq && !oang && ch === '"' && objListRaw[i - 1] !== '\\') oq = !oq;
+              else if (!otq && !oq && ch === '<') oang = true;
+              else if (!otq && !oq && ch === '>') oang = false;
+
+              if (!oq && !otq && !oang && ch === ',') {
+                if (oBuf.trim()) objItems.push(oBuf.trim());
+                oBuf = '';
+              } else {
+                oBuf += ch;
+              }
+            }
+            if (oBuf.trim()) objItems.push(oBuf.trim());
+
+            if (!record._triples[pred]) record._triples[pred] = [];
+            for (const oItem of objItems) {
+              record._triples[pred].push(parseObjectTerm(oItem));
+            }
+          }
+        });
+
+        return record;
+      }
+
+      const parsedArtifactCache = new WeakMap();
+
+      function getParsedFileArtifact(file) {
+        if (parsedArtifactCache.has(file)) {
+          return parsedArtifactCache.get(file);
+        }
+        let artifact = null;
+        if (file.format === 'EpiDoc XML') {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(file.content, 'application/xml');
+          const hasError = Boolean(doc.querySelector('parsererror'));
+          artifact = {
+            kind: 'XML',
+            doc: hasError ? null : doc,
+            pathIndex: hasError ? new Map() : indexXmlDocument(doc),
+            discoveredFields: hasError ? [] : extractXmlFieldsFromDoc(doc)
+          };
+        } else if (file.format.includes('JSON-LD')) {
+          let json = null;
+          try {
+            json = JSON.parse(file.content);
+          } catch (e) {
+            json = null;
+          }
+          artifact = {
+            kind: 'JSON-LD',
+            json,
+            discoveredFields: json ? extractRdfFieldsFromParsed(file, json, null) : []
+          };
+        } else {
+          const turtle = parseTurtleSimple(file.content);
+          artifact = {
+            kind: 'TURTLE',
+            turtle,
+            discoveredFields: extractRdfFieldsFromParsed(file, null, turtle)
+          };
+        }
+        parsedArtifactCache.set(file, artifact);
+        return artifact;
+      }
+
+      function extractRdfFieldsFromParsed(file, jsonData, turtleData) {
+        const fieldsMap = new Map();
+
+        const registerField = (pred, sampleVal, uri, certainty) => {
+          let entry = fieldsMap.get(pred);
+          if (!entry) {
+            entry = {
+              path: pred,
+              format: file.format,
+              count: 0,
+              samples: [],
+              hasUri: false,
+              hasCertainty: false,
+              sampleUri: null,
+              sampleCertainty: null
+            };
+            fieldsMap.set(pred, entry);
+          }
+          entry.count += 1;
+          const strVal = String(sampleVal);
+          if (entry.samples.length < 3 && !entry.samples.includes(strVal)) {
+            entry.samples.push(strVal);
+          }
+          if (uri) {
+            entry.hasUri = true;
+            if (!entry.sampleUri) entry.sampleUri = uri;
+          }
+          if (certainty) {
+            entry.hasCertainty = true;
+            if (!entry.sampleCertainty) entry.sampleCertainty = certainty;
+          }
+        };
+
+        if (jsonData) {
+          const graphs = Array.isArray(jsonData['@graph']) ? jsonData['@graph'] : [jsonData];
+          const walkObject = (obj, prefix = '') => {
+            if (!obj || typeof obj !== 'object') return;
+            const localCert = obj['epont:certainty'] || obj['certainty'] || null;
+            const localId = obj['@id'] || obj['owl:sameAs'] || null;
+
+            for (const [key, val] of Object.entries(obj)) {
+              if (key === '@context' || key === '@type') continue;
+              const fullPred = prefix ? `${prefix} → ${key}` : key;
+
+              if (key === '@id' && !prefix) {
+                registerField('@id', val, val, null);
+                continue;
+              }
+
+              const items = Array.isArray(val) ? val : [val];
+              for (const item of items) {
+                if (item && typeof item === 'object') {
+                  const label =
+                    item['skos:prefLabel'] ||
+                    item['@value'] ||
+                    item['rdfs:label'] ||
+                    item['@id'] ||
+                    null;
+                  const itemUri = item['@id'] || item['owl:sameAs'] || localId;
+                  const itemCert = item['epont:certainty'] || localCert;
+                  if (label) {
+                    registerField(fullPred, label, itemUri, itemCert);
+                  }
+                  walkObject(item, fullPred);
+                } else if (item !== null && item !== undefined) {
+                  registerField(fullPred, item, localId, localCert);
+                }
+              }
+            }
+          };
+          graphs.forEach((g) => walkObject(g));
+        } else if (turtleData) {
+          if (turtleData['@id']) {
+            registerField('@id (Subject URI)', turtleData['@id'], turtleData['@id'], null);
+          }
+          const globalCert = turtleData._triples['epont:certainty']?.[0]?.value || null;
+          for (const [pred, entries] of Object.entries(turtleData._triples)) {
+            for (const ent of entries) {
+              registerField(pred, ent.value, ent.uri, globalCert);
+            }
+          }
+        }
+
+        return Array.from(fieldsMap.values());
+      }
+
+      // ============================================================================
+      // 4. TRANSFORMATION ENGINE (Cached Artifacts + Alignments -> Target JSON)
+      // ============================================================================
+
+      function evaluateXmlXPathIndexed(pathIndex, xpathExpr, options) {
+        const isAttr = xpathExpr.includes('/@');
+        let elemPath = xpathExpr;
+        let targetAttr = null;
+
+        if (isAttr) {
+          const splitIdx = xpathExpr.lastIndexOf('/@');
+          elemPath = xpathExpr.slice(0, splitIdx);
+          targetAttr = xpathExpr.slice(splitIdx + 2);
+        }
+
+        const matchedElements = pathIndex.get(elemPath) || [];
+        const results = [];
+
+        for (let i = 0; i < matchedElements.length; i++) {
+          const el = matchedElements[i];
+
+          let rawValue = null;
+          if (targetAttr) {
+            rawValue = el.getAttribute(targetAttr);
+          } else if (options.textMode === 'raw') {
+            rawValue = el.innerHTML.trim();
+          } else if (options.textMode === 'diplomatic') {
+            rawValue = cleanEpigraphicText(el, 'diplomatic');
+          } else {
+            rawValue = cleanEpigraphicText(el, 'interpretive');
+          }
+
+          if (!rawValue) continue;
+
+          const uri =
+            el.getAttribute('ref') ||
+            el.getAttribute('corresp') ||
+            el.getAttribute('ana') ||
+            (targetAttr === 'ref' ? rawValue : null);
+          const certainty =
+            el.getAttribute('cert') ||
+            el.getAttribute('precision') ||
+            el.getAttribute('evidence') ||
+            null;
+          const placeType = !targetAttr ? el.getAttribute('type') || null : null;
+
+          const item = { value: rawValue };
+          if (placeType) item.type = placeType;
+          if (options.includeUri && uri) item.uri = uri;
+          if (options.includeCertainty && certainty) item.certainty = certainty;
+          results.push(item);
+        }
+
+        return results;
+      }
+
+      function evaluateRdfPredicateCached(artifact, predPath, options) {
+        const results = [];
+
+        if (artifact.kind === 'JSON-LD' && artifact.json) {
+          const graphs = Array.isArray(artifact.json['@graph'])
+            ? artifact.json['@graph']
+            : [artifact.json];
+
+          const searchNode = (obj, prefix = '') => {
+            if (!obj || typeof obj !== 'object') return;
+            const localCert = obj['epont:certainty'] || obj['certainty'] || null;
+            const localId = obj['@id'] || obj['owl:sameAs'] || null;
+
+            for (const [key, val] of Object.entries(obj)) {
+              if (key === '@context' || key === '@type') continue;
+              const fullPred = prefix ? `${prefix} → ${key}` : key;
+              const items = Array.isArray(val) ? val : [val];
+
+              if (fullPred === predPath) {
+                for (const item of items) {
+                  if (item && typeof item === 'object') {
+                    const label =
+                      item['skos:prefLabel'] ||
+                      item['@value'] ||
+                      item['rdfs:label'] ||
+                      item['@id'];
+                    const uri = item['@id'] || item['owl:sameAs'] || localId;
+                    const cert = item['epont:certainty'] || localCert;
+                    if (label !== undefined && label !== null) {
+                      const resObj = { value: label };
+                      if (options.includeUri && uri) resObj.uri = uri;
+                      if (options.includeCertainty && cert) resObj.certainty = cert;
+                      results.push(resObj);
+                    }
+                  } else if (item !== null && item !== undefined) {
+                    const resObj = { value: item };
+                    if (options.includeUri && localId) resObj.uri = localId;
+                    if (options.includeCertainty && localCert) resObj.certainty = localCert;
+                    results.push(resObj);
+                  }
+                }
+              }
+
+              for (const item of items) {
+                if (item && typeof item === 'object') {
+                  searchNode(item, fullPred);
+                }
+              }
+            }
+          };
+
+          graphs.forEach((g) => searchNode(g));
+        } else if (artifact.kind === 'TURTLE' && artifact.turtle) {
+          const parsed = artifact.turtle;
+          const globalCert = parsed._triples['epont:certainty']?.[0]?.value || null;
+          if (predPath === '@id (Subject URI)' && parsed['@id']) {
+            const resObj = { value: parsed['@id'] };
+            if (options.includeUri) resObj.uri = parsed['@id'];
+            results.push(resObj);
+          } else if (parsed._triples[predPath]) {
+            for (const ent of parsed._triples[predPath]) {
+              const resObj = { value: ent.value };
+              if (options.includeUri && ent.uri) resObj.uri = ent.uri;
+              if (options.includeCertainty && globalCert) resObj.certainty = globalCert;
+              results.push(resObj);
+            }
+          }
+        }
+
+        return results;
+      }
+
+      function transformFileToTargetJson(file, mappings) {
+        const artifact = getParsedFileArtifact(file);
+
+        const extractForTarget = (targetKey) => {
+          const rules = mappings[targetKey] || [];
+          const collected = [];
+
+          for (let i = 0; i < rules.length; i++) {
+            const rule = rules[i];
+            if (artifact.kind === 'XML' && artifact.pathIndex) {
+              const matches = evaluateXmlXPathIndexed(artifact.pathIndex, rule.sourcePath, rule);
+              collected.push(...matches);
+            } else if (artifact.kind !== 'XML') {
+              const matches = evaluateRdfPredicateCached(artifact, rule.sourcePath, rule);
+              collected.push(...matches);
+            }
+          }
+          return collected;
+        };
+
+        const formatSingleOrArray = (items, allowArray, isText = false, isNumeric = false) => {
+          if (!items || items.length === 0) return 'N/A';
+          if (isText) {
+            return items[0].value;
+          }
+          if (isNumeric) {
+            const first = { ...items[0] };
+            const str = String(first.value).trim();
+            if (/^[+-]?\d+(\.\d+)?$/.test(str)) {
+              first.value = Number(str);
+            } else {
+              const isoYearMatch = str.match(/^([+-]?\d{1,4})-\d{2}-\d{2}$/);
+              if (isoYearMatch) {
+                first.value = Number(isoYearMatch[1]);
+              }
+            }
+            return allowArray ? [first] : first;
+          }
+          if (!allowArray) {
+            return items[0];
+          }
+          return items;
+        };
+
+        const provinceItems = extractForTarget('geography_province');
+        const placeItems = extractForTarget('geography_ancient_place_name');
+        const latItems = extractForTarget('geography_latitude');
+        const lonItems = extractForTarget('geography_longitude');
+
+        let parsedLat = null;
+        let parsedLon = null;
+
+        if (latItems.length > 0) {
+          const rawLat = String(latItems[0].value).trim();
+          if (rawLat.includes(',') || rawLat.includes(' ')) {
+            const parts = rawLat.split(/[\s,]+/).filter(Boolean);
+            parsedLat = parseFloat(parts[0]);
+            if (lonItems.length === 0 && parts[1]) {
+              parsedLon = parseFloat(parts[1]);
+            }
+          } else {
+            parsedLat = isNaN(parseFloat(rawLat)) ? rawLat : parseFloat(rawLat);
+          }
+        }
+
+        if (lonItems.length > 0) {
+          const rawLon = String(lonItems[0].value).trim();
+          if (rawLon.includes(',') || rawLon.includes(' ')) {
+            const parts = rawLon.split(/[\s,]+/).filter(Boolean);
+            parsedLon = parseFloat(parts[1] || parts[0]);
+          } else {
+            parsedLon = isNaN(parseFloat(rawLon)) ? rawLon : parseFloat(rawLon);
+          }
+        }
+
+        const formattedProvinces = provinceItems.map((p) => {
+          const obj = { value: p.value };
+          if (p.type) obj.type = p.type;
+          if (p.uri) obj.uri = p.uri;
+          if (p.certainty) obj.certainty = p.certainty;
+          return obj;
+        });
+
+        const formattedAncientPlaces = placeItems.map((p) => {
+          const obj = { value: p.value };
+          if (p.type) obj.type = p.type;
+          if (p.uri) obj.uri = p.uri;
+          if (p.certainty) obj.certainty = p.certainty;
+          return obj;
+        });
+
+        const hasGeoData =
+          formattedProvinces.length > 0 ||
+          formattedAncientPlaces.length > 0 ||
+          (parsedLat !== null && !Number.isNaN(parsedLat)) ||
+          (parsedLon !== null && !Number.isNaN(parsedLon));
+
+        const geographyOutput = hasGeoData
+          ? {
+              province: formattedProvinces.length > 0 ? formattedProvinces : 'N/A',
+              ancient_place_name: formattedAncientPlaces.length > 0 ? formattedAncientPlaces : 'N/A',
+              latitude: parsedLat !== null && !Number.isNaN(parsedLat) ? parsedLat : 'N/A',
+              longitude: parsedLon !== null && !Number.isNaN(parsedLon) ? parsedLon : 'N/A'
+            }
+          : 'N/A';
+
+        return {
+          _source_file: file.name,
+          _source_format: file.format,
+          id: formatSingleOrArray(extractForTarget('id'), false),
+          provenance_corpus: formatSingleOrArray(extractForTarget('provenance_corpus'), true),
+          interpretive_text: formatSingleOrArray(extractForTarget('interpretive_text'), false, true),
+          diplomatic_text: formatSingleOrArray(extractForTarget('diplomatic_text'), false, true),
+          start_date: formatSingleOrArray(extractForTarget('start_date'), false, false, true),
+          end_date: formatSingleOrArray(extractForTarget('end_date'), false, false, true),
+          material: formatSingleOrArray(extractForTarget('material'), true),
+          type_of_object: formatSingleOrArray(extractForTarget('type_of_object'), true),
+          type_of_inscription: formatSingleOrArray(extractForTarget('type_of_inscription'), true),
+          geography: geographyOutput
+        };
+      }
+
+      // ============================================================================
+      // 5. DEFAULT SUGGESTED MAPPINGS HELPER
+      // ============================================================================
+
+      const AUTO_SUGGEST_RULES = {
+        id: [
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='localID']",
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='filename']",
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno',
+          '@id (Subject URI)',
+          'dcterms:identifier'
+        ],
+        provenance_corpus: [
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:authority',
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:publisher',
+          'dc:publisher',
+          'pav:authoredBy',
+          'dcterms:isPartOf → skos:prefLabel',
+          'dcterms:isPartOf'
+        ],
+        interpretive_text: [
+          "//tei:TEI/tei:text/tei:body/tei:div[@type='edition']",
+          "//tei:TEI/tei:text/tei:body/tei:div[@type='edition' and @subtype='primary']",
+          "//tei:TEI/tei:text/tei:body/tei:div[@type='edition' and @subtype='interpretive']",
+          'epi:editionText',
+          'epnet:hasTEI-annotatedTranscription',
+          'epont:hasInterpretiveText'
+        ],
+        diplomatic_text: [
+          "//tei:TEI/tei:text/tei:body/tei:div[@type='edition']",
+          "//tei:TEI/tei:text/tei:body/tei:div[@type='edition' and @subtype='primary']",
+          "//tei:TEI/tei:text/tei:body/tei:div[@type='diplomatic']",
+          'epi:diplomaticText',
+          'epont:hasDiplomaticText'
+        ],
+        start_date: [
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origDate/@notBefore-custom',
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origDate/@notBefore',
+          'nmo:hasStartDate',
+          'crm:P4_has_time-span → crm:P82a_begin_of_the_begin',
+          'crm:P82a_begin_of_the_begin'
+        ],
+        end_date: [
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origDate/@notAfter-custom',
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origDate/@notAfter',
+          'nmo:hasEndDate',
+          'crm:P4_has_time-span → crm:P82b_end_of_the_end',
+          'crm:P82b_end_of_the_end'
+        ],
+        material: [
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:support/tei:material',
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:support/tei:rs[@type='material']",
+          'nmo:hasMaterial',
+          'nmo:Material',
+          'crm:P45_consists_of',
+          'epont:materialLabel'
+        ],
+        type_of_object: [
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:support/tei:objectType',
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:physDesc/tei:objectDesc/tei:supportDesc/tei:support/tei:rs[@type='objectType']",
+          'epi:representsTypeOfMonument',
+          'nmo:hasObjectType',
+          'epont:hasObjectType',
+          'epont:objectTypeLabel'
+        ],
+        type_of_inscription: [
+          '//tei:TEI/tei:teiHeader/tei:profileDesc/tei:textClass/tei:keywords/tei:term',
+          "//tei:TEI/tei:teiHeader/tei:profileDesc/tei:textClass/tei:keywords/tei:term[@type='inscriptionType']",
+          "//tei:TEI/tei:teiHeader/tei:profileDesc/tei:textClass/tei:keywords/tei:term[@type='genre']",
+          'epi:representsTypeOfInscription',
+          'epont:hasInscriptionType',
+          'epont:inscriptionTypeLabel'
+        ],
+        geography_province: [
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:placeName[@type='province']",
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:region',
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:provenance[@type='found']/tei:placeName[@type='province']",
+          'epont:hasProvince'
+        ],
+        geography_ancient_place_name: [
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:placeName[@type='ancient']",
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:placeName',
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:provenance[@type='found']/tei:placeName",
+          'lawd:foundAt',
+          'dcterms:spatial → skos:prefLabel',
+          'skos:prefLabel'
+        ],
+        geography_latitude: [
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:geo',
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:provenance[@type='found']/tei:location/tei:geo[@decls='#lat']",
+          'geo:lat_long',
+          'dcterms:spatial → geo:lat',
+          'geo:lat'
+        ],
+        geography_longitude: [
+          '//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:origin/tei:origPlace/tei:geo',
+          "//tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:history/tei:provenance[@type='found']/tei:location/tei:geo[@decls='#long']",
+          'geo:lat_long',
+          'dcterms:spatial → geo:long',
+          'geo:long'
+        ]
+      };
+
+      // ============================================================================
+      // 6. MAIN REACT DASHBOARD COMPONENT
+      // ============================================================================
+
+      function App() {
+        const [darkMode, setDarkMode] = useState(() => {
+          try {
+            const saved = localStorage.getItem('epialign-theme');
+            if (saved === 'dark') return true;
+            if (saved === 'light') return false;
+          } catch (e) {}
+          return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        });
+
+        useEffect(() => {
+          const rootEl = document.documentElement;
+          if (darkMode) {
+            rootEl.classList.add('dark');
+          } else {
+            rootEl.classList.remove('dark');
+          }
+          try {
+            localStorage.setItem('epialign-theme', darkMode ? 'dark' : 'light');
+          } catch (e) {}
+        }, [darkMode]);
+
+        const [inputMode, setInputMode] = useState('XML');
+
+        const [filesByMode, setFilesByMode] = useState({
+          XML: [],
+          RDF: []
+        });
+
+        const [mappingsByMode, setMappingsByMode] = useState({
+          XML: {},
+          RDF: {}
+        });
+
+        const files = filesByMode[inputMode] || [];
+        const mappings = mappingsByMode[inputMode] || {};
+
+        const [lodGeoCache, setLodGeoCache] = useState({
+          'https://pleiades.stoa.org/places/118569': { lat: 45.7697, lon: 13.3708, source: 'Pleiades LOD' },
+          'https://pleiades.stoa.org/places/462410': { lat: 38.13205, lon: 13.33561, source: 'Pleiades LOD' },
+          'https://pleiades.stoa.org/places/79574': { lat: 51.513335, lon: -0.088949, source: 'Pleiades LOD' },
+          'https://pleiades.stoa.org/places/423025': { lat: 41.89193, lon: 12.51133, source: 'Pleiades LOD' },
+          'https://pleiades.stoa.org/places/89105': { lat: 55.0033, lon: -1.4317, source: 'Pleiades LOD' },
+          'https://pleiades.stoa.org/places/89132': { lat: 52.5, lon: -1.5, source: 'Pleiades LOD' },
+          'https://pleiades.stoa.org/places/462503': { lat: 37.0755, lon: 15.2866, source: 'Pleiades LOD' },
+          'https://pleiades.stoa.org/places/462492': { lat: 37.5, lon: 14.0, source: 'Pleiades LOD' }
+        });
+        const [resolvingLodUris, setResolvingLodUris] = useState(false);
+        const inFlightLodUrisRef = useRef(new Set());
+
+        const [batchIngestState, setBatchIngestState] = useState(null);
+        const [isDragOverDropzone, setIsDragOverDropzone] = useState(false);
+        const [isExportingZip, setIsExportingZip] = useState(false);
+        const [fileListFilter, setFileListFilter] = useState('');
+        const [visibleFileLimit, setVisibleFileLimit] = useState(50);
+
+        const [fieldSearch, setFieldSearch] = useState('');
+        const [draggedField, setDraggedField] = useState(null);
+        const [dragOverTarget, setDragOverTarget] = useState(null);
+        const [openDropdownTarget, setOpenDropdownTarget] = useState(null);
+        const [dropdownSearch, setDropdownSearch] = useState('');
+        const [selectedPreviewIdx, setSelectedPreviewIdx] = useState('ALL');
+        const [inspectedRule, setInspectedRule] = useState(null);
+        const [copiedJson, setCopiedJson] = useState(false);
+        const [toastMessage, setToastMessage] = useState(null);
+        const [uploadError, setUploadError] = useState(null);
+        const [activeTabMobile, setActiveTabMobile] = useState('workspace');
+        const [verifierViewMode, setVerifierViewMode] = useState('split');
+        const [selectedVerifierFile, setSelectedVerifierFile] = useState('ALL');
+
+        const fileInputRef = useRef(null);
+        const folderInputRef = useRef(null);
+        const profileInputRef = useRef(null);
+
+        const showToast = useCallback((msg) => {
+          setToastMessage(msg);
+          setTimeout(() => setToastMessage(null), 3400);
+        }, []);
+
+        useEffect(() => {
+          if (!openDropdownTarget) return;
+          const onKeyDown = (e) => {
+            if (e.key === 'Escape') {
+              setOpenDropdownTarget(null);
+              setDropdownSearch('');
+            }
+          };
+          window.addEventListener('keydown', onKeyDown);
+          return () => window.removeEventListener('keydown', onKeyDown);
+        }, [openDropdownTarget]);
+
+        const discoveredFields = useMemo(() => {
+          const combined = new Map();
+
+          for (let fIdx = 0; fIdx < files.length; fIdx++) {
+            const file = files[fIdx];
+            if (inputMode === 'XML' && file.format !== 'EpiDoc XML') continue;
+            if (inputMode === 'RDF' && file.format === 'EpiDoc XML') continue;
+
+            const artifact = getParsedFileArtifact(file);
+            const extracted = artifact.discoveredFields || [];
+
+            for (let i = 0; i < extracted.length; i++) {
+              const item = extracted[i];
+              const key = `${item.format}::${item.path}`;
+              const existing = combined.get(key);
+              if (!existing) {
+                combined.set(key, {
+                  ...item,
+                  samples: [...item.samples],
+                  key,
+                  files: [file.name]
+                });
+              } else {
+                existing.count += item.count;
+                if (existing.files.length < 15 && !existing.files.includes(file.name)) {
+                  existing.files.push(file.name);
+                }
+                for (let s = 0; s < item.samples.length; s++) {
+                  const sample = item.samples[s];
+                  if (existing.samples.length < 3 && !existing.samples.includes(sample)) {
+                    existing.samples.push(sample);
+                  }
+                }
+                existing.hasUri = existing.hasUri || item.hasUri;
+                existing.hasCertainty = existing.hasCertainty || item.hasCertainty;
+              }
+            }
+          }
+
+          return Array.from(combined.values());
+        }, [files, inputMode]);
+
+        const discoveredFieldLookup = useMemo(() => {
+          const map = new Map();
+          discoveredFields.forEach((f) => {
+            map.set(`${f.format}::${f.path}`, f);
+          });
+          return map;
+        }, [discoveredFields]);
+
+        const filteredDiscoveredFields = useMemo(() => {
+          const q = fieldSearch.toLowerCase().trim();
+          if (!q) return discoveredFields;
+          return discoveredFields.filter(
+            (f) =>
+              f.path.toLowerCase().includes(q) ||
+              f.samples.some((s) => s.toLowerCase().includes(q))
+          );
+        }, [discoveredFields, fieldSearch]);
+
+        const filteredLoadedFiles = useMemo(() => {
+          const q = fileListFilter.toLowerCase().trim();
+          if (!q) return files;
+          return files.filter(
+            (f) =>
+              f.name.toLowerCase().includes(q) ||
+              (f.description && f.description.toLowerCase().includes(q))
+          );
+        }, [files, fileListFilter]);
+
+        const buildSuggestedMappingsForFields = (fieldsList) => {
+          const nextMappings = {};
+          for (const target of TARGET_FIELDS) {
+            const candidatePaths = AUTO_SUGGEST_RULES[target.key] || [];
+            const matchedRules = [];
+            for (const cand of candidatePaths) {
+              const found = fieldsList.find((df) => df.path === cand);
+              if (found) {
+                matchedRules.push({
+                  id: `${target.key}-${found.path}-${Math.random().toString(36).slice(2, 7)}`,
+                  sourcePath: found.path,
+                  format: found.format,
+                  includeUri: true,
+                  includeCertainty: true,
+                  textMode: target.key === 'diplomatic_text' ? 'diplomatic' : 'clean'
+                });
+              }
+            }
+            if (matchedRules.length > 0) {
+              nextMappings[target.key] = matchedRules;
+            }
+          }
+          return nextMappings;
+        };
+
+        const handleModeSwitch = (nextMode) => {
+          if (nextMode === inputMode) return;
+          setInputMode(nextMode);
+          setSelectedPreviewIdx('ALL');
+          setSelectedVerifierFile('ALL');
+          setInspectedRule(null);
+          setFieldSearch('');
+          setFileListFilter('');
+          setOpenDropdownTarget(null);
+          setUploadError(null);
+          showToast(
+            `Switched to ${
+              nextMode === 'XML' ? 'EpiDoc XML (.xml)' : 'RDF (JSON-LD / Turtle)'
+            } workflow.`
+          );
+        };
+
+        const applyAutoSuggest = (notify = true) => {
+          const suggested = buildSuggestedMappingsForFields(discoveredFields);
+          setMappingsByMode((prev) => ({
+            ...prev,
+            [inputMode]: suggested
+          }));
+          const firstKey = Object.keys(suggested)[0];
+          if (firstKey && suggested[firstKey]?.[0]) {
+            setInspectedRule({ targetKey: firstKey, rule: suggested[firstKey][0] });
+          }
+          if (notify) {
+            showToast(
+              `Auto-aligned standard ${
+                inputMode === 'XML' ? 'EpiDoc TEI XPaths' : 'RDF predicates'
+              } to target attributes.`
+            );
+          }
+        };
+
+        const addMappingRule = (targetKey, fieldObj) => {
+          const newRule = {
+            id: `${targetKey}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            sourcePath: fieldObj.path,
+            format: fieldObj.format,
+            includeUri: true,
+            includeCertainty: true,
+            textMode: targetKey === 'diplomatic_text' ? 'diplomatic' : 'clean'
+          };
+
+          setMappingsByMode((prev) => {
+            const modeMappings = prev[inputMode] || {};
+            const current = modeMappings[targetKey] || [];
+            if (current.some((r) => r.sourcePath === fieldObj.path && r.format === fieldObj.format)) {
+              showToast('This input path is already aligned to this target field.');
+              return prev;
+            }
+            return {
+              ...prev,
+              [inputMode]: {
+                ...modeMappings,
+                [targetKey]: [...current, newRule]
+              }
+            };
+          });
+          setInspectedRule({ targetKey, rule: newRule });
+          setOpenDropdownTarget(null);
+          setDropdownSearch('');
+        };
+
+        const removeMappingRule = (targetKey, ruleId) => {
+          setMappingsByMode((prev) => {
+            const modeMappings = prev[inputMode] || {};
+            const updated = (modeMappings[targetKey] || []).filter((r) => r.id !== ruleId);
+            const nextModeMappings = { ...modeMappings };
+            if (updated.length === 0) {
+              delete nextModeMappings[targetKey];
+            } else {
+              nextModeMappings[targetKey] = updated;
+            }
+            return {
+              ...prev,
+              [inputMode]: nextModeMappings
+            };
+          });
+          setInspectedRule((prev) => (prev?.rule?.id === ruleId ? null : prev));
+        };
+
+        const updateRuleOption = (targetKey, ruleId, patch) => {
+          setMappingsByMode((prev) => {
+            const modeMappings = prev[inputMode] || {};
+            return {
+              ...prev,
+              [inputMode]: {
+                ...modeMappings,
+                [targetKey]: (modeMappings[targetKey] || []).map((r) =>
+                  r.id === ruleId ? { ...r, ...patch } : r
+                )
+              }
+            };
+          });
+          setInspectedRule((prev) =>
+            prev?.rule?.id === ruleId
+              ? { ...prev, rule: { ...prev.rule, ...patch } }
+              : prev
+          );
+        };
+
+        const processBatchFiles = async (rawFileList) => {
+          const allFiles = Array.from(rawFileList || []);
+          if (allFiles.length === 0) return;
+          setUploadError(null);
+
+          const validFiles = [];
+          const rejectedNames = [];
+
+          for (let i = 0; i < allFiles.length; i++) {
+            const file = allFiles[i];
+            const lower = file.name.toLowerCase();
+            if (file.name.startsWith('.')) continue;
+
+            const isXmlExt = lower.endsWith('.xml');
+            const isRdfExt =
+              lower.endsWith('.jsonld') ||
+              lower.endsWith('.ttl') ||
+              lower.endsWith('.rdf') ||
+              lower.endsWith('.json');
+
+            if (inputMode === 'XML' && isXmlExt) {
+              validFiles.push(file);
+            } else if (inputMode === 'RDF' && isRdfExt) {
+              validFiles.push(file);
+            } else {
+              rejectedNames.push(file.name);
+            }
+          }
+
+          if (rejectedNames.length > 0) {
+            const previewRejected = rejectedNames.slice(0, 3).join(', ');
+            const extraCount = rejectedNames.length > 3 ? ` (+${rejectedNames.length - 3} more)` : '';
+            setUploadError(
+              `Skipped ${rejectedNames.length} incompatible file${rejectedNames.length === 1 ? '' : 's'} (${previewRejected}${extraCount}). ${
+                inputMode === 'XML'
+                  ? 'EpiDoc XML mode accepts .xml files.'
+                  : 'RDF mode accepts .jsonld, .ttl, or .rdf files.'
+              }`
+            );
+          }
+
+          if (validFiles.length === 0) return;
+
+          setBatchIngestState({ processed: 0, total: validFiles.length });
+          const CHUNK_SIZE = 25;
+          const ingestedRecords = [];
+
+          for (let start = 0; start < validFiles.length; start += CHUNK_SIZE) {
+            const chunk = validFiles.slice(start, start + CHUNK_SIZE);
+            const chunkResults = await Promise.all(
+              chunk.map(async (file) => {
+                const content = await file.text();
+                const lower = file.name.toLowerCase();
+                let format = 'EpiDoc XML';
+                if (inputMode === 'RDF') {
+                  if (lower.endsWith('.jsonld') || lower.endsWith('.json')) {
+                    format = 'RDF (JSON-LD)';
+                  } else if (lower.endsWith('.ttl')) {
+                    format = 'RDF (Turtle)';
+                  } else {
+                    format = 'RDF (RDF-XML)';
+                  }
+                }
+                const relPath = file.webkitRelativePath || file.name;
+                const fileObj = {
+                  id: `upload-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                  name: file.name,
+                  format,
+                  description:
+                    relPath !== file.name
+                      ? `Folder batch: ${relPath}`
+                      : `Batch dataset (${(file.size / 1024).toFixed(1)} KB)`,
+                  content
+                };
+                getParsedFileArtifact(fileObj);
+                return fileObj;
+              })
+            );
+
+            ingestedRecords.push(...chunkResults);
+            setBatchIngestState({
+              processed: Math.min(start + CHUNK_SIZE, validFiles.length),
+              total: validFiles.length
+            });
+            await new Promise((r) => setTimeout(r, 0));
+          }
+
+          setFilesByMode((prev) => ({
+            ...prev,
+            [inputMode]: [...(prev[inputMode] || []), ...ingestedRecords]
+          }));
+          setBatchIngestState(null);
+          showToast(
+            `Batch imported ${ingestedRecords.length} ${inputMode} file${
+              ingestedRecords.length === 1 ? '' : 's'
+            }.`
+          );
+        };
+
+        const handleFileUpload = (e) => {
+          processBatchFiles(e.target.files);
+          e.target.value = '';
+        };
+
+        const handleDropFiles = async (e) => {
+          e.preventDefault();
+          setIsDragOverDropzone(false);
+
+          const items = e.dataTransfer?.items;
+          if (items && items.length > 0 && items[0].webkitGetAsEntry) {
+            const collectedFiles = [];
+            const traverseEntry = async (entry) => {
+              if (!entry) return;
+              if (entry.isFile) {
+                const file = await new Promise((resolve) => entry.file(resolve));
+                if (file) collectedFiles.push(file);
+              } else if (entry.isDirectory) {
+                const reader = entry.createReader();
+                const entries = await new Promise((resolve) => {
+                  const all = [];
+                  const readBatch = () => {
+                    reader.readEntries((batch) => {
+                      if (!batch.length) resolve(all);
+                      else {
+                        all.push(...batch);
+                        readBatch();
+                      }
+                    });
+                  };
+                  readBatch();
+                });
+                for (const child of entries) {
+                  await traverseEntry(child);
+                }
+              }
+            };
+
+            for (let i = 0; i < items.length; i++) {
+              const entry = items[i].webkitGetAsEntry();
+              if (entry) await traverseEntry(entry);
+            }
+            if (collectedFiles.length > 0) {
+              processBatchFiles(collectedFiles);
+              return;
+            }
+          }
+
+          if (e.dataTransfer?.files?.length) {
+            processBatchFiles(e.dataTransfer.files);
+          }
+        };
+
+        const removeFile = (fileId) => {
+          setFilesByMode((prev) => ({
+            ...prev,
+            [inputMode]: (prev[inputMode] || []).filter((f) => f.id !== fileId)
+          }));
+          setSelectedPreviewIdx('ALL');
+        };
+
+        const clearAllFiles = () => {
+          setFilesByMode((prev) => ({
+            ...prev,
+            [inputMode]: []
+          }));
+          setSelectedPreviewIdx('ALL');
+          setSelectedVerifierFile('ALL');
+          showToast(`Cleared all loaded ${inputMode} files.`);
+        };
+
+        const loadTestDatasets = () => {
+          setUploadError(null);
+          const sampleSubset = SAMPLE_FILES.filter((f) =>
+            inputMode === 'XML' ? f.format === 'EpiDoc XML' : f.format !== 'EpiDoc XML'
+          );
+          setFilesByMode((prev) => ({
+            ...prev,
+            [inputMode]: sampleSubset
+          }));
+          setSelectedPreviewIdx('ALL');
+          showToast(
+            `Loaded authentic ${
+              inputMode === 'XML' ? 'EDH & I.Sicily EpiDoc XML' : 'EDH & RIB Turtle RDF'
+            } test datasets.`
+          );
+        };
+
+        const handleExportProfile = () => {
+          const profile = {
+            schema_version: '1.1',
+            input_format: inputMode === 'XML' ? 'EpiDoc XML' : 'RDF',
+            exported_at: new Date().toISOString(),
+            description: `Epigraphic Data (${
+              inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'
+            }) to JSON Field Alignment Profile`,
+            mappings
+          };
+          const blob = new Blob([JSON.stringify(profile, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `epigraphic-${inputMode.toLowerCase()}-alignment-profile.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast(`Exported ${inputMode} alignment profile (.json).`);
+        };
+
+        const handleImportProfile = (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            try {
+              const parsed = JSON.parse(ev.target?.result);
+              if (parsed && parsed.mappings && typeof parsed.mappings === 'object') {
+                const profileMode =
+                  parsed.input_format === 'RDF'
+                    ? 'RDF'
+                    : parsed.input_format === 'EpiDoc XML'
+                    ? 'XML'
+                    : inputMode;
+                setInputMode(profileMode);
+                setMappingsByMode((prev) => ({
+                  ...prev,
+                  [profileMode]: parsed.mappings
+                }));
+                showToast(`Imported ${profileMode} alignment profile from ${file.name}`);
+              } else {
+                showToast('Invalid profile JSON: missing "mappings" object.');
+              }
+            } catch (err) {
+              showToast('Could not parse profile JSON file.');
+            }
+          };
+          reader.readAsText(file);
+          e.target.value = '';
+        };
+
+        const mandatoryFields = TARGET_FIELDS.filter((f) => f.group === 'mandatory');
+        const unmappedMandatory = mandatoryFields.filter(
+          (f) => !mappings[f.key] || mappings[f.key].length === 0
+        );
+        const isValidForExport = unmappedMandatory.length === 0 && files.length > 0;
+        const currentWorkflowStep = files.length === 0 ? 2 : !isValidForExport ? 3 : 4;
+
+        useEffect(() => {
+          const candidateUris = new Set();
+          files.forEach((file) => {
+            const baseRec = transformFileToTargetJson(file, mappings);
+            if (baseRec.geography && typeof baseRec.geography === 'object') {
+              const places = Array.isArray(baseRec.geography.ancient_place_name)
+                ? baseRec.geography.ancient_place_name
+                : [];
+              const provinces = Array.isArray(baseRec.geography.province)
+                ? baseRec.geography.province
+                : [];
+              [...places, ...provinces].forEach((entry) => {
+                if (entry && entry.uri) {
+                  const normalized = entry.uri.replace(/^http:\/\//i, 'https://').replace(/\/$/, '');
+                  const alreadyCached = normalized in lodGeoCache || entry.uri in lodGeoCache;
+                  const alreadyRequested = inFlightLodUrisRef.current.has(normalized);
+                  if (!alreadyCached && !alreadyRequested) {
+                    candidateUris.add(normalized);
+                  }
+                }
+              });
+            }
+          });
+
+          if (candidateUris.size === 0) return;
+
+          candidateUris.forEach((u) => inFlightLodUrisRef.current.add(u));
+          let cancelled = false;
+          setResolvingLodUris(true);
+
+          const resolveUri = async (uri) => {
+            try {
+              const pleiadesMatch = uri.match(/^https?:\/\/pleiades\.stoa\.org\/places\/(\d+)/i);
+              if (pleiadesMatch) {
+                const resp = await fetch(`https://pleiades.stoa.org/places/${pleiadesMatch[1]}/json`);
+                if (resp.ok) {
+                  const data = await resp.json();
+                  const reprPoint = Array.isArray(data.reprPoint) ? data.reprPoint : null;
+                  if (reprPoint && reprPoint.length >= 2) {
+                    return {
+                      uri,
+                      coords: {
+                        lon: Number(reprPoint[0]),
+                        lat: Number(reprPoint[1]),
+                        source: 'Pleiades LOD'
+                      }
+                    };
+                  }
+                }
+              }
+
+              const geonamesMatch = uri.match(/^https?:\/\/(?:www\.)?geonames\.org\/(\d+)/i);
+              if (geonamesMatch) {
+                const resp = await fetch(
+                  `https://secure.geonames.org/getJSON?geonameId=${geonamesMatch[1]}&username=demo`
+                );
+                if (resp.ok) {
+                  const data = await resp.json();
+                  if (data.lat !== undefined && data.lng !== undefined) {
+                    return {
+                      uri,
+                      coords: {
+                        lat: Number(data.lat),
+                        lon: Number(data.lng),
+                        source: 'GeoNames LOD'
+                      }
+                    };
+                  }
+                }
+              }
+            } catch (err) {}
+            return { uri, coords: null };
+          };
+
+          Promise.all(Array.from(candidateUris).map(resolveUri)).then((results) => {
+            if (cancelled) return;
+            setLodGeoCache((prev) => {
+              const next = { ...prev };
+              results.forEach(({ uri, coords }) => {
+                next[uri] = coords;
+              });
+              return next;
+            });
+            setResolvingLodUris(false);
+          });
+
+          return () => {
+            cancelled = true;
+          };
+        }, [files, mappings]);
+
+        const transformedRecords = useMemo(() => {
+          return files.map((file) => {
+            const rec = transformFileToTargetJson(file, mappings);
+            if (
+              rec.geography &&
+              typeof rec.geography === 'object' &&
+              (rec.geography.latitude === 'N/A' || rec.geography.longitude === 'N/A')
+            ) {
+              const ancientPlaces = Array.isArray(rec.geography.ancient_place_name)
+                ? rec.geography.ancient_place_name
+                : [];
+              const provinces = Array.isArray(rec.geography.province)
+                ? rec.geography.province
+                : [];
+              const candidateEntries = [...ancientPlaces, ...provinces];
+
+              for (const entry of candidateEntries) {
+                if (!entry?.uri) continue;
+                const normalized = entry.uri.replace(/^http:\/\//i, 'https://').replace(/\/$/, '');
+                const resolved = lodGeoCache[normalized] || lodGeoCache[entry.uri];
+                if (resolved && resolved.lat !== undefined && resolved.lon !== undefined) {
+                  rec.geography = {
+                    ...rec.geography,
+                    latitude: rec.geography.latitude === 'N/A' ? resolved.lat : rec.geography.latitude,
+                    longitude: rec.geography.longitude === 'N/A' ? resolved.lon : rec.geography.longitude,
+                    coordinate_source: `${resolved.source} (${normalized})`
+                  };
+                  break;
+                }
+              }
+            }
+            return rec;
+          });
+        }, [files, mappings, lodGeoCache]);
+
+        const previewJsonString = useMemo(() => {
+          if (selectedPreviewIdx === 'ALL') {
+            if (transformedRecords.length > 25) {
+              const slice = transformedRecords.slice(0, 25);
+              return (
+                JSON.stringify(slice, null, 2) +
+                `\n\n// ... Showing first 25 of ${transformedRecords.length} batch records in preview. Use Batch Export buttons above to download all ${transformedRecords.length} records.`
+              );
+            }
+            return JSON.stringify(transformedRecords, null, 2);
+          }
+          const idx = Number(selectedPreviewIdx);
+          const single = transformedRecords[idx] || transformedRecords[0] || null;
+          return JSON.stringify(single ? [single] : [], null, 2);
+        }, [transformedRecords, selectedPreviewIdx]);
+
+        const handleCopyJson = () => {
+          const fullJson = JSON.stringify(transformedRecords, null, 2);
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(fullJson);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = fullJson;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          setCopiedJson(true);
+          showToast(`Copied all ${transformedRecords.length} JSON records to clipboard.`);
+          setTimeout(() => setCopiedJson(false), 2000);
+        };
+
+        const handleDownloadJson = () => {
+          if (!isValidForExport) return;
+          const blob = new Blob([JSON.stringify(transformedRecords, null, 2)], {
+            type: 'application/json'
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `epigraphic-batch-${inputMode.toLowerCase()}-${transformedRecords.length}records.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast(`Exported combined JSON (${transformedRecords.length} records).`);
+        };
+
+        const handleDownloadNdjson = () => {
+          if (!isValidForExport) return;
+          const ndjson = transformedRecords.map((rec) => JSON.stringify(rec)).join('\n');
+          const blob = new Blob([ndjson], { type: 'application/x-ndjson' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `epigraphic-batch-${inputMode.toLowerCase()}-${transformedRecords.length}records.ndjson`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast(`Exported NDJSON stream (${transformedRecords.length} lines).`);
+        };
+
+        const handleDownloadBatchZip = async () => {
+          if (!isValidForExport || typeof JSZip === 'undefined') return;
+          setIsExportingZip(true);
+          try {
+            const zip = new JSZip();
+            const recordsFolder = zip.folder('records');
+            const usedFilenames = new Set();
+
+            transformedRecords.forEach((rec, idx) => {
+              const baseName = (rec._source_file || `record_${idx + 1}`)
+                .replace(/\.(xml|jsonld|ttl|rdf|json)$/i, '')
+                .replace(/[^a-zA-Z0-9._-]/g, '_');
+              let candidate = `${baseName}.json`;
+              let counter = 2;
+              while (usedFilenames.has(candidate)) {
+                candidate = `${baseName}_${counter}.json`;
+                counter += 1;
+              }
+              usedFilenames.add(candidate);
+              recordsFolder.file(candidate, JSON.stringify(rec, null, 2));
+            });
+
+            zip.file(
+              'batch_manifest.json',
+              JSON.stringify(
+                {
+                  exported_at: new Date().toISOString(),
+                  input_format: inputMode === 'XML' ? 'EpiDoc XML' : 'RDF',
+                  record_count: transformedRecords.length,
+                  alignment_profile: mappings
+                },
+                null,
+                2
+              )
+            );
+
+            const blob = await zip.generateAsync({ type: 'blob' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `epialign-batch-${inputMode.toLowerCase()}-${transformedRecords.length}files.zip`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast(`Exported ZIP archive with ${transformedRecords.length} individual JSON files.`);
+          } catch (err) {
+            showToast('Failed to generate ZIP archive.');
+          } finally {
+            setIsExportingZip(false);
+          }
+        };
+
+        const mappedPathsSet = useMemo(() => {
+          const s = new Set();
+          Object.values(mappings).forEach((rules) => {
+            (rules || []).forEach((r) => s.add(`${r.format}::${r.sourcePath}`));
+          });
+          return s;
+        }, [mappings]);
+
+        const activeInspectedEntry = useMemo(() => {
+          if (inspectedRule) {
+            const currentRules = mappings[inspectedRule.targetKey] || [];
+            const stillExists = currentRules.find((r) => r.id === inspectedRule.rule.id);
+            if (stillExists) {
+              return { targetKey: inspectedRule.targetKey, rule: stillExists };
+            }
+          }
+          for (const target of TARGET_FIELDS) {
+            const rules = mappings[target.key] || [];
+            if (rules.length > 0) {
+              return { targetKey: target.key, rule: rules[0] };
+            }
+          }
+          return null;
+        }, [inspectedRule, mappings]);
+
+        const inspectedSnippetsByFile = useMemo(() => {
+          if (!activeInspectedEntry) return [];
+          const { rule } = activeInspectedEntry;
+          const serializer = new XMLSerializer();
+
+          const targetFiles =
+            selectedVerifierFile === 'ALL'
+              ? files.slice(0, 30)
+              : files.filter((f) => f.name === selectedVerifierFile);
+
+          return targetFiles
+            .map((file) => {
+              const artifact = getParsedFileArtifact(file);
+
+              if (artifact.kind === 'XML' && rule.format === 'EpiDoc XML') {
+                const isAttr = rule.sourcePath.includes('/@');
+                let elemPath = rule.sourcePath;
+                let targetAttr = null;
+                if (isAttr) {
+                  const splitIdx = rule.sourcePath.lastIndexOf('/@');
+                  elemPath = rule.sourcePath.slice(0, splitIdx);
+                  targetAttr = rule.sourcePath.slice(splitIdx + 2);
+                }
+
+                const matchedElements = artifact.pathIndex.get(elemPath) || [];
+                const matches = [];
+
+                for (let i = 0; i < matchedElements.length; i++) {
+                  const el = matchedElements[i];
+                  let val = null;
+                  if (targetAttr) {
+                    val = el.getAttribute(targetAttr);
+                  } else if (rule.textMode === 'raw') {
+                    val = el.innerHTML.trim();
+                  } else if (rule.textMode === 'diplomatic') {
+                    val = cleanEpigraphicText(el, 'diplomatic');
+                  } else {
+                    val = cleanEpigraphicText(el, 'interpretive');
+                  }
+                  if (!val) continue;
+
+                  matches.push({
+                    value: String(val),
+                    rawSource: serializer.serializeToString(el),
+                    uri:
+                      el.getAttribute('ref') ||
+                      el.getAttribute('corresp') ||
+                      el.getAttribute('ana') ||
+                      (targetAttr === 'ref' ? val : null),
+                    certainty:
+                      el.getAttribute('cert') ||
+                      el.getAttribute('precision') ||
+                      el.getAttribute('evidence') ||
+                      null,
+                    placeType: !targetAttr ? el.getAttribute('type') || null : null
+                  });
+                }
+
+                return {
+                  fileName: file.name,
+                  format: file.format,
+                  matches
+                };
+              }
+
+              if (artifact.kind !== 'XML' && rule.format !== 'EpiDoc XML') {
+                const matches = evaluateRdfPredicateCached(artifact, rule.sourcePath, {
+                  includeUri: true,
+                  includeCertainty: true
+                }).map((m) => ({
+                  value: String(m.value),
+                  rawSource: `${rule.sourcePath} → ${JSON.stringify(m.value)}`,
+                  uri: m.uri || null,
+                  certainty: m.certainty || null
+                }));
+
+                return {
+                  fileName: file.name,
+                  format: file.format,
+                  matches
+                };
+              }
+
+              return null;
+            })
+            .filter(Boolean);
+        }, [activeInspectedEntry, files, selectedVerifierFile]);
+
+        const activeDropdownTarget = useMemo(
+          () => TARGET_FIELDS.find((t) => t.key === openDropdownTarget) || null,
+          [openDropdownTarget]
+        );
+
+        const dropdownFilteredFields = useMemo(() => {
+          const q = dropdownSearch.toLowerCase().trim();
+          if (!q) return discoveredFields;
+          return discoveredFields.filter(
+            (df) =>
+              df.path.toLowerCase().includes(q) ||
+              df.samples.some((s) => s.toLowerCase().includes(q))
+          );
+        }, [discoveredFields, dropdownSearch]);
+
+        return (
+          <div className="min-h-screen bg-[#F6F5F1] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans text-base leading-relaxed selection:bg-indigo-100 selection:text-indigo-950 dark:selection:bg-indigo-900 dark:selection:text-indigo-100 transition-colors duration-200">
+            {/* Top Scholarly Header */}
+            <header className="bg-[#162136] dark:bg-slate-900 text-stone-100 border-b border-slate-800 px-4 lg:px-6 py-4 shadow-sm sticky top-0 z-30">
+              <div className="max-w-[1720px] mx-auto flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                    <BookOpen className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+                        EpiAlign
+                      </h1>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-slate-800 text-amber-300 border border-slate-700">
+                        {inputMode === 'XML' ? 'EpiDoc XML → JSON' : 'RDF → JSON'}
+                      </span>
+                      <a
+                        href="/"
+                        className="hidden md:inline-flex items-center gap-1 text-xs font-medium text-slate-300 hover:text-amber-300 transition ml-2"
+                      >
+                        ← Petrified Voices
+                      </a>
+                    </div>
+                    <p className="text-sm text-slate-300 hidden sm:block mt-0.5">
+                      Epigraphic Schema Alignment &amp; Linked Open Data Batch Workbench
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Toolbar */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    onClick={() => applyAutoSuggest(true)}
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium bg-slate-800 hover:bg-slate-700 text-stone-100 border border-slate-600 transition cursor-pointer"
+                    title={`Automatically align standard ${
+                      inputMode === 'XML' ? 'EpiDoc TEI XPaths' : 'RDF predicates'
+                    }`}
+                  >
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    Auto-suggest Alignments
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setMappingsByMode((prev) => ({
+                        ...prev,
+                        [inputMode]: {}
+                      }));
+                      showToast(`Cleared ${inputMode} field alignments.`);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-slate-800/70 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer"
+                    title="Reset current format mappings"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    Reset
+                  </button>
+
+                  <div className="h-5 w-px bg-slate-700 mx-0.5 hidden md:block" />
+
+                  <button
+                    onClick={handleExportProfile}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition cursor-pointer"
+                    title="Save current alignment rules as reusable JSON config"
+                  >
+                    <Download className="w-4 h-4 text-sky-400" />
+                    Save Profile
+                  </button>
+
+                  <button
+                    onClick={() => profileInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition cursor-pointer"
+                    title="Load saved mapping profile JSON"
+                  >
+                    <FolderOpen className="w-4 h-4 text-sky-400" />
+                    Load Profile
+                  </button>
+                  <input
+                    ref={profileInputRef}
+                    type="file"
+                    accept=".json"
+                    onChange={handleImportProfile}
+                    className="hidden"
+                  />
+
+                  <div className="h-5 w-px bg-slate-700 mx-0.5 hidden sm:block" />
+
+                  {/* Dark Mode Toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setDarkMode((d) => !d)}
+                    aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                    title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-600 transition cursor-pointer"
+                  >
+                    {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                    <span className="hidden xl:inline text-slate-100">
+                      {darkMode ? 'Light' : 'Dark'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </header>
+
+            {/* SECTION 1: GUIDED 4-STEP WORKFLOW STEPPER & FORMAT SELECTOR */}
+            <div className="bg-white dark:bg-slate-900/95 border-b border-stone-300/90 dark:border-slate-800 px-4 lg:px-6 py-4 shadow-2xs transition-colors">
+              <div className="max-w-[1720px] mx-auto space-y-3.5">
+                {/* Visual 4-Step Progress Bar with Equal-Height Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch">
+                  {[
+                    {
+                      step: 1,
+                      title: 'Choose Format',
+                      desc: inputMode === 'XML' ? 'EpiDoc XML (.xml)' : 'RDF (.jsonld, .ttl)',
+                      status: 'done',
+                      action: null
+                    },
+                    {
+                      step: 2,
+                      title: 'Batch Upload or Load',
+                      desc:
+                        files.length > 0
+                          ? `${files.length} ${inputMode} file${files.length === 1 ? '' : 's'} ready`
+                          : 'Drop files/folders or load test data',
+                      status: files.length > 0 ? 'done' : 'active',
+                      action: () => {
+                        setActiveTabMobile('sources');
+                        document.getElementById('step-2-panel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                      }
+                    },
+                    {
+                      step: 3,
+                      title: 'Align Target Fields',
+                      desc:
+                        files.length === 0
+                          ? 'Waiting for source files'
+                          : isValidForExport
+                          ? `${Object.keys(mappings).length} target fields aligned`
+                          : `Map ${unmappedMandatory.length} mandatory field${unmappedMandatory.length === 1 ? '' : 's'}`,
+                      status:
+                        files.length === 0
+                          ? 'pending'
+                          : isValidForExport
+                          ? 'done'
+                          : 'active',
+                      action: () => {
+                        setActiveTabMobile('workspace');
+                        document.getElementById('step-3-panel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                      }
+                    },
+                    {
+                      step: 4,
+                      title: 'Verify & Batch Export',
+                      desc: isValidForExport
+                        ? 'Export JSON, NDJSON or ZIP archive'
+                        : 'Complete Steps 2–3 to unlock export',
+                      status: isValidForExport ? 'active' : 'pending',
+                      action: () => {
+                        setActiveTabMobile('verifier');
+                        document.getElementById('step-4-panel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                      }
+                    }
+                  ].map((item) => {
+                    const isActive = item.status === 'active';
+                    const isDone = item.status === 'done';
+                    return (
+                      <div
+                        key={item.step}
+                        onClick={item.action || undefined}
+                        role={item.action ? 'button' : undefined}
+                        tabIndex={item.action ? 0 : undefined}
+                        onKeyDown={(e) => {
+                          if (item.action && (e.key === 'Enter' || e.key === ' ')) {
+                            e.preventDefault();
+                            item.action();
+                          }
+                        }}
+                        className={`h-full rounded-xl border-2 px-3.5 py-3 flex items-start gap-3 transition ${
+                          item.action ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600' : ''
+                        } ${
+                          isActive
+                            ? 'bg-amber-50/90 dark:bg-amber-950/35 border-amber-500 ring-2 ring-amber-400/20 shadow-2xs'
+                            : isDone
+                            ? 'bg-emerald-50/50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 hover:border-emerald-400'
+                            : 'bg-stone-50/80 dark:bg-slate-800/60 border-stone-200 dark:border-slate-700 text-stone-700 dark:text-slate-300'
+                        }`}
+                      >
+                        <span
+                          className={`w-7 h-7 rounded-full text-sm font-bold flex items-center justify-center shrink-0 mt-0.5 ${
+                            isActive
+                              ? 'bg-[#162136] dark:bg-amber-400 text-amber-300 dark:text-slate-950'
+                              : isDone
+                              ? 'bg-emerald-700 dark:bg-emerald-600 text-white'
+                              : 'bg-stone-300 dark:bg-slate-700 text-slate-800 dark:text-slate-200'
+                          }`}
+                        >
+                          {isDone && item.step !== 1 ? '✓' : item.step}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-1.5">
+                            <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                              Step {item.step}: {item.title}
+                            </span>
+                            {isActive && (
+                              <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-200 dark:bg-amber-500/25 text-amber-950 dark:text-amber-200 shrink-0">
+                                Next
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 leading-snug">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Step 1 Format Switcher Sub-bar */}
+                <div className="pt-3 border-t border-stone-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                    <span className="font-bold text-slate-900 dark:text-white">Step 1 Format:</span>
+                    <span>Select whether your batch corpus is encoded in EpiDoc XML or RDF triples.</span>
+                  </div>
+
+                  <div
+                    role="radiogroup"
+                    aria-label="Input data format"
+                    className="grid grid-cols-2 gap-2.5 sm:w-auto w-full"
+                  >
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={inputMode === 'XML'}
+                      onClick={() => handleModeSwitch('XML')}
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border-2 text-left transition cursor-pointer ${
+                        inputMode === 'XML'
+                          ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 ring-2 ring-amber-500/20 text-amber-950 dark:text-amber-100 shadow-2xs'
+                          : 'bg-stone-50 dark:bg-slate-800 border-stone-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700'
+                      }`}
+                    >
+                      <FileCode2
+                        className={`w-5 h-5 shrink-0 ${
+                          inputMode === 'XML' ? 'text-amber-800 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'
+                        }`}
+                      />
+                      <div>
+                        <div className="text-sm font-bold flex items-center gap-2">
+                          EpiDoc XML
+                          {inputMode === 'XML' && (
+                            <span className="w-2 h-2 rounded-full bg-amber-600 dark:bg-amber-400" />
+                          )}
+                        </div>
+                        <div className="text-xs text-slate-600 dark:text-slate-400">TEI XML files (.xml)</div>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={inputMode === 'RDF'}
+                      onClick={() => handleModeSwitch('RDF')}
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border-2 text-left transition cursor-pointer ${
+                        inputMode === 'RDF'
+                          ? 'bg-sky-50 dark:bg-sky-950/45 border-sky-600 dark:border-sky-500 ring-2 ring-sky-500/20 text-sky-950 dark:text-sky-100 shadow-2xs'
+                          : 'bg-stone-50 dark:bg-slate-800 border-stone-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700'
+                      }`}
+                    >
+                      <Layers
+                        className={`w-5 h-5 shrink-0 ${
+                          inputMode === 'RDF' ? 'text-sky-800 dark:text-sky-400' : 'text-slate-500 dark:text-slate-400'
+                        }`}
+                      />
+                      <div>
+                        <div className="text-sm font-bold flex items-center gap-2">
+                          RDF Triples
+                          {inputMode === 'RDF' && (
+                            <span className="w-2 h-2 rounded-full bg-sky-600 dark:bg-sky-400" />
+                          )}
+                        </div>
+                        <div className="text-xs text-slate-600 dark:text-slate-400">JSON-LD / Turtle (.jsonld, .ttl)</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Toast Notification */}
+            {toastMessage && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="fixed bottom-5 right-5 z-[9990] bg-slate-900 dark:bg-slate-800 text-white text-sm px-4 py-3 rounded-xl shadow-lg border border-slate-700 flex items-center gap-2.5 animate-fade-in"
+              >
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                <span>{toastMessage}</span>
+              </div>
+            )}
+
+            {/* Mobile Navigation Tabs */}
+            <div className="lg:hidden bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 px-3 py-2.5 flex gap-2 sticky top-[68px] z-20 overflow-x-auto">
+              <button
+                onClick={() => setActiveTabMobile('sources')}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap ${
+                  activeTabMobile === 'sources'
+                    ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                    : 'bg-stone-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
+                }`}
+              >
+                2. Sources ({files.length})
+              </button>
+              <button
+                onClick={() => setActiveTabMobile('workspace')}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap ${
+                  activeTabMobile === 'workspace'
+                    ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                    : 'bg-stone-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
+                }`}
+              >
+                3. Align ({Object.keys(mappings).length}/13)
+              </button>
+              <button
+                onClick={() => setActiveTabMobile('verifier')}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap ${
+                  activeTabMobile === 'verifier'
+                    ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                    : 'bg-stone-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
+                }`}
+              >
+                4a. Verify
+              </button>
+              <button
+                onClick={() => setActiveTabMobile('output')}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap ${
+                  activeTabMobile === 'output'
+                    ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                    : 'bg-stone-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
+                }`}
+              >
+                4b. Export ({transformedRecords.length})
+              </button>
+            </div>
+
+            {/* Main Rearranged Workspace with Equal-Height Sections 2, 3, and 4 */}
+            <main className="flex-1 max-w-[1720px] w-full mx-auto flex flex-col gap-6 p-4 lg:p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                {/* =================================================================== */}
+                {/* LEFT COLUMN (3 cols): STEP 2 — BATCH UPLOAD & DISCOVERED FIELDS     */}
+                {/* =================================================================== */}
+                <section
+                  id="step-2-panel"
+                  className={`lg:col-span-3 h-full flex flex-col gap-5 ${
+                    activeTabMobile !== 'sources' ? 'hidden lg:flex' : 'flex'
+                  }`}
+                >
+                  {/* Batch Input Datasets Card */}
+                  <div
+                    onDragOver={(e) => {
+                      if (e.dataTransfer?.types?.includes('Files')) {
+                        e.preventDefault();
+                        setIsDragOverDropzone(true);
+                      }
+                    }}
+                    onDragLeave={() => setIsDragOverDropzone(false)}
+                    onDrop={handleDropFiles}
+                    className={`bg-white dark:bg-slate-900 rounded-xl border-2 shadow-xs transition flex flex-col ${
+                      isDragOverDropzone
+                        ? 'border-indigo-500 ring-4 ring-indigo-500/20 bg-indigo-50/40 dark:bg-indigo-950/30'
+                        : currentWorkflowStep === 2
+                        ? 'border-amber-500 ring-2 ring-amber-400/20'
+                        : 'border-stone-200 dark:border-slate-800'
+                    }`}
+                  >
+                    <div className="px-4 py-3.5 bg-stone-50 dark:bg-slate-800/80 border-b border-stone-200 dark:border-slate-800 rounded-t-xl flex items-center justify-between gap-2 flex-wrap">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-[#162136] text-amber-300">
+                          Step 2
+                        </span>
+                        <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-100">
+                          {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} Batch ({files.length})
+                        </h2>
+                      </div>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <button
+                          onClick={loadTestDatasets}
+                          className="text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white px-2.5 py-1.5 rounded-lg border border-stone-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 transition cursor-pointer"
+                          title={`Load built-in ${
+                            inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'
+                          } test datasets`}
+                        >
+                          Test Data
+                        </button>
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#162136] dark:bg-amber-400 hover:bg-slate-800 dark:hover:bg-amber-300 text-white dark:text-slate-950 px-2.5 py-1.5 rounded-lg transition cursor-pointer"
+                          title="Select multiple files for batch upload"
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          Files
+                        </button>
+                        <button
+                          onClick={() => folderInputRef.current?.click()}
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg transition cursor-pointer"
+                          title="Upload an entire folder of epigraphic files"
+                        >
+                          <FolderOpen className="w-3.5 h-3.5" />
+                          Folder
+                        </button>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          multiple
+                          accept={inputMode === 'XML' ? '.xml' : '.jsonld,.ttl,.rdf'}
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                        <input
+                          ref={folderInputRef}
+                          type="file"
+                          webkitdirectory=""
+                          directory=""
+                          multiple
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                      </div>
+                    </div>
+
+                    {batchIngestState && (
+                      <div className="px-3.5 pt-3">
+                        <div className="p-2.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-xs">
+                          <div className="flex justify-between font-semibold text-indigo-950 dark:text-indigo-200 mb-1.5">
+                            <span>Parsing batch files...</span>
+                            <span>
+                              {batchIngestState.processed} / {batchIngestState.total}
+                            </span>
+                          </div>
+                          <div className="w-full h-2 bg-indigo-200 dark:bg-indigo-900 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-indigo-600 dark:bg-amber-400 transition-all duration-150"
+                              style={{
+                                width: `${Math.round(
+                                  (batchIngestState.processed / Math.max(1, batchIngestState.total)) * 100
+                                )}%`
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {uploadError && (
+                      <div
+                        role="alert"
+                        className="mx-3.5 mt-3.5 p-3 rounded-lg bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 text-rose-950 dark:text-rose-200 text-xs flex items-start justify-between gap-2"
+                      >
+                        <div className="flex items-start gap-2">
+                          <AlertCircle className="w-4 h-4 text-rose-700 dark:text-rose-400 shrink-0 mt-0.5" />
+                          <span>{uploadError}</span>
+                        </div>
+                        <button
+                          onClick={() => setUploadError(null)}
+                          aria-label="Dismiss error"
+                          className="text-rose-600 dark:text-rose-300 hover:text-rose-900 font-bold text-base leading-none cursor-pointer"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )}
+
+                    {files.length > 4 && (
+                      <div className="px-3.5 pt-3 flex items-center gap-2">
+                        <div className="relative flex-1">
+                          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="text"
+                            value={fileListFilter}
+                            onChange={(e) => setFileListFilter(e.target.value)}
+                            placeholder={`Filter ${files.length} files...`}
+                            className="w-full pl-8 pr-2.5 py-1.5 text-xs bg-stone-50 dark:bg-slate-800 border border-stone-300 dark:border-slate-700 rounded-lg focus:outline-none focus:border-indigo-500"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={clearAllFiles}
+                          className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 hover:bg-rose-100 transition cursor-pointer shrink-0"
+                          title="Remove all loaded files"
+                        >
+                          Clear All
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="p-3.5 space-y-2">
+                      {files.length === 0 ? (
+                        <div className="text-center py-5 px-3.5 border-2 border-dashed border-stone-300 dark:border-slate-700 rounded-xl bg-stone-50/70 dark:bg-slate-800/40">
+                          <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">
+                            Drop batch {inputMode === 'XML' ? '.xml' : 'RDF'} files or folders here
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 mb-3.5">
+                            Supports multi-file selection, directory ingestion, or built-in sample data.
+                          </p>
+                          <div className="flex flex-wrap items-center justify-center gap-2">
+                            <button
+                              onClick={() => fileInputRef.current?.click()}
+                              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#162136] dark:bg-amber-400 hover:bg-slate-800 dark:hover:bg-amber-300 text-white dark:text-slate-950 px-3 py-2 rounded-lg transition cursor-pointer"
+                            >
+                              <Upload className="w-3.5 h-3.5" />
+                              Batch Files
+                            </button>
+                            <button
+                              onClick={() => folderInputRef.current?.click()}
+                              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg transition cursor-pointer"
+                            >
+                              <FolderOpen className="w-3.5 h-3.5" />
+                              Folder
+                            </button>
+                            <button
+                              onClick={loadTestDatasets}
+                              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-stone-300 dark:border-slate-600 px-3 py-2 rounded-lg transition cursor-pointer"
+                            >
+                              Test Data
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          {filteredLoadedFiles.slice(0, visibleFileLimit).map((file) => (
+                            <div
+                              key={file.id}
+                              className="flex items-start justify-between gap-2 p-2.5 rounded-lg bg-stone-50 dark:bg-slate-800/70 border border-stone-200 dark:border-slate-700 group"
+                            >
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold shrink-0 ${
+                                      inputMode === 'XML'
+                                        ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200 border border-amber-300 dark:border-amber-600/40'
+                                        : 'bg-sky-100 dark:bg-sky-500/20 text-sky-950 dark:text-sky-200 border border-sky-300 dark:border-sky-600/40'
+                                    }`}
+                                  >
+                                    {inputMode === 'XML' ? 'XML' : 'RDF'}
+                                  </span>
+                                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-100 break-all">
+                                    {file.name}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-snug">
+                                  {file.description}
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => removeFile(file.id)}
+                                aria-label={`Remove ${file.name}`}
+                                className="text-slate-500 dark:text-slate-400 hover:text-rose-700 dark:hover:text-rose-400 p-1.5 rounded opacity-80 group-hover:opacity-100 transition cursor-pointer shrink-0"
+                                title="Remove file"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                          {filteredLoadedFiles.length > visibleFileLimit && (
+                            <button
+                              type="button"
+                              onClick={() => setVisibleFileLimit((v) => v + 100)}
+                              className="w-full py-2 text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 rounded-lg border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition cursor-pointer"
+                            >
+                              Show more ({filteredLoadedFiles.length - visibleFileLimit} remaining)
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Discovered Source Schema Explorer */}
+                  <div className="bg-white dark:bg-slate-900 rounded-xl border border-stone-300 dark:border-slate-800 shadow-xs flex-1 flex flex-col">
+                    <div className="px-4 py-3.5 bg-stone-50 dark:bg-slate-800/80 border-b border-stone-200 dark:border-slate-800 rounded-t-xl">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <div className="flex items-center gap-2">
+                          <Code2 className="w-4 h-4 text-[#162136] dark:text-amber-300" />
+                          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-100">
+                            {inputMode === 'XML' ? 'XML XPaths' : 'RDF Predicates'} (
+                            {filteredDiscoveredFields.length})
+                          </h2>
+                        </div>
+                        <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                          Drag or select →
+                        </span>
+                      </div>
+
+                      <div className="relative">
+                        <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          aria-label={
+                            inputMode === 'XML'
+                              ? 'Filter XPaths or values'
+                              : 'Filter predicates or values'
+                          }
+                          value={fieldSearch}
+                          onChange={(e) => setFieldSearch(e.target.value)}
+                          placeholder={
+                            inputMode === 'XML'
+                              ? 'Filter XPaths or values...'
+                              : 'Filter predicates or values...'
+                          }
+                          className="w-full pl-9 pr-3 py-2 text-sm bg-white dark:bg-slate-950 border border-stone-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162136]/20 dark:focus:ring-amber-400/25 focus:border-[#162136] dark:focus:border-amber-400"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="p-3 space-y-2.5 flex-1">
+                      {filteredDiscoveredFields.length === 0 ? (
+                        <div className="text-center py-8 px-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                          {files.length === 0
+                            ? `Upload ${
+                                inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'
+                              } files or click "Test Data" above to discover available ${
+                                inputMode === 'XML' ? 'XPaths' : 'predicates'
+                              }.`
+                            : `No matching ${inputMode === 'XML' ? 'XPath' : 'RDF predicate'} found.`}
+                        </div>
+                      ) : (
+                        filteredDiscoveredFields.map((field) => {
+                          const isMapped = mappedPathsSet.has(field.key);
+                          const displayPath = field.path.replace(
+                            '//tei:TEI/tei:teiHeader/tei:fileDesc/',
+                            '…/fileDesc/'
+                          );
+
+                          return (
+                            <div
+                              key={field.key}
+                              draggable
+                              onDragStart={() => setDraggedField(field)}
+                              onDragEnd={() => {
+                                setDraggedField(null);
+                                setDragOverTarget(null);
+                              }}
+                              title={`Drag to target field\nFull path: ${field.path}`}
+                              className={`p-3 rounded-xl border-2 transition cursor-grab active:cursor-grabbing select-none ${
+                                isMapped
+                                  ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 hover:border-emerald-500'
+                                  : 'bg-white dark:bg-slate-800/70 border-stone-200 dark:border-slate-700 hover:border-[#162136] dark:hover:border-amber-400 hover:shadow-xs'
+                              }`}
+                            >
+                              <div className="flex items-start gap-2">
+                                <GripVertical className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center justify-between gap-1.5 mb-1.5 flex-wrap">
+                                    <span
+                                      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${
+                                        inputMode === 'XML'
+                                          ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
+                                          : 'bg-sky-100 dark:bg-sky-500/20 text-sky-950 dark:text-sky-200'
+                                      }`}
+                                    >
+                                      {inputMode === 'XML' ? 'XPath' : 'Predicate'}
+                                    </span>
+                                    <div className="flex items-center gap-1.5">
+                                      {field.hasUri && (
+                                        <span
+                                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-800"
+                                          title={`Contains LOD URI: ${field.sampleUri}`}
+                                        >
+                                          <LinkIcon className="w-3 h-3" />
+                                          LOD
+                                        </span>
+                                      )}
+                                      {field.hasCertainty && (
+                                        <span
+                                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-200 border border-purple-200 dark:border-purple-800"
+                                          title={`Contains uncertainty attribute: ${field.sampleCertainty}`}
+                                        >
+                                          <HelpCircle className="w-3 h-3" />
+                                          cert
+                                        </span>
+                                      )}
+                                      <span className="text-xs text-slate-600 dark:text-slate-400 font-mono font-semibold">
+                                        ×{field.count}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  <div className="font-mono text-xs text-slate-900 dark:text-slate-100 break-all leading-relaxed">
+                                    {displayPath}
+                                  </div>
+
+                                  {field.samples.length > 0 && (
+                                    <div className="mt-2 text-sm text-slate-800 dark:text-slate-200 bg-stone-100 dark:bg-slate-950/70 px-2.5 py-1.5 rounded-lg font-serif italic break-words">
+                                      “{field.samples[0]}”
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+                </section>
+
+                {/* =================================================================== */}
+                {/* CENTRE COLUMN (4 cols): STEP 3 — TARGET ATTRIBUTE ALIGNMENT         */}
+                {/* =================================================================== */}
+                <section
+                  id="step-3-panel"
+                  className={`lg:col-span-4 h-full flex flex-col gap-3.5 ${
+                    activeTabMobile !== 'workspace' ? 'hidden lg:flex' : 'flex'
+                  }`}
+                >
+                  {/* Step 3 Guidance & Validation Status Banner */}
+                  <div
+                    className={`rounded-xl border-2 px-4 py-3.5 flex items-center justify-between gap-3 transition ${
+                      currentWorkflowStep === 3
+                        ? 'bg-amber-50 dark:bg-amber-950/35 border-amber-500 ring-2 ring-amber-400/20 text-amber-950 dark:text-amber-100'
+                        : isValidForExport
+                        ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 text-emerald-950 dark:text-emerald-100'
+                        : 'bg-stone-50 dark:bg-slate-900 border-stone-300 dark:border-slate-800 text-slate-900 dark:text-slate-100'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-[#162136] text-amber-300 mt-0.5 shrink-0">
+                        Step 3
+                      </span>
+                      <div>
+                        <p className="text-sm font-bold">
+                          {files.length === 0
+                            ? 'Align Input Fields to Target Schema'
+                            : isValidForExport
+                            ? 'All mandatory target attributes aligned'
+                            : `Align mandatory attributes (${3 - unmappedMandatory.length}/3 complete)`}
+                        </p>
+                        <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">
+                          {files.length === 0
+                            ? 'Upload batch files in Step 2 first, then drag fields from the left or click + Align on any card below.'
+                            : isValidForExport
+                            ? `Rules apply across all ${files.length} files. Proceed to Step 4 to verify & batch export.`
+                            : `Drag from the left or click + Align to map: ${unmappedMandatory.map((f) => f.label).join(', ')}.`}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Target Attribute Groups (No inner scroll clipping so no content is cut) */}
+                  <div className="space-y-5 flex-1">
+                    {[
+                      {
+                        title: 'Mandatory Target Attributes',
+                        subtitle: 'Required to form valid epigraphic JSON records',
+                        groupKey: 'mandatory'
+                      },
+                      {
+                        title: 'Optional Descriptive & Chronological',
+                        subtitle: 'Supports multiple values, LOD hyperlinks & uncertainty',
+                        groupKey: 'optional'
+                      },
+                      {
+                        title: 'Geography & Spatial Coordinates',
+                        subtitle: 'Province, ancient place name, LOD URIs, latitude & longitude',
+                        groupKey: 'geography'
+                      }
+                    ].map((section) => {
+                      const sectionFields = TARGET_FIELDS.filter((f) => f.group === section.groupKey);
+                      return (
+                        <div key={section.groupKey} className="space-y-2.5">
+                          <div className="px-1">
+                            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+                              {section.title}
+                            </h3>
+                            <p className="text-xs text-slate-600 dark:text-slate-400">{section.subtitle}</p>
+                          </div>
+
+                          <div className="space-y-2.5">
+                            {sectionFields.map((target) => {
+                              const assignedRules = mappings[target.key] || [];
+                              const isMandatoryUnmapped =
+                                target.group === 'mandatory' && assignedRules.length === 0;
+                              const isDragTarget = dragOverTarget === target.key;
+
+                              return (
+                                <div
+                                  key={target.key}
+                                  onDragOver={(e) => {
+                                    e.preventDefault();
+                                    setDragOverTarget(target.key);
+                                  }}
+                                  onDragLeave={() => setDragOverTarget(null)}
+                                  onDrop={(e) => {
+                                    e.preventDefault();
+                                    setDragOverTarget(null);
+                                    if (draggedField) {
+                                      addMappingRule(target.key, draggedField);
+                                      setDraggedField(null);
+                                    }
+                                  }}
+                                  className={`rounded-xl border-2 bg-white dark:bg-slate-900 p-3.5 transition-all ${
+                                    isDragTarget
+                                      ? 'border-[#162136] dark:border-amber-400 ring-2 ring-indigo-500/25 bg-indigo-50/40 dark:bg-indigo-950/30'
+                                      : isMandatoryUnmapped
+                                      ? 'border-amber-400 dark:border-amber-500/70 shadow-xs'
+                                      : assignedRules.length > 0
+                                      ? 'border-stone-300 dark:border-slate-700 shadow-xs'
+                                      : 'border-stone-200 dark:border-slate-800'
+                                  }`}
+                                >
+                                  {/* Target Card Header */}
+                                  <div className="flex items-start justify-between gap-2.5 mb-2">
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="text-base font-bold text-slate-900 dark:text-slate-100">
+                                          {target.label}
+                                        </span>
+                                        {target.group === 'mandatory' ? (
+                                          <span
+                                            className={`px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wide ${
+                                              assignedRules.length > 0
+                                                ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-200'
+                                                : 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
+                                            }`}
+                                          >
+                                            Mandatory
+                                          </span>
+                                        ) : (
+                                          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-stone-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                                            Optional
+                                          </span>
+                                        )}
+                                        {target.multiValue && (
+                                          <span
+                                            title="Accepts multiple values"
+                                            className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                                          >
+                                            [ ]
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-snug">
+                                        {target.description}
+                                      </p>
+                                    </div>
+
+                                    {/* Portal-backed Align Picker Trigger */}
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setOpenDropdownTarget(
+                                          openDropdownTarget === target.key ? null : target.key
+                                        );
+                                        setDropdownSearch('');
+                                      }}
+                                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-stone-100 dark:bg-slate-800 hover:bg-stone-200 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 border border-stone-300 dark:border-slate-600 transition cursor-pointer shrink-0"
+                                    >
+                                      <Plus className="w-4 h-4" />
+                                      Align
+                                      <ChevronDown className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+                                    </button>
+                                  </div>
+
+                                  {/* Mapped Rules Pills / Dropzone */}
+                                  {assignedRules.length === 0 ? (
+                                    <div className="border-2 border-dashed border-stone-300 dark:border-slate-700 rounded-lg py-2.5 px-3 text-center text-xs text-slate-600 dark:text-slate-400 bg-stone-50/70 dark:bg-slate-950/40">
+                                      Drop {inputMode === 'XML' ? 'XPath' : 'predicate'} here or click{' '}
+                                      <span className="font-bold text-slate-800 dark:text-slate-200">+ Align</span>
+                                    </div>
+                                  ) : (
+                                    <div className="space-y-2.5 mt-2.5">
+                                      {assignedRules.map((rule) => {
+                                        const fieldMeta = discoveredFieldLookup.get(
+                                          `${rule.format}::${rule.sourcePath}`
+                                        );
+                                        const isInspected =
+                                          activeInspectedEntry?.rule?.id === rule.id;
+                                        return (
+                                          <div
+                                            key={rule.id}
+                                            onClick={() =>
+                                              setInspectedRule({ targetKey: target.key, rule })
+                                            }
+                                            className={`rounded-xl border-2 p-3 transition cursor-pointer ${
+                                              isInspected
+                                                ? 'bg-indigo-50/90 dark:bg-indigo-950/50 border-indigo-600 dark:border-indigo-400 ring-2 ring-indigo-500/20'
+                                                : 'bg-stone-50 dark:bg-slate-800/70 border-stone-200 dark:border-slate-700 hover:border-indigo-400'
+                                            }`}
+                                          >
+                                            <div className="flex items-start justify-between gap-2">
+                                              <div className="min-w-0 flex-1">
+                                                <div className="flex items-center flex-wrap gap-1.5 mb-1.5">
+                                                  <span
+                                                    className={`px-2 py-0.5 rounded text-xs font-bold ${
+                                                      rule.format === 'EpiDoc XML'
+                                                        ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
+                                                        : 'bg-sky-100 dark:bg-sky-500/20 text-sky-950 dark:text-sky-200'
+                                                    }`}
+                                                  >
+                                                    {rule.format}
+                                                  </span>
+                                                  {fieldMeta?.files?.length > 0 && (
+                                                    <span className="text-xs text-slate-600 dark:text-slate-400 font-mono break-all">
+                                                      {fieldMeta.files.slice(0, 2).join(', ')}
+                                                      {fieldMeta.files.length > 2 ? ` +${fieldMeta.files.length - 2}` : ''}
+                                                    </span>
+                                                  )}
+                                                  <span
+                                                    className={`ml-auto text-xs font-bold px-2 py-0.5 rounded ${
+                                                      isInspected
+                                                        ? 'bg-indigo-700 dark:bg-indigo-500 text-white'
+                                                        : 'bg-white dark:bg-slate-900 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700'
+                                                    }`}
+                                                  >
+                                                    {isInspected ? 'Viewing in Verifier →' : 'Verify →'}
+                                                  </span>
+                                                </div>
+                                                <div className="font-mono text-xs text-slate-900 dark:text-slate-100 break-all leading-relaxed">
+                                                  {rule.sourcePath}
+                                                </div>
+                                              </div>
+                                              <button
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  removeMappingRule(target.key, rule.id);
+                                                }}
+                                                aria-label="Remove alignment"
+                                                className="text-slate-500 dark:text-slate-400 hover:text-rose-700 dark:hover:text-rose-400 p-1.5 rounded transition cursor-pointer shrink-0"
+                                                title="Remove alignment"
+                                              >
+                                                <Trash2 className="w-4 h-4" />
+                                              </button>
+                                            </div>
+
+                                            <div
+                                              onClick={(e) => e.stopPropagation()}
+                                              className="mt-2.5 pt-2.5 border-t border-stone-200 dark:border-slate-700 flex flex-wrap items-center gap-3 text-xs"
+                                            >
+                                              {target.isTextField ? (
+                                                <div className="flex flex-wrap items-center gap-1.5">
+                                                  <span className="text-slate-600 dark:text-slate-400 font-medium">Render:</span>
+                                                  <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                      updateRuleOption(target.key, rule.id, {
+                                                        textMode: 'clean'
+                                                      })
+                                                    }
+                                                    className={`px-2.5 py-1 rounded-md font-semibold cursor-pointer ${
+                                                      rule.textMode === 'clean' || !rule.textMode
+                                                        ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                                                        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-stone-300 dark:border-slate-600'
+                                                    }`}
+                                                  >
+                                                    Interpretive
+                                                  </button>
+                                                  {inputMode === 'XML' && (
+                                                    <>
+                                                      <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                          updateRuleOption(target.key, rule.id, {
+                                                            textMode: 'diplomatic'
+                                                          })
+                                                        }
+                                                        className={`px-2.5 py-1 rounded-md font-semibold cursor-pointer ${
+                                                          rule.textMode === 'diplomatic'
+                                                            ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                                                            : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-stone-300 dark:border-slate-600'
+                                                        }`}
+                                                        title="Strips <ex>, <supplied>, and <corr> to preserve surviving epigraphic characters"
+                                                      >
+                                                        Diplomatic (No Edits)
+                                                      </button>
+                                                      <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                          updateRuleOption(target.key, rule.id, {
+                                                            textMode: 'raw'
+                                                          })
+                                                        }
+                                                        className={`px-2.5 py-1 rounded-md font-semibold cursor-pointer ${
+                                                          rule.textMode === 'raw'
+                                                            ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                                                            : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-stone-300 dark:border-slate-600'
+                                                        }`}
+                                                      >
+                                                        Raw XML
+                                                      </button>
+                                                    </>
+                                                  )}
+                                                </div>
+                                              ) : (
+                                                <>
+                                                  <label className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium cursor-pointer select-none">
+                                                    <input
+                                                      type="checkbox"
+                                                      checked={rule.includeUri}
+                                                      onChange={(e) =>
+                                                        updateRuleOption(target.key, rule.id, {
+                                                          includeUri: e.target.checked
+                                                        })
+                                                      }
+                                                      className="w-4 h-4 rounded border-stone-400 dark:border-slate-600 text-[#162136] focus:ring-0"
+                                                    />
+                                                    <span>
+                                                      {inputMode === 'XML'
+                                                        ? 'LOD URI (@ref)'
+                                                        : 'LOD URI (@id)'}
+                                                    </span>
+                                                  </label>
+
+                                                  <label className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium cursor-pointer select-none">
+                                                    <input
+                                                      type="checkbox"
+                                                      checked={rule.includeCertainty}
+                                                      onChange={(e) =>
+                                                        updateRuleOption(target.key, rule.id, {
+                                                          includeCertainty: e.target.checked
+                                                        })
+                                                      }
+                                                      className="w-4 h-4 rounded border-stone-400 dark:border-slate-600 text-[#162136] focus:ring-0"
+                                                    />
+                                                    <span>
+                                                      {inputMode === 'XML'
+                                                        ? 'Uncertainty (@cert)'
+                                                        : 'Uncertainty (cert)'}
+                                                    </span>
+                                                  </label>
+                                                </>
+                                              )}
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* =================================================================== */}
+                {/* RIGHT COLUMN (5 cols): STEP 4A — DEDICATED SNIPPET VERIFIER         */}
+                {/* =================================================================== */}
+                <section
+                  id="step-4-panel"
+                  className={`lg:col-span-5 h-full flex flex-col bg-white dark:bg-slate-900 rounded-xl border-2 shadow-sm overflow-hidden transition ${
+                    currentWorkflowStep === 4
+                      ? 'border-indigo-600 dark:border-indigo-400 ring-2 ring-indigo-500/15'
+                      : 'border-indigo-300 dark:border-slate-800'
+                  } ${
+                    activeTabMobile !== 'verifier' ? 'hidden lg:flex' : 'flex'
+                  }`}
+                >
+                  <div className="px-4 py-4 bg-indigo-950 dark:bg-slate-950 text-white border-b border-indigo-900 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2.5">
+                    <div className="flex items-center gap-3">
+                      <span className="px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wider bg-amber-400 text-slate-950 shrink-0">
+                        Step 4
+                      </span>
+                      <div>
+                        <h2 className="text-base font-bold tracking-tight text-white">
+                          Verify Alignment Snippets &amp; Context
+                        </h2>
+                        <p className="text-xs text-indigo-200 dark:text-slate-300 mt-0.5">
+                          Inspect extracted text &amp; raw {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} source before batch export below
+                        </p>
+                      </div>
+                    </div>
+
+                    {activeInspectedEntry && (
+                      <span className="px-3 py-1 rounded-lg text-xs font-bold bg-amber-400 text-slate-950 shadow-2xs">
+                        Target: {TARGET_FIELDS.find((t) => t.key === activeInspectedEntry.targetKey)?.label}
+                      </span>
+                    )}
+                  </div>
+
+                  {Object.keys(mappings).length > 0 && (
+                    <div className="px-4 py-3 bg-stone-50 dark:bg-slate-800/80 border-b border-stone-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2.5 text-xs">
+                      <div className="flex items-center gap-2 flex-1 min-w-[210px]">
+                        <span className="text-slate-700 dark:text-slate-300 font-semibold shrink-0">Inspecting:</span>
+                        <select
+                          aria-label="Inspect aligned field"
+                          value={activeInspectedEntry?.rule?.id || ''}
+                          onChange={(e) => {
+                            const chosenId = e.target.value;
+                            for (const target of TARGET_FIELDS) {
+                              const found = (mappings[target.key] || []).find((r) => r.id === chosenId);
+                              if (found) {
+                                setInspectedRule({ targetKey: target.key, rule: found });
+                                break;
+                              }
+                            }
+                          }}
+                          className="flex-1 bg-white dark:bg-slate-950 border border-stone-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-semibold rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-indigo-600"
+                        >
+                          {TARGET_FIELDS.flatMap((target) =>
+                            (mappings[target.key] || []).map((rule) => (
+                              <option key={rule.id} value={rule.id}>
+                                {target.label} ← {rule.sourcePath.split('/').pop()}
+                              </option>
+                            ))
+                          )}
+                        </select>
+                      </div>
+
+                      <div className="flex items-center gap-1 bg-stone-200 dark:bg-slate-950 p-1 rounded-lg">
+                        {[
+                          { id: 'split', label: 'Split View' },
+                          { id: 'extracted', label: 'Extracted Text' },
+                          { id: 'raw', label: 'Raw Source' }
+                        ].map((tab) => (
+                          <button
+                            key={tab.id}
+                            type="button"
+                            onClick={() => setVerifierViewMode(tab.id)}
+                            className={`px-2.5 py-1 rounded-md text-xs font-semibold transition cursor-pointer ${
+                              verifierViewMode === tab.id
+                                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-2xs'
+                                : 'text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
+                            }`}
+                          >
+                            {tab.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {files.length > 1 && activeInspectedEntry && (
+                    <div className="px-4 py-2.5 bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 flex items-center gap-2 overflow-x-auto text-xs">
+                      <span className="text-slate-600 dark:text-slate-400 font-medium shrink-0">File:</span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedVerifierFile('ALL')}
+                        className={`px-3 py-1 rounded-full font-semibold cursor-pointer shrink-0 ${
+                          selectedVerifierFile === 'ALL'
+                            ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                            : 'bg-stone-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-stone-200 dark:hover:bg-slate-700'
+                        }`}
+                      >
+                        {files.length > 30 ? `First 30 of ${files.length}` : `All Files (${files.length})`}
+                      </button>
+                      {files.slice(0, 20).map((f) => (
+                        <button
+                          key={f.id}
+                          type="button"
+                          onClick={() => setSelectedVerifierFile(f.name)}
+                          className={`px-3 py-1 rounded-full font-semibold cursor-pointer shrink-0 ${
+                            selectedVerifierFile === f.name
+                              ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                              : 'bg-stone-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-stone-200 dark:hover:bg-slate-700'
+                          }`}
+                        >
+                          {f.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {!activeInspectedEntry ? (
+                    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-stone-50/50 dark:bg-slate-950/40">
+                      <div className="w-14 h-14 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center text-indigo-700 dark:text-indigo-300 mb-3.5">
+                        <BookOpen className="w-7 h-7" />
+                      </div>
+                      <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-1.5">
+                        No Alignment Selected Yet
+                      </h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md leading-relaxed">
+                        Align any {inputMode === 'XML' ? 'EpiDoc XML XPath' : 'RDF predicate'} to a target field in the middle column. Full extracted snippets, raw source markup, and LOD metadata will appear here immediately for verification.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex-1 p-4 space-y-4">
+                      <div className="rounded-xl bg-slate-900 dark:bg-slate-950 text-stone-100 p-3.5 border border-slate-800">
+                        <div className="text-xs uppercase tracking-wider text-slate-300 font-semibold mb-1">
+                          Aligned Source {inputMode === 'XML' ? 'XPath Expression' : 'RDF Predicate'}
+                        </div>
+                        <div className="font-mono text-xs text-amber-300 break-all leading-relaxed">
+                          {activeInspectedEntry.rule.sourcePath}
+                        </div>
+                      </div>
+
+                      {inspectedSnippetsByFile.length === 0 ? (
+                        <div className="p-5 rounded-xl border-2 border-dashed border-stone-300 dark:border-slate-700 text-center text-sm text-slate-600 dark:text-slate-400">
+                          Upload or load test files to inspect extracted values for this alignment.
+                        </div>
+                      ) : (
+                        inspectedSnippetsByFile.map((fileGroup) => (
+                          <div
+                            key={fileGroup.fileName}
+                            className="rounded-xl border border-stone-300 dark:border-slate-700 bg-stone-50/80 dark:bg-slate-800/50 p-4 space-y-3.5 shadow-2xs"
+                          >
+                            <div className="flex items-center justify-between border-b border-stone-200 dark:border-slate-700 pb-2.5 flex-wrap gap-2">
+                              <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 rounded text-xs font-bold uppercase bg-white dark:bg-slate-900 border border-stone-300 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+                                  {fileGroup.format}
+                                </span>
+                                <span className="text-sm font-bold text-slate-900 dark:text-slate-100 break-all">
+                                  {fileGroup.fileName}
+                                </span>
+                              </div>
+                              <span
+                                className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                                  fileGroup.matches.length > 0
+                                    ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-200'
+                                    : 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
+                                }`}
+                              >
+                                {fileGroup.matches.length}{' '}
+                                {fileGroup.matches.length === 1 ? 'match' : 'matches'}
+                              </span>
+                            </div>
+
+                            {fileGroup.matches.length === 0 ? (
+                              <div className="space-y-2">
+                                <p className="text-sm text-amber-950 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-700 rounded-lg p-3 leading-relaxed">
+                                  This file does not contain a value at this path, outputting <code className="font-mono font-bold">N/A</code> in JSON. You can align an additional fallback {inputMode === 'XML' ? 'XPath' : 'predicate'} to the same target field.
+                                </p>
+                              </div>
+                            ) : (
+                              fileGroup.matches.map((m, idx) => (
+                                <div
+                                  key={idx}
+                                  className="space-y-3 bg-white dark:bg-slate-900 rounded-xl border border-stone-200 dark:border-slate-700 p-3.5"
+                                >
+                                  {(verifierViewMode === 'split' ||
+                                    verifierViewMode === 'extracted') && (
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+                                        <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                                          Extracted JSON Value {fileGroup.matches.length > 1 ? `#${idx + 1}` : ''}
+                                        </span>
+                                        <span className="text-xs text-slate-500 dark:text-slate-400">
+                                          {activeInspectedEntry.rule.textMode === 'raw'
+                                            ? 'Raw XML preserved'
+                                            : activeInspectedEntry.rule.textMode === 'diplomatic'
+                                            ? 'Diplomatic (editorial <ex>/<supplied> stripped)'
+                                            : 'Interpretive (normalized text)'}
+                                        </span>
+                                      </div>
+                                      <textarea
+                                        readOnly
+                                        aria-label="Extracted JSON Value"
+                                        rows={Math.min(6, Math.max(2, Math.ceil(m.value.length / 44)))}
+                                        value={m.value}
+                                        className="w-full text-base font-serif text-slate-950 dark:text-slate-100 bg-amber-50/50 dark:bg-slate-950 border border-stone-300 dark:border-slate-700 rounded-lg p-3 leading-relaxed resize-y focus:outline-none focus:border-indigo-600"
+                                      />
+                                    </div>
+                                  )}
+
+                                  {(verifierViewMode === 'split' || verifierViewMode === 'raw') && (
+                                    <div>
+                                      <div className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                                        Original {inputMode === 'XML' ? 'EpiDoc XML Element' : 'RDF Triple'} Context
+                                      </div>
+                                      <pre className="p-3 rounded-lg bg-slate-900 dark:bg-slate-950 text-stone-100 font-mono text-xs leading-relaxed whitespace-pre-wrap break-all overflow-x-auto border border-slate-800">
+                                        {m.rawSource}
+                                      </pre>
+                                    </div>
+                                  )}
+
+                                  {(m.uri || m.certainty || m.placeType) && (
+                                    <div className="pt-1 flex flex-wrap items-center gap-2 text-xs">
+                                      {m.placeType && (
+                                        <span className="inline-flex items-center gap-1.5 text-amber-950 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/60 px-3 py-1 rounded-lg border border-amber-300 dark:border-amber-700 font-semibold text-xs">
+                                          type: {m.placeType}
+                                        </span>
+                                      )}
+                                      {m.uri && (
+                                        <span className="inline-flex items-center gap-1.5 text-indigo-900 dark:text-indigo-200 bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1 rounded-lg border border-indigo-300 dark:border-indigo-700 break-all font-mono text-xs">
+                                          <LinkIcon className="w-3.5 h-3.5 shrink-0 text-indigo-700 dark:text-indigo-400" />
+                                          {m.uri}
+                                        </span>
+                                      )}
+                                      {m.certainty && (
+                                        <span className="inline-flex items-center gap-1.5 text-purple-900 dark:text-purple-200 bg-purple-50 dark:bg-purple-950/60 px-3 py-1 rounded-lg border border-purple-300 dark:border-purple-700 font-semibold text-xs">
+                                          <HelpCircle className="w-3.5 h-3.5 shrink-0 text-purple-700 dark:text-purple-400" />
+                                          certainty: {m.certainty}
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </section>
+              </div>
+
+              {/* =================================================================== */}
+              {/* BOTTOM FULL-WIDTH PANEL: STEP 4B — BATCH EXPORT & JSON OUTPUT       */}
+              {/* =================================================================== */}
+              <section
+                className={`bg-[#121927] dark:bg-slate-900 text-stone-100 rounded-xl border border-slate-800 shadow-sm flex flex-col overflow-hidden ${
+                  activeTabMobile !== 'output' ? 'hidden lg:flex' : 'flex'
+                }`}
+              >
+                <div className="px-4 py-3.5 bg-[#192336] dark:bg-slate-950 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      Step 4 Batch Export
+                    </span>
+                    <FileJson className="w-5 h-5 text-emerald-400" />
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-slate-100">
+                      Live Generated JSON Output
+                    </h2>
+                    <span className="text-xs text-slate-300 hidden sm:inline">
+                      , Preserves LOD <code className="text-sky-300">uri</code>,{' '}
+                      <code className="text-purple-300">certainty</code> &amp; LOD coordinates (
+                      {transformedRecords.length} record{transformedRecords.length === 1 ? '' : 's'})
+                    </span>
+                    {resolvingLodUris && (
+                      <span className="text-xs text-amber-300 animate-pulse">
+                        Resolving LOD coordinates...
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="text-slate-300 font-medium">Preview:</span>
+                      <select
+                        aria-label="Preview scope"
+                        value={selectedPreviewIdx}
+                        onChange={(e) => setSelectedPreviewIdx(e.target.value)}
+                        className="bg-slate-900 border border-slate-700 text-stone-100 rounded-lg px-2.5 py-1.5 text-xs font-medium focus:outline-none focus:border-sky-500 max-w-[230px]"
+                      >
+                        <option value="ALL">
+                          {transformedRecords.length > 25
+                            ? `Batch Preview (First 25 of ${transformedRecords.length})`
+                            : `All Records (${transformedRecords.length} files)`}
+                        </option>
+                        {files.slice(0, 100).map((f, idx) => (
+                          <option key={f.id} value={idx}>
+                            Record {idx + 1}: {f.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <button
+                      onClick={handleCopyJson}
+                      disabled={transformedRecords.length === 0}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition cursor-pointer disabled:opacity-50"
+                    >
+                      {copiedJson ? (
+                        <>
+                          <Check className="w-4 h-4 text-emerald-400" />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4" />
+                          Copy All
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={handleDownloadJson}
+                      disabled={!isValidForExport}
+                      title={
+                        isValidForExport
+                          ? 'Download single combined JSON array containing all batch records'
+                          : 'Map all 3 mandatory fields to enable export'
+                      }
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                        isValidForExport
+                          ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-xs'
+                          : 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'
+                      }`}
+                    >
+                      <Download className="w-4 h-4" />
+                      Batch JSON ({transformedRecords.length})
+                    </button>
+
+                    <button
+                      onClick={handleDownloadNdjson}
+                      disabled={!isValidForExport}
+                      title={
+                        isValidForExport
+                          ? 'Download Newline-Delimited JSON (.ndjson) for large corpora'
+                          : 'Map all 3 mandatory fields to enable export'
+                      }
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                        isValidForExport
+                          ? 'bg-sky-600 hover:bg-sky-500 text-white cursor-pointer shadow-xs'
+                          : 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'
+                      }`}
+                    >
+                      <Download className="w-4 h-4" />
+                      NDJSON
+                    </button>
+
+                    <button
+                      onClick={handleDownloadBatchZip}
+                      disabled={!isValidForExport || isExportingZip}
+                      title={
+                        isValidForExport
+                          ? 'Download ZIP archive with one individual JSON file per inscription + manifest'
+                          : 'Map all 3 mandatory fields to enable export'
+                      }
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                        isValidForExport
+                          ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 cursor-pointer shadow-xs'
+                          : 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'
+                      }`}
+                    >
+                      <Archive className="w-4 h-4" />
+                      {isExportingZip ? 'Zipping...' : 'Batch ZIP'}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-auto p-4 font-mono text-sm leading-relaxed">
+                  <pre className="text-stone-100 whitespace-pre-wrap break-words">
+                    {previewJsonString}
+                  </pre>
+                </div>
+              </section>
+            </main>
+
+            {/* PORTAL-BACKED ALIGN PICKER MODAL (Always on top, never clipped by any container) */}
+            {activeDropdownTarget &&
+              createPortal(
+                <div
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label={`Align ${activeDropdownTarget.label}`}
+                  onClick={() => {
+                    setOpenDropdownTarget(null);
+                    setDropdownSearch('');
+                  }}
+                  className="fixed inset-0 z-[9999] bg-slate-950/60 backdrop-blur-[1px] flex items-center justify-center p-4"
+                >
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border-2 border-stone-300 dark:border-slate-700 overflow-hidden flex flex-col max-h-[85vh] animate-fade-in"
+                  >
+                    <div className="px-5 py-4 bg-stone-50 dark:bg-slate-800/90 border-b border-stone-200 dark:border-slate-700 flex items-center justify-between gap-3">
+                      <div>
+                        <span className="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-amber-300">
+                          Align Target Attribute
+                        </span>
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                          {activeDropdownTarget.label}
+                        </h3>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenDropdownTarget(null);
+                          setDropdownSearch('');
+                        }}
+                        aria-label="Close alignment picker"
+                        className="px-3 py-1.5 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-stone-300 dark:border-slate-600 hover:bg-stone-100 dark:hover:bg-slate-800 cursor-pointer"
+                      >
+                        Close
+                      </button>
+                    </div>
+
+                    <div className="p-3.5 border-b border-stone-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                      <div className="relative">
+                        <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          autoFocus
+                          value={dropdownSearch}
+                          onChange={(e) => setDropdownSearch(e.target.value)}
+                          placeholder="Search XPath, RDF predicate, or sample snippet..."
+                          className="w-full pl-9 pr-3 py-2.5 text-sm bg-stone-50 dark:bg-slate-950 border border-stone-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl focus:outline-none focus:border-indigo-600 dark:focus:border-amber-400"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="overflow-y-auto divide-y divide-stone-200 dark:divide-slate-800 flex-1">
+                      {dropdownFilteredFields.length === 0 ? (
+                        <div className="p-8 text-center text-sm text-slate-600 dark:text-slate-400">
+                          No matching fields found. Load or upload {inputMode} files first to discover fields.
+                        </div>
+                      ) : (
+                        dropdownFilteredFields.map((df) => {
+                          const conciseFiles =
+                            df.files.length > 2
+                              ? `${df.files.slice(0, 2).join(', ')}...`
+                              : df.files.join(', ');
+                          return (
+                            <button
+                              key={df.key}
+                              type="button"
+                              onClick={() => addMappingRule(activeDropdownTarget.key, df)}
+                              className="w-full text-left px-5 py-3.5 hover:bg-indigo-50/80 dark:hover:bg-slate-800 transition flex flex-col gap-1.5 cursor-pointer"
+                            >
+                              <div className="flex items-center justify-between gap-2">
+                                <span
+                                  className={`text-xs font-bold px-2 py-0.5 rounded shrink-0 ${
+                                    df.format === 'EpiDoc XML'
+                                      ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
+                                      : 'bg-sky-100 dark:bg-sky-500/20 text-sky-950 dark:text-sky-200'
+                                  }`}
+                                >
+                                  {df.format}
+                                </span>
+                                <span
+                                  className="text-xs text-slate-600 dark:text-slate-400 font-mono truncate"
+                                  title={df.files.join(', ')}
+                                >
+                                  {conciseFiles}
+                                </span>
+                              </div>
+                              <span className="font-mono text-xs text-slate-900 dark:text-slate-100 break-all leading-relaxed">
+                                {df.path}
+                              </span>
+                              {df.samples.length > 0 && (
+                                <div className="mt-1 text-sm text-slate-900 dark:text-slate-200 bg-amber-50/80 dark:bg-slate-950/80 border border-stone-200 dark:border-slate-700 px-3 py-2 rounded-lg font-serif leading-relaxed break-words">
+                                  “{df.samples.join('” | “')}”
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+                </div>,
+                document.body
+              )}
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
