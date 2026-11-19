@@ -6,7 +6,7 @@
     <title>EpiAlign — Epigraphic Schema Alignment &amp; LOD JSON Workbench</title>
     <meta
       name="description"
-      content="Align EpiDoc XML or RDF epigraphic files into structured, Linked Open Data compliant JSON."
+      content="Align EpiDoc XML or RDF epigraphic files into structured, Linked Open Data compliant JSON with batch upload, batch export, and dark mode."
     />
 
     <!-- Fonts: Inter, JetBrains Mono, Newsreader -->
@@ -21,6 +21,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
             fontFamily: {
@@ -33,18 +34,17 @@
       };
     </script>
 
-    <!-- React 18 & Babel Standalone for Zero-Build GitHub Pages Execution -->
+    <!-- React 18, Babel Standalone & JSZip for Batch ZIP Export -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <style>
       html {
         font-size: 17px;
       }
       body {
-        background-color: #f6f5f1;
-        color: #0f172a;
         -webkit-font-smoothing: antialiased;
       }
       @keyframes fadeIn {
@@ -56,11 +56,11 @@
       }
     </style>
   </head>
-  <body>
+  <body class="bg-[#F6F5F1] text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
     <div id="root"></div>
 
     <script type="text/babel">
-      const { useState, useEffect, useMemo, useRef } = React;
+      const { useState, useEffect, useMemo, useRef, useCallback } = React;
 
       // ============================================================================
       // 0. INLINE SVG ICONS (Zero external icon runtime dependency)
@@ -240,6 +240,34 @@
         <Icon className={className}>
           <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
           <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+        </Icon>
+      );
+
+      const Sun = ({ className }) => (
+        <Icon className={className}>
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </Icon>
+      );
+
+      const Moon = ({ className }) => (
+        <Icon className={className}>
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </Icon>
+      );
+
+      const Archive = ({ className }) => (
+        <Icon className={className}>
+          <rect width="20" height="5" x="2" y="3" rx="1" />
+          <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+          <path d="M10 12h4" />
         </Icon>
       );
 
@@ -610,12 +638,19 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
       ];
 
       // ============================================================================
-      // 3. PARSING & SCHEMA DISCOVERY UTILITIES (EpiDoc XML & RDF)
+      // 3. EFFICIENT PARSING & CACHED SCHEMA DISCOVERY ENGINE
       // ============================================================================
 
       const DISTINGUISHING_ATTRS = ['type', 'subtype', 'decls'];
 
+      // Memoize semantic XPath strings per DOM Element instance during parsing
+      const elementXPathCache = new WeakMap();
+
       function buildSemanticXPath(el) {
+        if (!el || el.nodeType !== 1) return '';
+        const cached = elementXPathCache.get(el);
+        if (cached) return cached;
+
         const parts = [];
         let curr = el;
         while (curr && curr.nodeType === 1) {
@@ -624,7 +659,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           let step = `${prefix}${localName}`;
 
           const qualifiers = [];
-          for (const attr of DISTINGUISHING_ATTRS) {
+          for (let i = 0; i < DISTINGUISHING_ATTRS.length; i++) {
+            const attr = DISTINGUISHING_ATTRS[i];
             if (curr.hasAttribute && curr.hasAttribute(attr)) {
               qualifiers.push(`@${attr}='${curr.getAttribute(attr)}'`);
             }
@@ -635,7 +671,9 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           parts.unshift(step);
           curr = curr.parentElement;
         }
-        return '//' + parts.join('/');
+        const xpath = '//' + parts.join('/');
+        elementXPathCache.set(el, xpath);
+        return xpath;
       }
 
       function cleanEpigraphicText(el, editionStyle = 'interpretive') {
@@ -656,11 +694,12 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
         }
 
         const lbs = clone.querySelectorAll('lb');
-        lbs.forEach((lb, idx) => {
+        for (let i = 0; i < lbs.length; i++) {
+          const lb = lbs[i];
           const breakAttr = lb.getAttribute('break');
-          const replacement = document.createTextNode(breakAttr === 'no' ? '' : idx === 0 ? '' : ' ');
+          const replacement = document.createTextNode(breakAttr === 'no' ? '' : i === 0 ? '' : ' ');
           lb.parentNode.replaceChild(replacement, lb);
-        });
+        }
         const text = (clone.textContent || '')
           .replace(/\s+/g, ' ')
           .trim()
@@ -668,6 +707,36 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           .trim();
 
         return editionStyle === 'diplomatic' ? text.toUpperCase() : text;
+      }
+
+      const VALUE_ATTRS = [
+        'notBefore-custom',
+        'notAfter-custom',
+        'notBefore',
+        'notAfter',
+        'when-custom',
+        'when',
+        'from',
+        'to',
+        'value',
+        'ref'
+      ];
+
+      // Pre-index an XML Document into a path -> Element[] map for O(1) rule evaluation
+      function indexXmlDocument(doc) {
+        const pathIndex = new Map();
+        const allElements = doc.getElementsByTagName('*');
+        for (let i = 0; i < allElements.length; i++) {
+          const el = allElements[i];
+          const path = buildSemanticXPath(el);
+          let bucket = pathIndex.get(path);
+          if (!bucket) {
+            bucket = [];
+            pathIndex.set(path, bucket);
+          }
+          bucket.push(el);
+        }
+        return pathIndex;
       }
 
       function extractXmlFieldsFromDoc(doc) {
@@ -683,64 +752,63 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
             (localName === 'div' &&
               (el.getAttribute('type') === 'edition' || el.getAttribute('type') === 'diplomatic')) ||
             localName === 'ab';
-          const hasChildElements = Array.from(el.childNodes).some((n) => n.nodeType === 1);
-          const cleanedText = cleanEpigraphicText(el);
-
-          if ((!hasChildElements || isEditionContainer || localName === 'expan') && cleanedText) {
-            const refUri =
-              el.getAttribute('ref') || el.getAttribute('corresp') || el.getAttribute('ana') || null;
-            const certVal =
-              el.getAttribute('cert') ||
-              el.getAttribute('precision') ||
-              el.getAttribute('evidence') ||
-              null;
-
-            if (!fieldsMap.has(basePath)) {
-              fieldsMap.set(basePath, {
-                path: basePath,
-                format: 'EpiDoc XML',
-                count: 0,
-                samples: [],
-                hasUri: false,
-                hasCertainty: false,
-                sampleUri: null,
-                sampleCertainty: null
-              });
-            }
-            const entry = fieldsMap.get(basePath);
-            entry.count += 1;
-            if (entry.samples.length < 3 && !entry.samples.includes(cleanedText)) {
-              entry.samples.push(cleanedText);
-            }
-            if (refUri) {
-              entry.hasUri = true;
-              if (!entry.sampleUri) entry.sampleUri = refUri;
-            }
-            if (certVal) {
-              entry.hasCertainty = true;
-              if (!entry.sampleCertainty) entry.sampleCertainty = certVal;
+          let hasChildElements = false;
+          for (let c = 0; c < el.childNodes.length; c++) {
+            if (el.childNodes[c].nodeType === 1) {
+              hasChildElements = true;
+              break;
             }
           }
 
-          const valueAttrs = [
-            'notBefore-custom',
-            'notAfter-custom',
-            'notBefore',
-            'notAfter',
-            'when-custom',
-            'when',
-            'from',
-            'to',
-            'value',
-            'ref'
-          ];
-          for (const attrName of valueAttrs) {
+          if (!hasChildElements || isEditionContainer || localName === 'expan') {
+            const cleanedText = cleanEpigraphicText(el);
+            if (cleanedText) {
+              const refUri =
+                el.getAttribute('ref') || el.getAttribute('corresp') || el.getAttribute('ana') || null;
+              const certVal =
+                el.getAttribute('cert') ||
+                el.getAttribute('precision') ||
+                el.getAttribute('evidence') ||
+                null;
+
+              let entry = fieldsMap.get(basePath);
+              if (!entry) {
+                entry = {
+                  path: basePath,
+                  format: 'EpiDoc XML',
+                  count: 0,
+                  samples: [],
+                  hasUri: false,
+                  hasCertainty: false,
+                  sampleUri: null,
+                  sampleCertainty: null
+                };
+                fieldsMap.set(basePath, entry);
+              }
+              entry.count += 1;
+              if (entry.samples.length < 3 && !entry.samples.includes(cleanedText)) {
+                entry.samples.push(cleanedText);
+              }
+              if (refUri) {
+                entry.hasUri = true;
+                if (!entry.sampleUri) entry.sampleUri = refUri;
+              }
+              if (certVal) {
+                entry.hasCertainty = true;
+                if (!entry.sampleCertainty) entry.sampleCertainty = certVal;
+              }
+            }
+          }
+
+          for (let a = 0; a < VALUE_ATTRS.length; a++) {
+            const attrName = VALUE_ATTRS[a];
             if (el.hasAttribute(attrName)) {
               const attrPath = `${basePath}/@${attrName}`;
               const attrVal = el.getAttribute(attrName);
               const certVal = el.getAttribute('cert') || el.getAttribute('precision') || null;
-              if (!fieldsMap.has(attrPath)) {
-                fieldsMap.set(attrPath, {
+              let entry = fieldsMap.get(attrPath);
+              if (!entry) {
+                entry = {
                   path: attrPath,
                   format: 'EpiDoc XML',
                   count: 0,
@@ -749,9 +817,9 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                   hasCertainty: Boolean(certVal),
                   sampleUri: attrName === 'ref' ? attrVal : null,
                   sampleCertainty: certVal
-                });
+                };
+                fieldsMap.set(attrPath, entry);
               }
-              const entry = fieldsMap.get(attrPath);
               entry.count += 1;
               if (entry.samples.length < 3 && !entry.samples.includes(attrVal)) {
                 entry.samples.push(attrVal);
@@ -772,14 +840,14 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
         const lines = ttlText.split(/\r?\n/);
         const bodyLines = [];
 
-        for (const line of lines) {
-          const trimmed = line.trim();
+        for (let i = 0; i < lines.length; i++) {
+          const trimmed = lines[i].trim();
           if (!trimmed || trimmed.startsWith('#')) continue;
           const prefixMatch = trimmed.match(/^@?prefix\s+([a-zA-Z0-9_-]*:)\s*<([^>]+)>\s*\.?$/i);
           if (prefixMatch) {
             prefixes[prefixMatch[1]] = prefixMatch[2];
           } else {
-            bodyLines.push(line);
+            bodyLines.push(lines[i]);
           }
         }
 
@@ -929,12 +997,55 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
         return record;
       }
 
-      function extractRdfFieldsFromFile(file) {
+      // Per-file parse artifact cache so batch operations never re-parse unchanged XML/RDF strings
+      const parsedArtifactCache = new WeakMap();
+
+      function getParsedFileArtifact(file) {
+        if (parsedArtifactCache.has(file)) {
+          return parsedArtifactCache.get(file);
+        }
+        let artifact = null;
+        if (file.format === 'EpiDoc XML') {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(file.content, 'application/xml');
+          const hasError = Boolean(doc.querySelector('parsererror'));
+          artifact = {
+            kind: 'XML',
+            doc: hasError ? null : doc,
+            pathIndex: hasError ? new Map() : indexXmlDocument(doc),
+            discoveredFields: hasError ? [] : extractXmlFieldsFromDoc(doc)
+          };
+        } else if (file.format.includes('JSON-LD')) {
+          let json = null;
+          try {
+            json = JSON.parse(file.content);
+          } catch (e) {
+            json = null;
+          }
+          artifact = {
+            kind: 'JSON-LD',
+            json,
+            discoveredFields: json ? extractRdfFieldsFromParsed(file, json, null) : []
+          };
+        } else {
+          const turtle = parseTurtleSimple(file.content);
+          artifact = {
+            kind: 'TURTLE',
+            turtle,
+            discoveredFields: extractRdfFieldsFromParsed(file, null, turtle)
+          };
+        }
+        parsedArtifactCache.set(file, artifact);
+        return artifact;
+      }
+
+      function extractRdfFieldsFromParsed(file, jsonData, turtleData) {
         const fieldsMap = new Map();
 
         const registerField = (pred, sampleVal, uri, certainty) => {
-          if (!fieldsMap.has(pred)) {
-            fieldsMap.set(pred, {
+          let entry = fieldsMap.get(pred);
+          if (!entry) {
+            entry = {
               path: pred,
               format: file.format,
               count: 0,
@@ -943,9 +1054,9 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
               hasCertainty: false,
               sampleUri: null,
               sampleCertainty: null
-            });
+            };
+            fieldsMap.set(pred, entry);
           }
-          const entry = fieldsMap.get(pred);
           entry.count += 1;
           const strVal = String(sampleVal);
           if (entry.samples.length < 3 && !entry.samples.includes(strVal)) {
@@ -961,59 +1072,50 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           }
         };
 
-        if (file.format.includes('JSON-LD')) {
-          try {
-            const data = JSON.parse(file.content);
-            const graphs = Array.isArray(data['@graph']) ? data['@graph'] : [data];
+        if (jsonData) {
+          const graphs = Array.isArray(jsonData['@graph']) ? jsonData['@graph'] : [jsonData];
+          const walkObject = (obj, prefix = '') => {
+            if (!obj || typeof obj !== 'object') return;
+            const localCert = obj['epont:certainty'] || obj['certainty'] || null;
+            const localId = obj['@id'] || obj['owl:sameAs'] || null;
 
-            const walkObject = (obj, prefix = '') => {
-              if (!obj || typeof obj !== 'object') return;
-              const localCert = obj['epont:certainty'] || obj['certainty'] || null;
-              const localId = obj['@id'] || obj['owl:sameAs'] || null;
+            for (const [key, val] of Object.entries(obj)) {
+              if (key === '@context' || key === '@type') continue;
+              const fullPred = prefix ? `${prefix} → ${key}` : key;
 
-              for (const [key, val] of Object.entries(obj)) {
-                if (key === '@context' || key === '@type') continue;
-                const fullPred = prefix ? `${prefix} → ${key}` : key;
+              if (key === '@id' && !prefix) {
+                registerField('@id', val, val, null);
+                continue;
+              }
 
-                if (key === '@id' && !prefix) {
-                  registerField('@id', val, val, null);
-                  continue;
-                }
-
-                const items = Array.isArray(val) ? val : [val];
-                for (const item of items) {
-                  if (item && typeof item === 'object') {
-                    const label =
-                      item['skos:prefLabel'] ||
-                      item['@value'] ||
-                      item['rdfs:label'] ||
-                      item['@id'] ||
-                      null;
-                    const itemUri = item['@id'] || item['owl:sameAs'] || localId;
-                    const itemCert = item['epont:certainty'] || localCert;
-                    if (label) {
-                      registerField(fullPred, label, itemUri, itemCert);
-                    }
-                    walkObject(item, fullPred);
-                  } else if (item !== null && item !== undefined) {
-                    registerField(fullPred, item, localId, localCert);
+              const items = Array.isArray(val) ? val : [val];
+              for (const item of items) {
+                if (item && typeof item === 'object') {
+                  const label =
+                    item['skos:prefLabel'] ||
+                    item['@value'] ||
+                    item['rdfs:label'] ||
+                    item['@id'] ||
+                    null;
+                  const itemUri = item['@id'] || item['owl:sameAs'] || localId;
+                  const itemCert = item['epont:certainty'] || localCert;
+                  if (label) {
+                    registerField(fullPred, label, itemUri, itemCert);
                   }
+                  walkObject(item, fullPred);
+                } else if (item !== null && item !== undefined) {
+                  registerField(fullPred, item, localId, localCert);
                 }
               }
-            };
-
-            graphs.forEach((g) => walkObject(g));
-          } catch (e) {
-            console.error('JSON-LD parse error', e);
+            }
+          };
+          graphs.forEach((g) => walkObject(g));
+        } else if (turtleData) {
+          if (turtleData['@id']) {
+            registerField('@id (Subject URI)', turtleData['@id'], turtleData['@id'], null);
           }
-        } else {
-          const parsed = parseTurtleSimple(file.content);
-          if (parsed['@id']) {
-            registerField('@id (Subject URI)', parsed['@id'], parsed['@id'], null);
-          }
-          const globalCert =
-            parsed._triples['epont:certainty']?.[0]?.value || null;
-          for (const [pred, entries] of Object.entries(parsed._triples)) {
+          const globalCert = turtleData._triples['epont:certainty']?.[0]?.value || null;
+          for (const [pred, entries] of Object.entries(turtleData._triples)) {
             for (const ent of entries) {
               registerField(pred, ent.value, ent.uri, globalCert);
             }
@@ -1024,10 +1126,10 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
       }
 
       // ============================================================================
-      // 4. TRANSFORMATION ENGINE (Files + User Alignments -> Target JSON)
+      // 4. TRANSFORMATION ENGINE (Cached Artifacts + Alignments -> Target JSON)
       // ============================================================================
 
-      function evaluateXmlXPathLike(doc, xpathExpr, options) {
+      function evaluateXmlXPathIndexed(pathIndex, xpathExpr, options) {
         const isAttr = xpathExpr.includes('/@');
         let elemPath = xpathExpr;
         let targetAttr = null;
@@ -1038,13 +1140,11 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           targetAttr = xpathExpr.slice(splitIdx + 2);
         }
 
-        const allElements = doc.getElementsByTagName('*');
+        const matchedElements = pathIndex.get(elemPath) || [];
         const results = [];
 
-        for (let i = 0; i < allElements.length; i++) {
-          const el = allElements[i];
-          const currentPath = buildSemanticXPath(el);
-          if (currentPath !== elemPath) continue;
+        for (let i = 0; i < matchedElements.length; i++) {
+          const el = matchedElements[i];
 
           let rawValue = null;
           if (targetAttr) {
@@ -1072,78 +1172,69 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           const placeType = !targetAttr ? el.getAttribute('type') || null : null;
 
           const item = { value: rawValue };
-          if (placeType) {
-            item.type = placeType;
-          }
-          if (options.includeUri && uri) {
-            item.uri = uri;
-          }
-          if (options.includeCertainty && certainty) {
-            item.certainty = certainty;
-          }
+          if (placeType) item.type = placeType;
+          if (options.includeUri && uri) item.uri = uri;
+          if (options.includeCertainty && certainty) item.certainty = certainty;
           results.push(item);
         }
 
         return results;
       }
 
-      function evaluateRdfPredicate(file, predPath, options) {
+      function evaluateRdfPredicateCached(artifact, predPath, options) {
         const results = [];
 
-        if (file.format.includes('JSON-LD')) {
-          try {
-            const data = JSON.parse(file.content);
-            const graphs = Array.isArray(data['@graph']) ? data['@graph'] : [data];
+        if (artifact.kind === 'JSON-LD' && artifact.json) {
+          const graphs = Array.isArray(artifact.json['@graph'])
+            ? artifact.json['@graph']
+            : [artifact.json];
 
-            const searchNode = (obj, prefix = '') => {
-              if (!obj || typeof obj !== 'object') return;
-              const localCert = obj['epont:certainty'] || obj['certainty'] || null;
-              const localId = obj['@id'] || obj['owl:sameAs'] || null;
+          const searchNode = (obj, prefix = '') => {
+            if (!obj || typeof obj !== 'object') return;
+            const localCert = obj['epont:certainty'] || obj['certainty'] || null;
+            const localId = obj['@id'] || obj['owl:sameAs'] || null;
 
-              for (const [key, val] of Object.entries(obj)) {
-                if (key === '@context' || key === '@type') continue;
-                const fullPred = prefix ? `${prefix} → ${key}` : key;
-                const items = Array.isArray(val) ? val : [val];
+            for (const [key, val] of Object.entries(obj)) {
+              if (key === '@context' || key === '@type') continue;
+              const fullPred = prefix ? `${prefix} → ${key}` : key;
+              const items = Array.isArray(val) ? val : [val];
 
-                if (fullPred === predPath) {
-                  for (const item of items) {
-                    if (item && typeof item === 'object') {
-                      const label =
-                        item['skos:prefLabel'] ||
-                        item['@value'] ||
-                        item['rdfs:label'] ||
-                        item['@id'];
-                      const uri = item['@id'] || item['owl:sameAs'] || localId;
-                      const cert = item['epont:certainty'] || localCert;
-                      if (label !== undefined && label !== null) {
-                        const resObj = { value: label };
-                        if (options.includeUri && uri) resObj.uri = uri;
-                        if (options.includeCertainty && cert) resObj.certainty = cert;
-                        results.push(resObj);
-                      }
-                    } else if (item !== null && item !== undefined) {
-                      const resObj = { value: item };
-                      if (options.includeUri && localId) resObj.uri = localId;
-                      if (options.includeCertainty && localCert) resObj.certainty = localCert;
-                      results.push(resObj);
-                    }
-                  }
-                }
-
+              if (fullPred === predPath) {
                 for (const item of items) {
                   if (item && typeof item === 'object') {
-                    searchNode(item, fullPred);
+                    const label =
+                      item['skos:prefLabel'] ||
+                      item['@value'] ||
+                      item['rdfs:label'] ||
+                      item['@id'];
+                    const uri = item['@id'] || item['owl:sameAs'] || localId;
+                    const cert = item['epont:certainty'] || localCert;
+                    if (label !== undefined && label !== null) {
+                      const resObj = { value: label };
+                      if (options.includeUri && uri) resObj.uri = uri;
+                      if (options.includeCertainty && cert) resObj.certainty = cert;
+                      results.push(resObj);
+                    }
+                  } else if (item !== null && item !== undefined) {
+                    const resObj = { value: item };
+                    if (options.includeUri && localId) resObj.uri = localId;
+                    if (options.includeCertainty && localCert) resObj.certainty = localCert;
+                    results.push(resObj);
                   }
                 }
               }
-            };
 
-            graphs.forEach((g) => searchNode(g));
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          const parsed = parseTurtleSimple(file.content);
+              for (const item of items) {
+                if (item && typeof item === 'object') {
+                  searchNode(item, fullPred);
+                }
+              }
+            }
+          };
+
+          graphs.forEach((g) => searchNode(g));
+        } else if (artifact.kind === 'TURTLE' && artifact.turtle) {
+          const parsed = artifact.turtle;
           const globalCert = parsed._triples['epont:certainty']?.[0]?.value || null;
           if (predPath === '@id (Subject URI)' && parsed['@id']) {
             const resObj = { value: parsed['@id'] };
@@ -1163,20 +1254,19 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
       }
 
       function transformFileToTargetJson(file, mappings) {
-        const parser = new DOMParser();
-        const xmlDoc =
-          file.format === 'EpiDoc XML' ? parser.parseFromString(file.content, 'application/xml') : null;
+        const artifact = getParsedFileArtifact(file);
 
         const extractForTarget = (targetKey) => {
           const rules = mappings[targetKey] || [];
           const collected = [];
 
-          for (const rule of rules) {
-            if (file.format === 'EpiDoc XML' && xmlDoc) {
-              const matches = evaluateXmlXPathLike(xmlDoc, rule.sourcePath, rule);
+          for (let i = 0; i < rules.length; i++) {
+            const rule = rules[i];
+            if (artifact.kind === 'XML' && artifact.pathIndex) {
+              const matches = evaluateXmlXPathIndexed(artifact.pathIndex, rule.sourcePath, rule);
               collected.push(...matches);
-            } else if (file.format !== 'EpiDoc XML') {
-              const matches = evaluateRdfPredicate(file, rule.sourcePath, rule);
+            } else if (artifact.kind !== 'XML') {
+              const matches = evaluateRdfPredicateCached(artifact, rule.sourcePath, rule);
               collected.push(...matches);
             }
           }
@@ -1393,10 +1483,32 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
       // ============================================================================
 
       function App() {
+        // Theme state: persisted in localStorage or synced with OS preference
+        const [darkMode, setDarkMode] = useState(() => {
+          try {
+            const saved = localStorage.getItem('epialign-theme');
+            if (saved === 'dark') return true;
+            if (saved === 'light') return false;
+          } catch (e) {}
+          return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        });
+
+        useEffect(() => {
+          const rootEl = document.documentElement;
+          if (darkMode) {
+            rootEl.classList.add('dark');
+          } else {
+            rootEl.classList.remove('dark');
+          }
+          try {
+            localStorage.setItem('epialign-theme', darkMode ? 'dark' : 'light');
+          } catch (e) {}
+        }, [darkMode]);
+
         // Step 1: Exclusive input format mode ('XML' | 'RDF')
         const [inputMode, setInputMode] = useState('XML');
 
-        // Loaded epigraphic files isolated by mode (starts empty; test data is loaded only on explicit user action)
+        // Loaded epigraphic files isolated by mode
         const [filesByMode, setFilesByMode] = useState({
           XML: [],
           RDF: []
@@ -1412,7 +1524,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
         const files = filesByMode[inputMode] || [];
         const mappings = mappingsByMode[inputMode] || {};
 
-        // Cache of coordinates resolved from Linked Open Data URIs (e.g., Pleiades JSON API / GeoNames)
+        // Cache of coordinates resolved from Linked Open Data URIs
         const [lodGeoCache, setLodGeoCache] = useState({
           'https://pleiades.stoa.org/places/118569': { lat: 45.7697, lon: 13.3708, source: 'Pleiades LOD' },
           'https://pleiades.stoa.org/places/462410': { lat: 38.13205, lon: 13.33561, source: 'Pleiades LOD' },
@@ -1425,6 +1537,13 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
         });
         const [resolvingLodUris, setResolvingLodUris] = useState(false);
         const inFlightLodUrisRef = useRef(new Set());
+
+        // Batch ingestion & export progress states
+        const [batchIngestState, setBatchIngestState] = useState(null); // { processed, total }
+        const [isDragOverDropzone, setIsDragOverDropzone] = useState(false);
+        const [isExportingZip, setIsExportingZip] = useState(false);
+        const [fileListFilter, setFileListFilter] = useState('');
+        const [visibleFileLimit, setVisibleFileLimit] = useState(50);
 
         // UI filters & state
         const [fieldSearch, setFieldSearch] = useState('');
@@ -1442,46 +1561,46 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
         const [selectedVerifierFile, setSelectedVerifierFile] = useState('ALL');
 
         const fileInputRef = useRef(null);
+        const folderInputRef = useRef(null);
         const profileInputRef = useRef(null);
 
-        const showToast = (msg) => {
+        const showToast = useCallback((msg) => {
           setToastMessage(msg);
-          setTimeout(() => setToastMessage(null), 3200);
-        };
+          setTimeout(() => setToastMessage(null), 3400);
+        }, []);
 
-        // Discover unique fields strictly for the active input format mode
+        // Discover unique fields using cached file artifacts (O(1) per already-parsed file)
         const discoveredFields = useMemo(() => {
           const combined = new Map();
-          const parser = new DOMParser();
 
-          for (const file of files) {
-            let extracted = [];
-            if (inputMode === 'XML' && file.format === 'EpiDoc XML') {
-              const doc = parser.parseFromString(file.content, 'application/xml');
-              if (!doc.querySelector('parsererror')) {
-                extracted = extractXmlFieldsFromDoc(doc);
-              }
-            } else if (inputMode === 'RDF' && file.format !== 'EpiDoc XML') {
-              extracted = extractRdfFieldsFromFile(file);
-            }
+          for (let fIdx = 0; fIdx < files.length; fIdx++) {
+            const file = files[fIdx];
+            if (inputMode === 'XML' && file.format !== 'EpiDoc XML') continue;
+            if (inputMode === 'RDF' && file.format === 'EpiDoc XML') continue;
 
-            for (const item of extracted) {
+            const artifact = getParsedFileArtifact(file);
+            const extracted = artifact.discoveredFields || [];
+
+            for (let i = 0; i < extracted.length; i++) {
+              const item = extracted[i];
               const key = `${item.format}::${item.path}`;
-              if (!combined.has(key)) {
+              const existing = combined.get(key);
+              if (!existing) {
                 combined.set(key, {
                   ...item,
+                  samples: [...item.samples],
                   key,
                   files: [file.name]
                 });
               } else {
-                const existing = combined.get(key);
                 existing.count += item.count;
-                if (!existing.files.includes(file.name)) {
+                if (existing.files.length < 15 && !existing.files.includes(file.name)) {
                   existing.files.push(file.name);
                 }
-                for (const s of item.samples) {
-                  if (existing.samples.length < 3 && !existing.samples.includes(s)) {
-                    existing.samples.push(s);
+                for (let s = 0; s < item.samples.length; s++) {
+                  const sample = item.samples[s];
+                  if (existing.samples.length < 3 && !existing.samples.includes(sample)) {
+                    existing.samples.push(sample);
                   }
                 }
                 existing.hasUri = existing.hasUri || item.hasUri;
@@ -1513,6 +1632,17 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           );
         }, [discoveredFields, fieldSearch]);
 
+        // Filtered loaded files list for large batch management
+        const filteredLoadedFiles = useMemo(() => {
+          const q = fileListFilter.toLowerCase().trim();
+          if (!q) return files;
+          return files.filter(
+            (f) =>
+              f.name.toLowerCase().includes(q) ||
+              (f.description && f.description.toLowerCase().includes(q))
+          );
+        }, [files, fileListFilter]);
+
         const buildSuggestedMappingsForFields = (fieldsList) => {
           const nextMappings = {};
           for (const target of TARGET_FIELDS) {
@@ -1542,8 +1672,10 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           if (nextMode === inputMode) return;
           setInputMode(nextMode);
           setSelectedPreviewIdx('ALL');
+          setSelectedVerifierFile('ALL');
           setInspectedRule(null);
           setFieldSearch('');
+          setFileListFilter('');
           setOpenDropdownTarget(null);
           setUploadError(null);
           showToast(
@@ -1640,13 +1772,21 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           );
         };
 
-        const handleFileUpload = (e) => {
-          const uploaded = Array.from(e.target.files || []);
-          if (uploaded.length === 0) return;
+        // Chunked, non-blocking batch file ingestion supporting multi-file, folder selection & drag-and-drop
+        const processBatchFiles = async (rawFileList) => {
+          const allFiles = Array.from(rawFileList || []);
+          if (allFiles.length === 0) return;
           setUploadError(null);
 
-          uploaded.forEach((file) => {
+          const validFiles = [];
+          const rejectedNames = [];
+
+          for (let i = 0; i < allFiles.length; i++) {
+            const file = allFiles[i];
             const lower = file.name.toLowerCase();
+            // Skip hidden system files like .DS_Store during folder uploads
+            if (file.name.startsWith('.')) continue;
+
             const isXmlExt = lower.endsWith('.xml');
             const isRdfExt =
               lower.endsWith('.jsonld') ||
@@ -1654,54 +1794,139 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
               lower.endsWith('.rdf') ||
               lower.endsWith('.json');
 
-            if (inputMode === 'XML' && !isXmlExt) {
-              setUploadError(
-                `Rejected "${file.name}": EpiDoc XML mode accepts only .xml files. Switch Step 1 to RDF to upload RDF datasets.`
-              );
-              return;
+            if (inputMode === 'XML' && isXmlExt) {
+              validFiles.push(file);
+            } else if (inputMode === 'RDF' && isRdfExt) {
+              validFiles.push(file);
+            } else {
+              rejectedNames.push(file.name);
             }
+          }
 
-            if (inputMode === 'RDF' && !isRdfExt) {
-              setUploadError(
-                `Rejected "${file.name}": RDF mode accepts only .jsonld, .ttl, or .rdf files. Switch Step 1 to EpiDoc XML for TEI XML files.`
-              );
-              return;
-            }
+          if (rejectedNames.length > 0) {
+            const previewRejected = rejectedNames.slice(0, 3).join(', ');
+            const extraCount = rejectedNames.length > 3 ? ` (+${rejectedNames.length - 3} more)` : '';
+            setUploadError(
+              `Skipped ${rejectedNames.length} incompatible file${rejectedNames.length === 1 ? '' : 's'} (${previewRejected}${extraCount}). ${
+                inputMode === 'XML'
+                  ? 'EpiDoc XML mode accepts .xml files.'
+                  : 'RDF mode accepts .jsonld, .ttl, or .rdf files.'
+              }`
+            );
+          }
 
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-              const content = ev.target?.result;
-              if (typeof content !== 'string') return;
+          if (validFiles.length === 0) return;
 
-              let format = 'EpiDoc XML';
-              if (inputMode === 'RDF') {
-                if (lower.endsWith('.jsonld') || lower.endsWith('.json')) {
-                  format = 'RDF (JSON-LD)';
-                } else if (lower.endsWith('.ttl')) {
-                  format = 'RDF (Turtle)';
-                } else {
-                  format = 'RDF (RDF-XML)';
+          setBatchIngestState({ processed: 0, total: validFiles.length });
+          const CHUNK_SIZE = 25;
+          const ingestedRecords = [];
+
+          for (let start = 0; start < validFiles.length; start += CHUNK_SIZE) {
+            const chunk = validFiles.slice(start, start + CHUNK_SIZE);
+            const chunkResults = await Promise.all(
+              chunk.map(async (file) => {
+                const content = await file.text();
+                const lower = file.name.toLowerCase();
+                let format = 'EpiDoc XML';
+                if (inputMode === 'RDF') {
+                  if (lower.endsWith('.jsonld') || lower.endsWith('.json')) {
+                    format = 'RDF (JSON-LD)';
+                  } else if (lower.endsWith('.ttl')) {
+                    format = 'RDF (Turtle)';
+                  } else {
+                    format = 'RDF (RDF-XML)';
+                  }
+                }
+                const relPath = file.webkitRelativePath || file.name;
+                const fileObj = {
+                  id: `upload-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                  name: file.name,
+                  format,
+                  description:
+                    relPath !== file.name
+                      ? `Folder batch: ${relPath}`
+                      : `Batch dataset (${(file.size / 1024).toFixed(1)} KB)`,
+                  content
+                };
+                // Warm up the parse cache inside the chunked loop so UI remains responsive
+                getParsedFileArtifact(fileObj);
+                return fileObj;
+              })
+            );
+
+            ingestedRecords.push(...chunkResults);
+            setBatchIngestState({
+              processed: Math.min(start + CHUNK_SIZE, validFiles.length),
+              total: validFiles.length
+            });
+            // Yield to browser main thread between chunks
+            await new Promise((r) => setTimeout(r, 0));
+          }
+
+          setFilesByMode((prev) => ({
+            ...prev,
+            [inputMode]: [...(prev[inputMode] || []), ...ingestedRecords]
+          }));
+          setBatchIngestState(null);
+          showToast(
+            `Batch imported ${ingestedRecords.length} ${inputMode} file${
+              ingestedRecords.length === 1 ? '' : 's'
+            }.`
+          );
+        };
+
+        const handleFileUpload = (e) => {
+          processBatchFiles(e.target.files);
+          e.target.value = '';
+        };
+
+        // Recursive directory traversal for drag-and-drop folders
+        const handleDropFiles = async (e) => {
+          e.preventDefault();
+          setIsDragOverDropzone(false);
+
+          const items = e.dataTransfer?.items;
+          if (items && items.length > 0 && items[0].webkitGetAsEntry) {
+            const collectedFiles = [];
+            const traverseEntry = async (entry) => {
+              if (!entry) return;
+              if (entry.isFile) {
+                const file = await new Promise((resolve) => entry.file(resolve));
+                if (file) collectedFiles.push(file);
+              } else if (entry.isDirectory) {
+                const reader = entry.createReader();
+                const entries = await new Promise((resolve) => {
+                  const all = [];
+                  const readBatch = () => {
+                    reader.readEntries((batch) => {
+                      if (!batch.length) resolve(all);
+                      else {
+                        all.push(...batch);
+                        readBatch();
+                      }
+                    });
+                  };
+                  readBatch();
+                });
+                for (const child of entries) {
+                  await traverseEntry(child);
                 }
               }
-
-              setFilesByMode((prev) => ({
-                ...prev,
-                [inputMode]: [
-                  ...(prev[inputMode] || []),
-                  {
-                    id: `upload-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-                    name: file.name,
-                    format,
-                    description: 'Uploaded researcher dataset',
-                    content
-                  }
-                ]
-              }));
-              showToast(`Loaded ${file.name} (${format})`);
             };
-            reader.readAsText(file);
-          });
-          e.target.value = '';
+
+            for (let i = 0; i < items.length; i++) {
+              const entry = items[i].webkitGetAsEntry();
+              if (entry) await traverseEntry(entry);
+            }
+            if (collectedFiles.length > 0) {
+              processBatchFiles(collectedFiles);
+              return;
+            }
+          }
+
+          if (e.dataTransfer?.files?.length) {
+            processBatchFiles(e.dataTransfer.files);
+          }
         };
 
         const removeFile = (fileId) => {
@@ -1710,6 +1935,16 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
             [inputMode]: (prev[inputMode] || []).filter((f) => f.id !== fileId)
           }));
           setSelectedPreviewIdx('ALL');
+        };
+
+        const clearAllFiles = () => {
+          setFilesByMode((prev) => ({
+            ...prev,
+            [inputMode]: []
+          }));
+          setSelectedPreviewIdx('ALL');
+          setSelectedVerifierFile('ALL');
+          showToast(`Cleared all loaded ${inputMode} files.`);
         };
 
         const loadTestDatasets = () => {
@@ -1918,8 +2153,16 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           });
         }, [files, mappings, lodGeoCache]);
 
+        // Paginated / scoped JSON preview so massive batches (e.g. 500+ records) never freeze DOM rendering
         const previewJsonString = useMemo(() => {
           if (selectedPreviewIdx === 'ALL') {
+            if (transformedRecords.length > 25) {
+              const slice = transformedRecords.slice(0, 25);
+              return (
+                JSON.stringify(slice, null, 2) +
+                `\n\n// ... Showing first 25 of ${transformedRecords.length} batch records in preview. Use Batch Export buttons above to download all ${transformedRecords.length} records.`
+              );
+            }
             return JSON.stringify(transformedRecords, null, 2);
           }
           const idx = Number(selectedPreviewIdx);
@@ -1928,21 +2171,23 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
         }, [transformedRecords, selectedPreviewIdx]);
 
         const handleCopyJson = () => {
+          const fullJson = JSON.stringify(transformedRecords, null, 2);
           if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(previewJsonString);
+            navigator.clipboard.writeText(fullJson);
           } else {
             const ta = document.createElement('textarea');
-            ta.value = previewJsonString;
+            ta.value = fullJson;
             document.body.appendChild(ta);
             ta.select();
             document.execCommand('copy');
             document.body.removeChild(ta);
           }
           setCopiedJson(true);
-          showToast('Copied JSON output to clipboard.');
+          showToast(`Copied all ${transformedRecords.length} JSON records to clipboard.`);
           setTimeout(() => setCopiedJson(false), 2000);
         };
 
+        // Batch Export 1: Combined JSON Array
         const handleDownloadJson = () => {
           if (!isValidForExport) return;
           const blob = new Blob([JSON.stringify(transformedRecords, null, 2)], {
@@ -1951,10 +2196,76 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = `epigraphic-transformed-${inputMode.toLowerCase()}.json`;
+          a.download = `epigraphic-batch-${inputMode.toLowerCase()}-${transformedRecords.length}records.json`;
           a.click();
           URL.revokeObjectURL(url);
-          showToast('Downloaded transformed epigraphic JSON.');
+          showToast(`Exported combined JSON (${transformedRecords.length} records).`);
+        };
+
+        // Batch Export 2: Newline-Delimited JSON (NDJSON) for large-scale data pipelines
+        const handleDownloadNdjson = () => {
+          if (!isValidForExport) return;
+          const ndjson = transformedRecords.map((rec) => JSON.stringify(rec)).join('\n');
+          const blob = new Blob([ndjson], { type: 'application/x-ndjson' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `epigraphic-batch-${inputMode.toLowerCase()}-${transformedRecords.length}records.ndjson`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast(`Exported NDJSON stream (${transformedRecords.length} lines).`);
+        };
+
+        // Batch Export 3: Individual JSON files + alignment manifest bundled in a ZIP archive
+        const handleDownloadBatchZip = async () => {
+          if (!isValidForExport || typeof JSZip === 'undefined') return;
+          setIsExportingZip(true);
+          try {
+            const zip = new JSZip();
+            const recordsFolder = zip.folder('records');
+            const usedFilenames = new Set();
+
+            transformedRecords.forEach((rec, idx) => {
+              const baseName = (rec._source_file || `record_${idx + 1}`)
+                .replace(/\.(xml|jsonld|ttl|rdf|json)$/i, '')
+                .replace(/[^a-zA-Z0-9._-]/g, '_');
+              let candidate = `${baseName}.json`;
+              let counter = 2;
+              while (usedFilenames.has(candidate)) {
+                candidate = `${baseName}_${counter}.json`;
+                counter += 1;
+              }
+              usedFilenames.add(candidate);
+              recordsFolder.file(candidate, JSON.stringify(rec, null, 2));
+            });
+
+            zip.file(
+              'batch_manifest.json',
+              JSON.stringify(
+                {
+                  exported_at: new Date().toISOString(),
+                  input_format: inputMode === 'XML' ? 'EpiDoc XML' : 'RDF',
+                  record_count: transformedRecords.length,
+                  alignment_profile: mappings
+                },
+                null,
+                2
+              )
+            );
+
+            const blob = await zip.generateAsync({ type: 'blob' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `epialign-batch-${inputMode.toLowerCase()}-${transformedRecords.length}files.zip`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast(`Exported ZIP archive with ${transformedRecords.length} individual JSON files.`);
+          } catch (err) {
+            showToast('Failed to generate ZIP archive.');
+          } finally {
+            setIsExportingZip(false);
+          }
         };
 
         const mappedPathsSet = useMemo(() => {
@@ -1985,12 +2296,19 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
         const inspectedSnippetsByFile = useMemo(() => {
           if (!activeInspectedEntry) return [];
           const { rule } = activeInspectedEntry;
-          const parser = new DOMParser();
+          const serializer = new XMLSerializer();
 
-          return files
+          // Cap verifier rendering to 30 files at a time when "ALL" is selected in massive batches
+          const targetFiles =
+            selectedVerifierFile === 'ALL'
+              ? files.slice(0, 30)
+              : files.filter((f) => f.name === selectedVerifierFile);
+
+          return targetFiles
             .map((file) => {
-              if (file.format === 'EpiDoc XML' && rule.format === 'EpiDoc XML') {
-                const doc = parser.parseFromString(file.content, 'application/xml');
+              const artifact = getParsedFileArtifact(file);
+
+              if (artifact.kind === 'XML' && rule.format === 'EpiDoc XML') {
                 const isAttr = rule.sourcePath.includes('/@');
                 let elemPath = rule.sourcePath;
                 let targetAttr = null;
@@ -2000,14 +2318,11 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                   targetAttr = rule.sourcePath.slice(splitIdx + 2);
                 }
 
-                const allElements = doc.getElementsByTagName('*');
+                const matchedElements = artifact.pathIndex.get(elemPath) || [];
                 const matches = [];
-                const serializer = new XMLSerializer();
 
-                for (let i = 0; i < allElements.length; i++) {
-                  const el = allElements[i];
-                  if (buildSemanticXPath(el) !== elemPath) continue;
-
+                for (let i = 0; i < matchedElements.length; i++) {
+                  const el = matchedElements[i];
                   let val = null;
                   if (targetAttr) {
                     val = el.getAttribute(targetAttr);
@@ -2044,8 +2359,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                 };
               }
 
-              if (file.format !== 'EpiDoc XML' && rule.format !== 'EpiDoc XML') {
-                const matches = evaluateRdfPredicate(file, rule.sourcePath, {
+              if (artifact.kind !== 'XML' && rule.format !== 'EpiDoc XML') {
+                const matches = evaluateRdfPredicateCached(artifact, rule.sourcePath, {
                   includeUri: true,
                   includeCertainty: true
                 }).map((m) => ({
@@ -2065,12 +2380,12 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
               return null;
             })
             .filter(Boolean);
-        }, [activeInspectedEntry, files]);
+        }, [activeInspectedEntry, files, selectedVerifierFile]);
 
         return (
-          <div className="min-h-screen bg-[#F6F5F1] text-slate-900 flex flex-col font-sans text-base leading-relaxed selection:bg-indigo-100 selection:text-indigo-950">
+          <div className="min-h-screen bg-[#F6F5F1] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans text-base leading-relaxed selection:bg-indigo-100 selection:text-indigo-950 dark:selection:bg-indigo-900 dark:selection:text-indigo-100 transition-colors duration-200">
             {/* Top Scholarly Header */}
-            <header className="bg-[#162136] text-stone-100 border-b border-slate-800 px-4 lg:px-6 py-4 shadow-sm sticky top-0 z-30">
+            <header className="bg-[#162136] dark:bg-slate-900 text-stone-100 border-b border-slate-800 px-4 lg:px-6 py-4 shadow-sm sticky top-0 z-30">
               <div className="max-w-[1720px] mx-auto flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3.5">
                   <div className="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-300">
@@ -2092,7 +2407,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                       </a>
                     </div>
                     <p className="text-sm text-slate-300 hidden sm:block mt-0.5">
-                      Epigraphic Schema Alignment &amp; Linked Open Data Transformation Workbench
+                      Epigraphic Schema Alignment &amp; Linked Open Data Batch Workbench
                     </p>
                   </div>
                 </div>
@@ -2151,12 +2466,28 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                     onChange={handleImportProfile}
                     className="hidden"
                   />
+
+                  <div className="h-5 w-px bg-slate-700 mx-0.5 hidden sm:block" />
+
+                  {/* Dark Mode Toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setDarkMode((d) => !d)}
+                    aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                    title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-600 transition cursor-pointer"
+                  >
+                    {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                    <span className="hidden xl:inline text-slate-100">
+                      {darkMode ? 'Light' : 'Dark'}
+                    </span>
+                  </button>
                 </div>
               </div>
             </header>
 
             {/* GUIDED 4-STEP WORKFLOW STEPPER & FORMAT SELECTOR */}
-            <div className="bg-white border-b border-stone-300/90 px-4 lg:px-6 py-4 shadow-2xs">
+            <div className="bg-white dark:bg-slate-900/95 border-b border-stone-300/90 dark:border-slate-800 px-4 lg:px-6 py-4 shadow-2xs transition-colors">
               <div className="max-w-[1720px] mx-auto space-y-3.5">
                 {/* Visual 4-Step Progress Bar */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -2170,11 +2501,11 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                     },
                     {
                       step: 2,
-                      title: 'Upload or Load Data',
+                      title: 'Batch Upload or Load',
                       desc:
                         files.length > 0
                           ? `${files.length} ${inputMode} file${files.length === 1 ? '' : 's'} ready`
-                          : `Add ${inputMode === 'XML' ? '.xml' : 'RDF'} files or test data`,
+                          : `Drop files/folders or load test data`,
                       status: files.length > 0 ? 'done' : 'active',
                       action: () => {
                         setActiveTabMobile('sources');
@@ -2203,9 +2534,9 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                     },
                     {
                       step: 4,
-                      title: 'Verify & Export JSON',
+                      title: 'Verify & Batch Export',
                       desc: isValidForExport
-                        ? 'Check snippets & download JSON'
+                        ? 'Export JSON, NDJSON or ZIP archive'
                         : 'Complete Steps 2–3 to unlock export',
                       status: isValidForExport ? 'active' : 'pending',
                       action: () => {
@@ -2232,35 +2563,37 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                           item.action ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600' : ''
                         } ${
                           isActive
-                            ? 'bg-amber-50/90 border-amber-500 ring-2 ring-amber-400/20 shadow-2xs'
+                            ? 'bg-amber-50/90 dark:bg-amber-950/35 border-amber-500 ring-2 ring-amber-400/20 shadow-2xs'
                             : isDone
-                            ? 'bg-emerald-50/50 border-emerald-300 hover:border-emerald-400'
-                            : 'bg-stone-50/80 border-stone-200 text-stone-700'
+                            ? 'bg-emerald-50/50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 hover:border-emerald-400'
+                            : 'bg-stone-50/80 dark:bg-slate-800/60 border-stone-200 dark:border-slate-700 text-stone-700 dark:text-slate-300'
                         }`}
                       >
                         <span
                           className={`w-7 h-7 rounded-full text-sm font-bold flex items-center justify-center shrink-0 mt-0.5 ${
                             isActive
-                              ? 'bg-[#162136] text-amber-300'
+                              ? 'bg-[#162136] dark:bg-amber-400 text-amber-300 dark:text-slate-950'
                               : isDone
-                              ? 'bg-emerald-700 text-white'
-                              : 'bg-stone-300 text-slate-800'
+                              ? 'bg-emerald-700 dark:bg-emerald-600 text-white'
+                              : 'bg-stone-300 dark:bg-slate-700 text-slate-800 dark:text-slate-200'
                           }`}
                         >
                           {isDone && item.step !== 1 ? '✓' : item.step}
                         </span>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-1.5">
-                            <span className="text-sm font-bold text-slate-900 truncate">
+                            <span className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
                               Step {item.step}: {item.title}
                             </span>
                             {isActive && (
-                              <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-200 text-amber-950 shrink-0">
+                              <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-200 dark:bg-amber-500/25 text-amber-950 dark:text-amber-200 shrink-0">
                                 Next
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-slate-700 mt-1 leading-snug">{item.desc}</p>
+                          <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 leading-snug">
+                            {item.desc}
+                          </p>
                         </div>
                       </div>
                     );
@@ -2268,10 +2601,10 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                 </div>
 
                 {/* Step 1 Format Switcher Sub-bar */}
-                <div className="pt-3 border-t border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-sm text-slate-700">
-                    <span className="font-bold text-slate-900">Step 1 Format:</span>
-                    <span>Select whether your corpus is encoded in EpiDoc XML or RDF triples.</span>
+                <div className="pt-3 border-t border-stone-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                    <span className="font-bold text-slate-900 dark:text-white">Step 1 Format:</span>
+                    <span>Select whether your batch corpus is encoded in EpiDoc XML or RDF triples.</span>
                   </div>
 
                   <div
@@ -2286,23 +2619,23 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                       onClick={() => handleModeSwitch('XML')}
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border-2 text-left transition cursor-pointer ${
                         inputMode === 'XML'
-                          ? 'bg-amber-50 border-amber-500 ring-2 ring-amber-500/20 text-amber-950 shadow-2xs'
-                          : 'bg-stone-50 border-stone-300 text-slate-700 hover:bg-stone-100'
+                          ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 ring-2 ring-amber-500/20 text-amber-950 dark:text-amber-100 shadow-2xs'
+                          : 'bg-stone-50 dark:bg-slate-800 border-stone-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700'
                       }`}
                     >
                       <FileCode2
                         className={`w-5 h-5 shrink-0 ${
-                          inputMode === 'XML' ? 'text-amber-800' : 'text-slate-500'
+                          inputMode === 'XML' ? 'text-amber-800 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'
                         }`}
                       />
                       <div>
                         <div className="text-sm font-bold flex items-center gap-2">
                           EpiDoc XML
                           {inputMode === 'XML' && (
-                            <span className="w-2 h-2 rounded-full bg-amber-600" />
+                            <span className="w-2 h-2 rounded-full bg-amber-600 dark:bg-amber-400" />
                           )}
                         </div>
-                        <div className="text-xs text-slate-600">TEI XML files (.xml)</div>
+                        <div className="text-xs text-slate-600 dark:text-slate-400">TEI XML files (.xml)</div>
                       </div>
                     </button>
 
@@ -2313,23 +2646,23 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                       onClick={() => handleModeSwitch('RDF')}
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border-2 text-left transition cursor-pointer ${
                         inputMode === 'RDF'
-                          ? 'bg-sky-50 border-sky-600 ring-2 ring-sky-500/20 text-sky-950 shadow-2xs'
-                          : 'bg-stone-50 border-stone-300 text-slate-700 hover:bg-stone-100'
+                          ? 'bg-sky-50 dark:bg-sky-950/45 border-sky-600 dark:border-sky-500 ring-2 ring-sky-500/20 text-sky-950 dark:text-sky-100 shadow-2xs'
+                          : 'bg-stone-50 dark:bg-slate-800 border-stone-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-700'
                       }`}
                     >
                       <Layers
                         className={`w-5 h-5 shrink-0 ${
-                          inputMode === 'RDF' ? 'text-sky-800' : 'text-slate-500'
+                          inputMode === 'RDF' ? 'text-sky-800 dark:text-sky-400' : 'text-slate-500 dark:text-slate-400'
                         }`}
                       />
                       <div>
                         <div className="text-sm font-bold flex items-center gap-2">
                           RDF Triples
                           {inputMode === 'RDF' && (
-                            <span className="w-2 h-2 rounded-full bg-sky-600" />
+                            <span className="w-2 h-2 rounded-full bg-sky-600 dark:bg-sky-400" />
                           )}
                         </div>
-                        <div className="text-xs text-slate-600">JSON-LD / Turtle (.jsonld, .ttl)</div>
+                        <div className="text-xs text-slate-600 dark:text-slate-400">JSON-LD / Turtle (.jsonld, .ttl)</div>
                       </div>
                     </button>
                   </div>
@@ -2342,7 +2675,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
               <div
                 role="status"
                 aria-live="polite"
-                className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg border border-slate-700 flex items-center gap-2.5 animate-fade-in"
+                className="fixed bottom-5 right-5 z-50 bg-slate-900 dark:bg-slate-800 text-white text-sm px-4 py-3 rounded-xl shadow-lg border border-slate-700 flex items-center gap-2.5 animate-fade-in"
               >
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
                 <span>{toastMessage}</span>
@@ -2350,23 +2683,23 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
             )}
 
             {/* Mobile Navigation Tabs */}
-            <div className="lg:hidden bg-white border-b border-stone-200 px-3 py-2.5 flex gap-2 sticky top-[68px] z-20 overflow-x-auto">
+            <div className="lg:hidden bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 px-3 py-2.5 flex gap-2 sticky top-[68px] z-20 overflow-x-auto">
               <button
                 onClick={() => setActiveTabMobile('sources')}
                 className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap ${
                   activeTabMobile === 'sources'
-                    ? 'bg-[#162136] text-white'
-                    : 'bg-stone-100 text-slate-800'
+                    ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                    : 'bg-stone-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
                 }`}
               >
-                2. Sources ({discoveredFields.length})
+                2. Sources ({files.length})
               </button>
               <button
                 onClick={() => setActiveTabMobile('workspace')}
                 className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap ${
                   activeTabMobile === 'workspace'
-                    ? 'bg-[#162136] text-white'
-                    : 'bg-stone-100 text-slate-800'
+                    ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                    : 'bg-stone-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
                 }`}
               >
                 3. Align ({Object.keys(mappings).length}/13)
@@ -2375,8 +2708,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                 onClick={() => setActiveTabMobile('verifier')}
                 className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap ${
                   activeTabMobile === 'verifier'
-                    ? 'bg-[#162136] text-white'
-                    : 'bg-stone-100 text-slate-800'
+                    ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                    : 'bg-stone-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
                 }`}
               >
                 4a. Verify
@@ -2385,11 +2718,11 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                 onClick={() => setActiveTabMobile('output')}
                 className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap ${
                   activeTabMobile === 'output'
-                    ? 'bg-[#162136] text-white'
-                    : 'bg-stone-100 text-slate-800'
+                    ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                    : 'bg-stone-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
                 }`}
               >
-                4b. JSON ({transformedRecords.length})
+                4b. Export ({transformedRecords.length})
               </button>
             </div>
 
@@ -2397,7 +2730,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
             <main className="flex-1 max-w-[1720px] w-full mx-auto flex flex-col gap-6 p-4 lg:p-6">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
                 {/* =================================================================== */}
-                {/* LEFT COLUMN (3 cols): STEP 2 — LOADED FILES & DISCOVERED FIELDS     */}
+                {/* LEFT COLUMN (3 cols): STEP 2 — BATCH UPLOAD & DISCOVERED FIELDS     */}
                 {/* =================================================================== */}
                 <section
                   id="step-2-panel"
@@ -2405,39 +2738,58 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                     activeTabMobile !== 'sources' ? 'hidden lg:flex' : 'flex'
                   }`}
                 >
-                  {/* Loaded Input Datasets Card */}
+                  {/* Batch Input Datasets Card with Drag-and-Drop & Folder Upload */}
                   <div
-                    className={`bg-white rounded-xl border-2 shadow-xs overflow-hidden transition ${
-                      currentWorkflowStep === 2
+                    onDragOver={(e) => {
+                      if (e.dataTransfer?.types?.includes('Files')) {
+                        e.preventDefault();
+                        setIsDragOverDropzone(true);
+                      }
+                    }}
+                    onDragLeave={() => setIsDragOverDropzone(false)}
+                    onDrop={handleDropFiles}
+                    className={`bg-white dark:bg-slate-900 rounded-xl border-2 shadow-xs overflow-hidden transition ${
+                      isDragOverDropzone
+                        ? 'border-indigo-500 ring-4 ring-indigo-500/20 bg-indigo-50/40 dark:bg-indigo-950/30'
+                        : currentWorkflowStep === 2
                         ? 'border-amber-500 ring-2 ring-amber-400/20'
-                        : 'border-stone-200'
+                        : 'border-stone-200 dark:border-slate-800'
                     }`}
                   >
-                    <div className="px-4 py-3.5 bg-stone-50 border-b border-stone-200 flex items-center justify-between gap-2 flex-wrap">
+                    <div className="px-4 py-3.5 bg-stone-50 dark:bg-slate-800/80 border-b border-stone-200 dark:border-slate-800 flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-2">
                         <span className="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-[#162136] text-amber-300">
                           Step 2
                         </span>
-                        <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
-                          {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} Files ({files.length})
+                        <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-100">
+                          {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} Batch ({files.length})
                         </h2>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         <button
                           onClick={loadTestDatasets}
-                          className="text-xs font-semibold text-slate-700 hover:text-slate-950 px-2.5 py-1.5 rounded-lg border border-stone-300 bg-white hover:bg-stone-100 transition cursor-pointer"
+                          className="text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white px-2.5 py-1.5 rounded-lg border border-stone-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 transition cursor-pointer"
                           title={`Load built-in ${
                             inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'
                           } test datasets`}
                         >
-                          Load Test Data
+                          Test Data
                         </button>
                         <button
                           onClick={() => fileInputRef.current?.click()}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#162136] hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg transition cursor-pointer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#162136] dark:bg-amber-400 hover:bg-slate-800 dark:hover:bg-amber-300 text-white dark:text-slate-950 px-2.5 py-1.5 rounded-lg transition cursor-pointer"
+                          title="Select multiple files for batch upload"
                         >
                           <Upload className="w-3.5 h-3.5" />
-                          Upload
+                          Files
+                        </button>
+                        <button
+                          onClick={() => folderInputRef.current?.click()}
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg transition cursor-pointer"
+                          title="Upload an entire folder of epigraphic files"
+                        >
+                          <FolderOpen className="w-3.5 h-3.5" />
+                          Folder
                         </button>
                         <input
                           ref={fileInputRef}
@@ -2447,109 +2799,186 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                           onChange={handleFileUpload}
                           className="hidden"
                         />
+                        <input
+                          ref={folderInputRef}
+                          type="file"
+                          webkitdirectory=""
+                          directory=""
+                          multiple
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
                       </div>
                     </div>
+
+                    {/* Batch Ingestion Progress Bar */}
+                    {batchIngestState && (
+                      <div className="px-3.5 pt-3">
+                        <div className="p-2.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-xs">
+                          <div className="flex justify-between font-semibold text-indigo-950 dark:text-indigo-200 mb-1.5">
+                            <span>Parsing batch files...</span>
+                            <span>
+                              {batchIngestState.processed} / {batchIngestState.total}
+                            </span>
+                          </div>
+                          <div className="w-full h-2 bg-indigo-200 dark:bg-indigo-900 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-indigo-600 dark:bg-amber-400 transition-all duration-150"
+                              style={{
+                                width: `${Math.round(
+                                  (batchIngestState.processed / Math.max(1, batchIngestState.total)) * 100
+                                )}%`
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {uploadError && (
                       <div
                         role="alert"
-                        className="mx-3.5 mt-3.5 p-3 rounded-lg bg-rose-50 border border-rose-300 text-rose-950 text-xs flex items-start justify-between gap-2"
+                        className="mx-3.5 mt-3.5 p-3 rounded-lg bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 text-rose-950 dark:text-rose-200 text-xs flex items-start justify-between gap-2"
                       >
                         <div className="flex items-start gap-2">
-                          <AlertCircle className="w-4 h-4 text-rose-700 shrink-0 mt-0.5" />
+                          <AlertCircle className="w-4 h-4 text-rose-700 dark:text-rose-400 shrink-0 mt-0.5" />
                           <span>{uploadError}</span>
                         </div>
                         <button
                           onClick={() => setUploadError(null)}
                           aria-label="Dismiss error"
-                          className="text-rose-600 hover:text-rose-900 font-bold text-base leading-none cursor-pointer"
+                          className="text-rose-600 dark:text-rose-300 hover:text-rose-900 font-bold text-base leading-none cursor-pointer"
                         >
                           ×
                         </button>
                       </div>
                     )}
 
-                    <div className="p-3.5 space-y-2.5 max-h-52 overflow-y-auto">
+                    {/* Filter & Clear Controls for Large Batches */}
+                    {files.length > 4 && (
+                      <div className="px-3.5 pt-3 flex items-center gap-2">
+                        <div className="relative flex-1">
+                          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="text"
+                            value={fileListFilter}
+                            onChange={(e) => setFileListFilter(e.target.value)}
+                            placeholder={`Filter ${files.length} files...`}
+                            className="w-full pl-8 pr-2.5 py-1.5 text-xs bg-stone-50 dark:bg-slate-800 border border-stone-300 dark:border-slate-700 rounded-lg focus:outline-none focus:border-indigo-500"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={clearAllFiles}
+                          className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 hover:bg-rose-100 transition cursor-pointer shrink-0"
+                          title="Remove all loaded files"
+                        >
+                          Clear All
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="p-3.5 space-y-2 max-h-56 overflow-y-auto">
                       {files.length === 0 ? (
-                        <div className="text-center py-5 px-3.5 border-2 border-dashed border-stone-300 rounded-xl bg-stone-50/70">
-                          <p className="text-sm font-bold text-slate-800 mb-1">
-                            No {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} files uploaded yet
+                        <div className="text-center py-5 px-3.5 border-2 border-dashed border-stone-300 dark:border-slate-700 rounded-xl bg-stone-50/70 dark:bg-slate-800/40">
+                          <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">
+                            Drop batch {inputMode === 'XML' ? '.xml' : 'RDF'} files or folders here
                           </p>
-                          <p className="text-xs text-slate-600 mb-3.5">
-                            Upload {inputMode === 'XML' ? '.xml' : '.jsonld, .ttl, or .rdf'} files or load sample data.
+                          <p className="text-xs text-slate-600 dark:text-slate-400 mb-3.5">
+                            Supports multi-file selection, directory ingestion, or built-in sample data.
                           </p>
                           <div className="flex flex-wrap items-center justify-center gap-2">
                             <button
                               onClick={() => fileInputRef.current?.click()}
-                              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#162136] hover:bg-slate-800 text-white px-3.5 py-2 rounded-lg transition cursor-pointer"
+                              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-[#162136] dark:bg-amber-400 hover:bg-slate-800 dark:hover:bg-amber-300 text-white dark:text-slate-950 px-3 py-2 rounded-lg transition cursor-pointer"
                             >
                               <Upload className="w-3.5 h-3.5" />
-                              Upload Files
+                              Batch Files
+                            </button>
+                            <button
+                              onClick={() => folderInputRef.current?.click()}
+                              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg transition cursor-pointer"
+                            >
+                              <FolderOpen className="w-3.5 h-3.5" />
+                              Folder
                             </button>
                             <button
                               onClick={loadTestDatasets}
-                              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white hover:bg-stone-100 text-slate-800 border border-stone-300 px-3.5 py-2 rounded-lg transition cursor-pointer"
+                              className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-stone-300 dark:border-slate-600 px-3 py-2 rounded-lg transition cursor-pointer"
                             >
-                              Load Test Data
+                              Test Data
                             </button>
                           </div>
                         </div>
                       ) : (
-                        files.map((file) => (
-                          <div
-                            key={file.id}
-                            className="flex items-start justify-between gap-2 p-2.5 rounded-lg bg-stone-50 border border-stone-200 group"
-                          >
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold shrink-0 ${
-                                    inputMode === 'XML'
-                                      ? 'bg-amber-100 text-amber-950 border border-amber-300'
-                                      : 'bg-sky-100 text-sky-950 border border-sky-300'
-                                  }`}
-                                >
-                                  {inputMode === 'XML' ? 'XML' : 'RDF'}
-                                </span>
-                                <span className="text-sm font-semibold text-slate-900 truncate">
-                                  {file.name}
-                                </span>
-                              </div>
-                              <p className="text-xs text-slate-600 truncate mt-1">
-                                {file.description}
-                              </p>
-                            </div>
-                            <button
-                              onClick={() => removeFile(file.id)}
-                              aria-label={`Remove ${file.name}`}
-                              className="text-slate-500 hover:text-rose-700 p-1.5 rounded opacity-80 group-hover:opacity-100 transition cursor-pointer"
-                              title="Remove file"
+                        <>
+                          {filteredLoadedFiles.slice(0, visibleFileLimit).map((file) => (
+                            <div
+                              key={file.id}
+                              className="flex items-start justify-between gap-2 p-2.5 rounded-lg bg-stone-50 dark:bg-slate-800/70 border border-stone-200 dark:border-slate-700 group"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold shrink-0 ${
+                                      inputMode === 'XML'
+                                        ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200 border border-amber-300 dark:border-amber-600/40'
+                                        : 'bg-sky-100 dark:bg-sky-500/20 text-sky-950 dark:text-sky-200 border border-sky-300 dark:border-sky-600/40'
+                                    }`}
+                                  >
+                                    {inputMode === 'XML' ? 'XML' : 'RDF'}
+                                  </span>
+                                  <span className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                                    {file.name}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-slate-600 dark:text-slate-400 truncate mt-1">
+                                  {file.description}
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => removeFile(file.id)}
+                                aria-label={`Remove ${file.name}`}
+                                className="text-slate-500 dark:text-slate-400 hover:text-rose-700 dark:hover:text-rose-400 p-1.5 rounded opacity-80 group-hover:opacity-100 transition cursor-pointer"
+                                title="Remove file"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                          {filteredLoadedFiles.length > visibleFileLimit && (
+                            <button
+                              type="button"
+                              onClick={() => setVisibleFileLimit((v) => v + 100)}
+                              className="w-full py-2 text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 rounded-lg border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition cursor-pointer"
+                            >
+                              Show more ({filteredLoadedFiles.length - visibleFileLimit} remaining)
                             </button>
-                          </div>
-                        ))
+                          )}
+                        </>
                       )}
                     </div>
                   </div>
 
                   {/* Discovered Source Schema Explorer */}
-                  <div className="bg-white rounded-xl border border-stone-300 shadow-xs flex-1 flex flex-col min-h-[520px]">
-                    <div className="px-4 py-3.5 bg-stone-50 border-b border-stone-200">
+                  <div className="bg-white dark:bg-slate-900 rounded-xl border border-stone-300 dark:border-slate-800 shadow-xs flex-1 flex flex-col min-h-[520px]">
+                    <div className="px-4 py-3.5 bg-stone-50 dark:bg-slate-800/80 border-b border-stone-200 dark:border-slate-800">
                       <div className="flex items-center justify-between mb-2.5">
                         <div className="flex items-center gap-2">
-                          <Code2 className="w-4 h-4 text-[#162136]" />
-                          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+                          <Code2 className="w-4 h-4 text-[#162136] dark:text-amber-300" />
+                          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-100">
                             {inputMode === 'XML' ? 'XML XPaths' : 'RDF Predicates'} (
                             {filteredDiscoveredFields.length})
                           </h2>
                         </div>
-                        <span className="text-xs font-medium text-slate-600">Drag or select →</span>
+                        <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                          Drag or select →
+                        </span>
                       </div>
 
                       {/* Search Input */}
                       <div className="relative">
-                        <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           aria-label={
@@ -2564,7 +2993,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                               ? 'Filter XPaths or values...'
                               : 'Filter predicates or values...'
                           }
-                          className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162136]/20 focus:border-[#162136]"
+                          className="w-full pl-9 pr-3 py-2 text-sm bg-white dark:bg-slate-950 border border-stone-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162136]/20 dark:focus:ring-amber-400/25 focus:border-[#162136] dark:focus:border-amber-400"
                         />
                       </div>
                     </div>
@@ -2572,11 +3001,11 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                     {/* Draggable Field List */}
                     <div className="p-3 space-y-2.5 overflow-y-auto flex-1 max-h-[580px]">
                       {filteredDiscoveredFields.length === 0 ? (
-                        <div className="text-center py-8 px-4 text-sm text-slate-600 leading-relaxed">
+                        <div className="text-center py-8 px-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                           {files.length === 0
                             ? `Upload ${
                                 inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'
-                              } files or click "Load Test Data" above to discover available ${
+                              } files or click "Test Data" above to discover available ${
                                 inputMode === 'XML' ? 'XPaths' : 'predicates'
                               }.`
                             : `No matching ${inputMode === 'XML' ? 'XPath' : 'RDF predicate'} found.`}
@@ -2601,8 +3030,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                               title={`Drag to target field\nFull path: ${field.path}`}
                               className={`p-3 rounded-xl border-2 transition cursor-grab active:cursor-grabbing select-none ${
                                 isMapped
-                                  ? 'bg-emerald-50/60 border-emerald-300 hover:border-emerald-500'
-                                  : 'bg-white border-stone-200 hover:border-[#162136] hover:shadow-xs'
+                                  ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 hover:border-emerald-500'
+                                  : 'bg-white dark:bg-slate-800/70 border-stone-200 dark:border-slate-700 hover:border-[#162136] dark:hover:border-amber-400 hover:shadow-xs'
                               }`}
                             >
                               <div className="flex items-start gap-2">
@@ -2612,8 +3041,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                     <span
                                       className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${
                                         inputMode === 'XML'
-                                          ? 'bg-amber-100 text-amber-950'
-                                          : 'bg-sky-100 text-sky-950'
+                                          ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
+                                          : 'bg-sky-100 dark:bg-sky-500/20 text-sky-950 dark:text-sky-200'
                                       }`}
                                     >
                                       {inputMode === 'XML' ? 'XPath' : 'Predicate'}
@@ -2621,7 +3050,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                     <div className="flex items-center gap-1.5">
                                       {field.hasUri && (
                                         <span
-                                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200"
+                                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-800"
                                           title={`Contains LOD URI: ${field.sampleUri}`}
                                         >
                                           <LinkIcon className="w-3 h-3" />
@@ -2630,25 +3059,25 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                       )}
                                       {field.hasCertainty && (
                                         <span
-                                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-purple-50 text-purple-800 border border-purple-200"
+                                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-purple-50 dark:bg-purple-950/60 text-purple-800 dark:text-purple-200 border border-purple-200 dark:border-purple-800"
                                           title={`Contains uncertainty attribute: ${field.sampleCertainty}`}
                                         >
                                           <HelpCircle className="w-3 h-3" />
                                           cert
                                         </span>
                                       )}
-                                      <span className="text-xs text-slate-600 font-mono font-semibold">
+                                      <span className="text-xs text-slate-600 dark:text-slate-400 font-mono font-semibold">
                                         ×{field.count}
                                       </span>
                                     </div>
                                   </div>
 
-                                  <div className="font-mono text-xs text-slate-900 break-all leading-relaxed">
+                                  <div className="font-mono text-xs text-slate-900 dark:text-slate-100 break-all leading-relaxed">
                                     {displayPath}
                                   </div>
 
                                   {field.samples.length > 0 && (
-                                    <div className="mt-2 text-sm text-slate-800 bg-stone-100 px-2.5 py-1.5 rounded-lg truncate font-serif italic">
+                                    <div className="mt-2 text-sm text-slate-800 dark:text-slate-200 bg-stone-100 dark:bg-slate-950/70 px-2.5 py-1.5 rounded-lg truncate font-serif italic">
                                       “{field.samples[0]}”
                                     </div>
                                   )}
@@ -2675,10 +3104,10 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                   <div
                     className={`rounded-xl border-2 px-4 py-3.5 flex items-center justify-between gap-3 transition ${
                       currentWorkflowStep === 3
-                        ? 'bg-amber-50 border-amber-500 ring-2 ring-amber-400/20 text-amber-950'
+                        ? 'bg-amber-50 dark:bg-amber-950/35 border-amber-500 ring-2 ring-amber-400/20 text-amber-950 dark:text-amber-100'
                         : isValidForExport
-                        ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
-                        : 'bg-stone-50 border-stone-300 text-slate-900'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 text-emerald-950 dark:text-emerald-100'
+                        : 'bg-stone-50 dark:bg-slate-900 border-stone-300 dark:border-slate-800 text-slate-900 dark:text-slate-100'
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -2693,11 +3122,11 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                             ? 'All mandatory target attributes aligned'
                             : `Align mandatory attributes (${3 - unmappedMandatory.length}/3 complete)`}
                         </p>
-                        <p className="text-xs text-slate-700 mt-1 leading-relaxed">
+                        <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">
                           {files.length === 0
-                            ? 'Upload files in Step 2 first, then drag fields from the left or click + Align on any card below.'
+                            ? 'Upload batch files in Step 2 first, then drag fields from the left or click + Align on any card below.'
                             : isValidForExport
-                            ? 'Optional fields can still be added, or proceed to Step 4 to verify snippets & export JSON.'
+                            ? `Rules apply across all ${files.length} files. Proceed to Step 4 to verify & batch export.`
                             : `Drag from the left or click + Align to map: ${unmappedMandatory.map((f) => f.label).join(', ')}.`}
                         </p>
                       </div>
@@ -2727,10 +3156,10 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                       return (
                         <div key={section.groupKey} className="space-y-2.5">
                           <div className="px-1">
-                            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
                               {section.title}
                             </h3>
-                            <p className="text-xs text-slate-600">{section.subtitle}</p>
+                            <p className="text-xs text-slate-600 dark:text-slate-400">{section.subtitle}</p>
                           </div>
 
                           <div className="space-y-2.5">
@@ -2756,48 +3185,48 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                       setDraggedField(null);
                                     }
                                   }}
-                                  className={`rounded-xl border-2 bg-white p-3.5 transition-all ${
+                                  className={`rounded-xl border-2 bg-white dark:bg-slate-900 p-3.5 transition-all ${
                                     isDragTarget
-                                      ? 'border-[#162136] ring-2 ring-indigo-500/25 bg-indigo-50/40'
+                                      ? 'border-[#162136] dark:border-amber-400 ring-2 ring-indigo-500/25 bg-indigo-50/40 dark:bg-indigo-950/30'
                                       : isMandatoryUnmapped
-                                      ? 'border-amber-400 shadow-xs'
+                                      ? 'border-amber-400 dark:border-amber-500/70 shadow-xs'
                                       : assignedRules.length > 0
-                                      ? 'border-stone-300 shadow-xs'
-                                      : 'border-stone-200'
+                                      ? 'border-stone-300 dark:border-slate-700 shadow-xs'
+                                      : 'border-stone-200 dark:border-slate-800'
                                   }`}
                                 >
                                   {/* Target Card Header */}
                                   <div className="flex items-start justify-between gap-2.5 mb-2">
                                     <div>
                                       <div className="flex items-center gap-2 flex-wrap">
-                                        <span className="text-base font-bold text-slate-900">
+                                        <span className="text-base font-bold text-slate-900 dark:text-slate-100">
                                           {target.label}
                                         </span>
                                         {target.group === 'mandatory' ? (
                                           <span
                                             className={`px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wide ${
                                               assignedRules.length > 0
-                                                ? 'bg-emerald-100 text-emerald-900'
-                                                : 'bg-amber-100 text-amber-950'
+                                                ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-200'
+                                                : 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
                                             }`}
                                           >
                                             Mandatory
                                           </span>
                                         ) : (
-                                          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-stone-100 text-slate-700">
+                                          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-stone-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                                             Optional
                                           </span>
                                         )}
                                         {target.multiValue && (
                                           <span
                                             title="Accepts multiple values"
-                                            className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-700"
+                                            className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
                                           >
                                             [ ]
                                           </span>
                                         )}
                                       </div>
-                                      <p className="text-xs text-slate-600 mt-1 leading-snug">
+                                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-snug">
                                         {target.description}
                                       </p>
                                     </div>
@@ -2811,29 +3240,29 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                           );
                                           setDropdownSearch('');
                                         }}
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-stone-100 hover:bg-stone-200 text-slate-900 border border-stone-300 transition cursor-pointer shrink-0"
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-stone-100 dark:bg-slate-800 hover:bg-stone-200 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 border border-stone-300 dark:border-slate-600 transition cursor-pointer shrink-0"
                                       >
                                         <Plus className="w-4 h-4" />
                                         Align
-                                        <ChevronDown className="w-3.5 h-3.5 text-slate-600" />
+                                        <ChevronDown className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
                                       </button>
 
                                       {openDropdownTarget === target.key && (
-                                        <div className="absolute right-0 mt-1.5 w-[30rem] sm:w-[38rem] max-w-[92vw] bg-white rounded-xl shadow-2xl border-2 border-stone-300 z-30 overflow-hidden">
-                                          <div className="p-3 border-b border-stone-200 bg-stone-50">
+                                        <div className="absolute right-0 mt-1.5 w-[30rem] sm:w-[38rem] max-w-[92vw] bg-white dark:bg-slate-900 rounded-xl shadow-2xl border-2 border-stone-300 dark:border-slate-700 z-30 overflow-hidden">
+                                          <div className="p-3 border-b border-stone-200 dark:border-slate-800 bg-stone-50 dark:bg-slate-800/80">
                                             <div className="relative">
-                                              <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                                              <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                                               <input
                                                 type="text"
                                                 autoFocus
                                                 value={dropdownSearch}
                                                 onChange={(e) => setDropdownSearch(e.target.value)}
                                                 placeholder="Search XPath, RDF predicate, or sample snippet..."
-                                                className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-stone-300 rounded-lg focus:outline-none focus:border-[#162136]"
+                                                className="w-full pl-9 pr-3 py-2 text-sm bg-white dark:bg-slate-950 border border-stone-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg focus:outline-none focus:border-[#162136] dark:focus:border-amber-400"
                                               />
                                             </div>
                                           </div>
-                                          <div className="max-h-96 overflow-y-auto divide-y divide-stone-200">
+                                          <div className="max-h-96 overflow-y-auto divide-y divide-stone-200 dark:divide-slate-800">
                                             {discoveredFields
                                               .filter((df) => {
                                                 const q = dropdownSearch.toLowerCase();
@@ -2852,30 +3281,30 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                   <button
                                                     key={df.key}
                                                     onClick={() => addMappingRule(target.key, df)}
-                                                    className="w-full text-left px-4 py-3.5 hover:bg-indigo-50/80 transition flex flex-col gap-1.5 cursor-pointer"
+                                                    className="w-full text-left px-4 py-3.5 hover:bg-indigo-50/80 dark:hover:bg-slate-800 transition flex flex-col gap-1.5 cursor-pointer"
                                                   >
                                                     <div className="flex items-center justify-between gap-2">
                                                       <span
                                                         className={`text-xs font-bold px-2 py-0.5 rounded shrink-0 ${
                                                           df.format === 'EpiDoc XML'
-                                                            ? 'bg-amber-100 text-amber-950'
-                                                            : 'bg-sky-100 text-sky-950'
+                                                            ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
+                                                            : 'bg-sky-100 dark:bg-sky-500/20 text-sky-950 dark:text-sky-200'
                                                         }`}
                                                       >
                                                         {df.format}
                                                       </span>
                                                       <span
-                                                        className="text-xs text-slate-600 font-mono truncate"
+                                                        className="text-xs text-slate-600 dark:text-slate-400 font-mono truncate"
                                                         title={df.files.join(', ')}
                                                       >
                                                         {conciseFiles}
                                                       </span>
                                                     </div>
-                                                    <span className="font-mono text-xs text-slate-900 break-all leading-relaxed">
+                                                    <span className="font-mono text-xs text-slate-900 dark:text-slate-100 break-all leading-relaxed">
                                                       {df.path}
                                                     </span>
                                                     {df.samples.length > 0 && (
-                                                      <div className="mt-1 text-sm text-slate-900 bg-amber-50/80 border border-stone-200 px-3 py-2 rounded-lg font-serif leading-relaxed line-clamp-3">
+                                                      <div className="mt-1 text-sm text-slate-900 dark:text-slate-200 bg-amber-50/80 dark:bg-slate-950/80 border border-stone-200 dark:border-slate-700 px-3 py-2 rounded-lg font-serif leading-relaxed line-clamp-3">
                                                         “{df.samples.join('” | “')}”
                                                       </div>
                                                     )}
@@ -2883,10 +3312,10 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                 );
                                               })}
                                           </div>
-                                          <div className="px-4 py-2.5 bg-stone-50 border-t border-stone-200 flex justify-end">
+                                          <div className="px-4 py-2.5 bg-stone-50 dark:bg-slate-800/80 border-t border-stone-200 dark:border-slate-800 flex justify-end">
                                             <button
                                               onClick={() => setOpenDropdownTarget(null)}
-                                              className="text-sm font-semibold text-slate-700 hover:text-slate-950 cursor-pointer"
+                                              className="text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white cursor-pointer"
                                             >
                                               Close
                                             </button>
@@ -2898,9 +3327,9 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
 
                                   {/* Mapped Rules Pills / Dropzone */}
                                   {assignedRules.length === 0 ? (
-                                    <div className="border-2 border-dashed border-stone-300 rounded-lg py-2.5 px-3 text-center text-xs text-slate-600 bg-stone-50/70">
+                                    <div className="border-2 border-dashed border-stone-300 dark:border-slate-700 rounded-lg py-2.5 px-3 text-center text-xs text-slate-600 dark:text-slate-400 bg-stone-50/70 dark:bg-slate-950/40">
                                       Drop {inputMode === 'XML' ? 'XPath' : 'predicate'} here or click{' '}
-                                      <span className="font-bold text-slate-800">+ Align</span>
+                                      <span className="font-bold text-slate-800 dark:text-slate-200">+ Align</span>
                                     </div>
                                   ) : (
                                     <div className="space-y-2.5 mt-2.5">
@@ -2918,8 +3347,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                             }
                                             className={`rounded-xl border-2 p-3 transition cursor-pointer ${
                                               isInspected
-                                                ? 'bg-indigo-50/90 border-indigo-600 ring-2 ring-indigo-500/20'
-                                                : 'bg-stone-50 border-stone-200 hover:border-indigo-400'
+                                                ? 'bg-indigo-50/90 dark:bg-indigo-950/50 border-indigo-600 dark:border-indigo-400 ring-2 ring-indigo-500/20'
+                                                : 'bg-stone-50 dark:bg-slate-800/70 border-stone-200 dark:border-slate-700 hover:border-indigo-400'
                                             }`}
                                           >
                                             <div className="flex items-start justify-between gap-2">
@@ -2928,28 +3357,29 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                   <span
                                                     className={`px-2 py-0.5 rounded text-xs font-bold ${
                                                       rule.format === 'EpiDoc XML'
-                                                        ? 'bg-amber-100 text-amber-950'
-                                                        : 'bg-sky-100 text-sky-950'
+                                                        ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
+                                                        : 'bg-sky-100 dark:bg-sky-500/20 text-sky-950 dark:text-sky-200'
                                                     }`}
                                                   >
                                                     {rule.format}
                                                   </span>
                                                   {fieldMeta?.files?.length > 0 && (
-                                                    <span className="text-xs text-slate-600 font-mono truncate">
-                                                      {fieldMeta.files.join(', ')}
+                                                    <span className="text-xs text-slate-600 dark:text-slate-400 font-mono truncate">
+                                                      {fieldMeta.files.slice(0, 2).join(', ')}
+                                                      {fieldMeta.files.length > 2 ? ` +${fieldMeta.files.length - 2}` : ''}
                                                     </span>
                                                   )}
                                                   <span
                                                     className={`ml-auto text-xs font-bold px-2 py-0.5 rounded ${
                                                       isInspected
-                                                        ? 'bg-indigo-700 text-white'
-                                                        : 'bg-white text-indigo-800 border border-indigo-300'
+                                                        ? 'bg-indigo-700 dark:bg-indigo-500 text-white'
+                                                        : 'bg-white dark:bg-slate-900 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700'
                                                     }`}
                                                   >
                                                     {isInspected ? 'Viewing in Verifier →' : 'Verify →'}
                                                   </span>
                                                 </div>
-                                                <div className="font-mono text-xs text-slate-900 break-all leading-relaxed">
+                                                <div className="font-mono text-xs text-slate-900 dark:text-slate-100 break-all leading-relaxed">
                                                   {rule.sourcePath}
                                                 </div>
                                               </div>
@@ -2959,7 +3389,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                   removeMappingRule(target.key, rule.id);
                                                 }}
                                                 aria-label="Remove alignment"
-                                                className="text-slate-500 hover:text-rose-700 p-1.5 rounded transition cursor-pointer"
+                                                className="text-slate-500 dark:text-slate-400 hover:text-rose-700 dark:hover:text-rose-400 p-1.5 rounded transition cursor-pointer"
                                                 title="Remove alignment"
                                               >
                                                 <Trash2 className="w-4 h-4" />
@@ -2969,11 +3399,11 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                             {/* Per-Alignment Extraction Toggles */}
                                             <div
                                               onClick={(e) => e.stopPropagation()}
-                                              className="mt-2.5 pt-2.5 border-t border-stone-200 flex flex-wrap items-center gap-3 text-xs"
+                                              className="mt-2.5 pt-2.5 border-t border-stone-200 dark:border-slate-700 flex flex-wrap items-center gap-3 text-xs"
                                             >
                                               {target.isTextField ? (
                                                 <div className="flex flex-wrap items-center gap-1.5">
-                                                  <span className="text-slate-600 font-medium">Render:</span>
+                                                  <span className="text-slate-600 dark:text-slate-400 font-medium">Render:</span>
                                                   <button
                                                     type="button"
                                                     onClick={() =>
@@ -2983,8 +3413,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                     }
                                                     className={`px-2.5 py-1 rounded-md font-semibold cursor-pointer ${
                                                       rule.textMode === 'clean' || !rule.textMode
-                                                        ? 'bg-[#162136] text-white'
-                                                        : 'bg-white text-slate-700 border border-stone-300'
+                                                        ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                                                        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-stone-300 dark:border-slate-600'
                                                     }`}
                                                   >
                                                     Interpretive
@@ -3000,8 +3430,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                         }
                                                         className={`px-2.5 py-1 rounded-md font-semibold cursor-pointer ${
                                                           rule.textMode === 'diplomatic'
-                                                            ? 'bg-[#162136] text-white'
-                                                            : 'bg-white text-slate-700 border border-stone-300'
+                                                            ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                                                            : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-stone-300 dark:border-slate-600'
                                                         }`}
                                                         title="Strips <ex>, <supplied>, and <corr> to preserve surviving epigraphic characters"
                                                       >
@@ -3016,8 +3446,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                         }
                                                         className={`px-2.5 py-1 rounded-md font-semibold cursor-pointer ${
                                                           rule.textMode === 'raw'
-                                                            ? 'bg-[#162136] text-white'
-                                                            : 'bg-white text-slate-700 border border-stone-300'
+                                                            ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                                                            : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-stone-300 dark:border-slate-600'
                                                         }`}
                                                       >
                                                         Raw XML
@@ -3027,7 +3457,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                 </div>
                                               ) : (
                                                 <>
-                                                  <label className="inline-flex items-center gap-2 text-slate-700 font-medium cursor-pointer select-none">
+                                                  <label className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium cursor-pointer select-none">
                                                     <input
                                                       type="checkbox"
                                                       checked={rule.includeUri}
@@ -3036,7 +3466,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                           includeUri: e.target.checked
                                                         })
                                                       }
-                                                      className="w-4 h-4 rounded border-stone-400 text-[#162136] focus:ring-0"
+                                                      className="w-4 h-4 rounded border-stone-400 dark:border-slate-600 text-[#162136] focus:ring-0"
                                                     />
                                                     <span>
                                                       {inputMode === 'XML'
@@ -3045,7 +3475,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                     </span>
                                                   </label>
 
-                                                  <label className="inline-flex items-center gap-2 text-slate-700 font-medium cursor-pointer select-none">
+                                                  <label className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium cursor-pointer select-none">
                                                     <input
                                                       type="checkbox"
                                                       checked={rule.includeCertainty}
@@ -3054,7 +3484,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                                                           includeCertainty: e.target.checked
                                                         })
                                                       }
-                                                      className="w-4 h-4 rounded border-stone-400 text-[#162136] focus:ring-0"
+                                                      className="w-4 h-4 rounded border-stone-400 dark:border-slate-600 text-[#162136] focus:ring-0"
                                                     />
                                                     <span>
                                                       {inputMode === 'XML'
@@ -3085,16 +3515,16 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                 {/* =================================================================== */}
                 <section
                   id="step-4-panel"
-                  className={`lg:col-span-5 flex flex-col bg-white rounded-xl border-2 shadow-sm overflow-hidden min-h-[720px] transition ${
+                  className={`lg:col-span-5 flex flex-col bg-white dark:bg-slate-900 rounded-xl border-2 shadow-sm overflow-hidden min-h-[720px] transition ${
                     currentWorkflowStep === 4
-                      ? 'border-indigo-600 ring-2 ring-indigo-500/15'
-                      : 'border-indigo-300'
+                      ? 'border-indigo-600 dark:border-indigo-400 ring-2 ring-indigo-500/15'
+                      : 'border-indigo-300 dark:border-slate-800'
                   } ${
                     activeTabMobile !== 'verifier' ? 'hidden lg:flex' : 'flex'
                   }`}
                 >
                   {/* Prominent Verifier Header */}
-                  <div className="px-4 py-4 bg-indigo-950 text-white border-b border-indigo-900 flex flex-wrap items-center justify-between gap-2.5">
+                  <div className="px-4 py-4 bg-indigo-950 dark:bg-slate-950 text-white border-b border-indigo-900 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2.5">
                     <div className="flex items-center gap-3">
                       <span className="px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wider bg-amber-400 text-slate-950 shrink-0">
                         Step 4
@@ -3103,8 +3533,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                         <h2 className="text-base font-bold tracking-tight text-white">
                           Verify Alignment Snippets &amp; Context
                         </h2>
-                        <p className="text-xs text-indigo-200 mt-0.5">
-                          Inspect extracted text &amp; raw {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} source before exporting JSON below
+                        <p className="text-xs text-indigo-200 dark:text-slate-300 mt-0.5">
+                          Inspect extracted text &amp; raw {inputMode === 'XML' ? 'EpiDoc XML' : 'RDF'} source before batch export below
                         </p>
                       </div>
                     </div>
@@ -3118,9 +3548,9 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
 
                   {/* Verifier Controls: Quick Alignment Switcher, File Filter & View Mode */}
                   {Object.keys(mappings).length > 0 && (
-                    <div className="px-4 py-3 bg-stone-50 border-b border-stone-200 flex flex-wrap items-center justify-between gap-2.5 text-xs">
+                    <div className="px-4 py-3 bg-stone-50 dark:bg-slate-800/80 border-b border-stone-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2.5 text-xs">
                       <div className="flex items-center gap-2 flex-1 min-w-[210px]">
-                        <span className="text-slate-700 font-semibold shrink-0">Inspecting:</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-semibold shrink-0">Inspecting:</span>
                         <select
                           aria-label="Inspect aligned field"
                           value={activeInspectedEntry?.rule?.id || ''}
@@ -3134,7 +3564,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                               }
                             }
                           }}
-                          className="flex-1 bg-white border border-stone-300 text-slate-900 font-semibold rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-indigo-600"
+                          className="flex-1 bg-white dark:bg-slate-950 border border-stone-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-semibold rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-indigo-600"
                         >
                           {TARGET_FIELDS.flatMap((target) =>
                             (mappings[target.key] || []).map((rule) => (
@@ -3146,7 +3576,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                         </select>
                       </div>
 
-                      <div className="flex items-center gap-1 bg-stone-200 p-1 rounded-lg">
+                      <div className="flex items-center gap-1 bg-stone-200 dark:bg-slate-950 p-1 rounded-lg">
                         {[
                           { id: 'split', label: 'Split View' },
                           { id: 'extracted', label: 'Extracted Text' },
@@ -3158,8 +3588,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                             onClick={() => setVerifierViewMode(tab.id)}
                             className={`px-2.5 py-1 rounded-md text-xs font-semibold transition cursor-pointer ${
                               verifierViewMode === tab.id
-                                ? 'bg-white text-slate-900 shadow-2xs'
-                                : 'text-slate-700 hover:text-slate-950'
+                                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-2xs'
+                                : 'text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
                             }`}
                           >
                             {tab.label}
@@ -3171,28 +3601,28 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
 
                   {/* File Scope Filter Pill Bar */}
                   {files.length > 1 && activeInspectedEntry && (
-                    <div className="px-4 py-2.5 bg-white border-b border-stone-200 flex items-center gap-2 overflow-x-auto text-xs">
-                      <span className="text-slate-600 font-medium shrink-0">File:</span>
+                    <div className="px-4 py-2.5 bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 flex items-center gap-2 overflow-x-auto text-xs">
+                      <span className="text-slate-600 dark:text-slate-400 font-medium shrink-0">File:</span>
                       <button
                         type="button"
                         onClick={() => setSelectedVerifierFile('ALL')}
                         className={`px-3 py-1 rounded-full font-semibold cursor-pointer shrink-0 ${
                           selectedVerifierFile === 'ALL'
-                            ? 'bg-[#162136] text-white'
-                            : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
+                            ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                            : 'bg-stone-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-stone-200 dark:hover:bg-slate-700'
                         }`}
                       >
-                        All Files ({files.length})
+                        {files.length > 30 ? `First 30 of ${files.length}` : `All Files (${files.length})`}
                       </button>
-                      {files.map((f) => (
+                      {files.slice(0, 20).map((f) => (
                         <button
                           key={f.id}
                           type="button"
                           onClick={() => setSelectedVerifierFile(f.name)}
                           className={`px-3 py-1 rounded-full font-semibold cursor-pointer shrink-0 ${
                             selectedVerifierFile === f.name
-                              ? 'bg-[#162136] text-white'
-                              : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
+                              ? 'bg-[#162136] dark:bg-amber-400 text-white dark:text-slate-950'
+                              : 'bg-stone-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-stone-200 dark:hover:bg-slate-700'
                           }`}
                         >
                           {f.name}
@@ -3203,21 +3633,21 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
 
                   {/* Main Spacious Snippet Body */}
                   {!activeInspectedEntry ? (
-                    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-stone-50/50">
-                      <div className="w-14 h-14 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700 mb-3.5">
+                    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-stone-50/50 dark:bg-slate-950/40">
+                      <div className="w-14 h-14 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center text-indigo-700 dark:text-indigo-300 mb-3.5">
                         <BookOpen className="w-7 h-7" />
                       </div>
-                      <h3 className="text-base font-bold text-slate-900 mb-1.5">
+                      <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                         No Alignment Selected Yet
                       </h3>
-                      <p className="text-sm text-slate-600 max-w-md leading-relaxed">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md leading-relaxed">
                         Align any {inputMode === 'XML' ? 'EpiDoc XML XPath' : 'RDF predicate'} to a target field in the middle column. Full extracted snippets, raw source markup, and LOD metadata will appear here immediately for verification.
                       </p>
                     </div>
                   ) : (
                     <div className="flex-1 p-4 space-y-4 overflow-y-auto max-h-[630px]">
                       {/* Full Source Path Banner */}
-                      <div className="rounded-xl bg-slate-900 text-stone-100 p-3.5 border border-slate-800">
+                      <div className="rounded-xl bg-slate-900 dark:bg-slate-950 text-stone-100 p-3.5 border border-slate-800">
                         <div className="text-xs uppercase tracking-wider text-slate-300 font-semibold mb-1">
                           Aligned Source {inputMode === 'XML' ? 'XPath Expression' : 'RDF Predicate'}
                         </div>
@@ -3227,115 +3657,110 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                       </div>
 
                       {inspectedSnippetsByFile.length === 0 ? (
-                        <div className="p-5 rounded-xl border-2 border-dashed border-stone-300 text-center text-sm text-slate-600">
+                        <div className="p-5 rounded-xl border-2 border-dashed border-stone-300 dark:border-slate-700 text-center text-sm text-slate-600 dark:text-slate-400">
                           Upload or load test files to inspect extracted values for this alignment.
                         </div>
                       ) : (
-                        inspectedSnippetsByFile
-                          .filter(
-                            (fg) =>
-                              selectedVerifierFile === 'ALL' || fg.fileName === selectedVerifierFile
-                          )
-                          .map((fileGroup) => (
-                            <div
-                              key={fileGroup.fileName}
-                              className="rounded-xl border border-stone-300 bg-stone-50/80 p-4 space-y-3.5 shadow-2xs"
-                            >
-                              <div className="flex items-center justify-between border-b border-stone-200 pb-2.5">
-                                <div className="flex items-center gap-2">
-                                  <span className="px-2 py-0.5 rounded text-xs font-bold uppercase bg-white border border-stone-300 text-slate-800">
-                                    {fileGroup.format}
-                                  </span>
-                                  <span className="text-sm font-bold text-slate-900">
-                                    {fileGroup.fileName}
-                                  </span>
-                                </div>
-                                <span
-                                  className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
-                                    fileGroup.matches.length > 0
-                                      ? 'bg-emerald-100 text-emerald-900'
-                                      : 'bg-amber-100 text-amber-950'
-                                  }`}
-                                >
-                                  {fileGroup.matches.length}{' '}
-                                  {fileGroup.matches.length === 1 ? 'match' : 'matches'}
+                        inspectedSnippetsByFile.map((fileGroup) => (
+                          <div
+                            key={fileGroup.fileName}
+                            className="rounded-xl border border-stone-300 dark:border-slate-700 bg-stone-50/80 dark:bg-slate-800/50 p-4 space-y-3.5 shadow-2xs"
+                          >
+                            <div className="flex items-center justify-between border-b border-stone-200 dark:border-slate-700 pb-2.5">
+                              <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 rounded text-xs font-bold uppercase bg-white dark:bg-slate-900 border border-stone-300 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+                                  {fileGroup.format}
+                                </span>
+                                <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                                  {fileGroup.fileName}
                                 </span>
                               </div>
-
-                              {fileGroup.matches.length === 0 ? (
-                                <div className="space-y-2">
-                                  <p className="text-sm text-amber-950 bg-amber-50 border border-amber-300 rounded-lg p-3 leading-relaxed">
-                                    This file does not contain a value at this path — outputting <code className="font-mono font-bold">N/A</code> in JSON. You can align an additional fallback {inputMode === 'XML' ? 'XPath' : 'predicate'} to the same target field.
-                                  </p>
-                                </div>
-                              ) : (
-                                fileGroup.matches.map((m, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="space-y-3 bg-white rounded-xl border border-stone-200 p-3.5"
-                                  >
-                                    {(verifierViewMode === 'split' ||
-                                      verifierViewMode === 'extracted') && (
-                                      <div>
-                                        <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
-                                          <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                                            Extracted JSON Value {fileGroup.matches.length > 1 ? `#${idx + 1}` : ''}
-                                          </span>
-                                          <span className="text-xs text-slate-500">
-                                            {activeInspectedEntry.rule.textMode === 'raw'
-                                              ? 'Raw XML preserved'
-                                              : activeInspectedEntry.rule.textMode === 'diplomatic'
-                                              ? 'Diplomatic (editorial <ex>/<supplied> stripped)'
-                                              : 'Interpretive (normalized text)'}
-                                          </span>
-                                        </div>
-                                        <textarea
-                                          readOnly
-                                          aria-label="Extracted JSON Value"
-                                          rows={Math.min(6, Math.max(2, Math.ceil(m.value.length / 44)))}
-                                          value={m.value}
-                                          className="w-full text-base font-serif text-slate-950 bg-amber-50/50 border border-stone-300 rounded-lg p-3 leading-relaxed resize-y focus:outline-none focus:border-indigo-600"
-                                        />
-                                      </div>
-                                    )}
-
-                                    {(verifierViewMode === 'split' || verifierViewMode === 'raw') && (
-                                      <div>
-                                        <div className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                                          Original {inputMode === 'XML' ? 'EpiDoc XML Element' : 'RDF Triple'} Context
-                                        </div>
-                                        <pre className="p-3 rounded-lg bg-slate-900 text-stone-100 font-mono text-xs leading-relaxed whitespace-pre-wrap break-all overflow-x-auto max-h-48">
-                                          {m.rawSource}
-                                        </pre>
-                                      </div>
-                                    )}
-
-                                    {(m.uri || m.certainty || m.placeType) && (
-                                      <div className="pt-1 flex flex-wrap items-center gap-2 text-xs">
-                                        {m.placeType && (
-                                          <span className="inline-flex items-center gap-1.5 text-amber-950 bg-amber-50 px-3 py-1 rounded-lg border border-amber-300 font-semibold text-xs">
-                                            type: {m.placeType}
-                                          </span>
-                                        )}
-                                        {m.uri && (
-                                          <span className="inline-flex items-center gap-1.5 text-indigo-900 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-300 break-all font-mono text-xs">
-                                            <LinkIcon className="w-3.5 h-3.5 shrink-0 text-indigo-700" />
-                                            {m.uri}
-                                          </span>
-                                        )}
-                                        {m.certainty && (
-                                          <span className="inline-flex items-center gap-1.5 text-purple-900 bg-purple-50 px-3 py-1 rounded-lg border border-purple-300 font-semibold text-xs">
-                                            <HelpCircle className="w-3.5 h-3.5 shrink-0 text-purple-700" />
-                                            certainty: {m.certainty}
-                                          </span>
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
-                                ))
-                              )}
+                              <span
+                                className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                                  fileGroup.matches.length > 0
+                                    ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-200'
+                                    : 'bg-amber-100 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200'
+                                }`}
+                              >
+                                {fileGroup.matches.length}{' '}
+                                {fileGroup.matches.length === 1 ? 'match' : 'matches'}
+                              </span>
                             </div>
-                          ))
+
+                            {fileGroup.matches.length === 0 ? (
+                              <div className="space-y-2">
+                                <p className="text-sm text-amber-950 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-700 rounded-lg p-3 leading-relaxed">
+                                  This file does not contain a value at this path — outputting <code className="font-mono font-bold">N/A</code> in JSON. You can align an additional fallback {inputMode === 'XML' ? 'XPath' : 'predicate'} to the same target field.
+                                </p>
+                              </div>
+                            ) : (
+                              fileGroup.matches.map((m, idx) => (
+                                <div
+                                  key={idx}
+                                  className="space-y-3 bg-white dark:bg-slate-900 rounded-xl border border-stone-200 dark:border-slate-700 p-3.5"
+                                >
+                                  {(verifierViewMode === 'split' ||
+                                    verifierViewMode === 'extracted') && (
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+                                        <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                                          Extracted JSON Value {fileGroup.matches.length > 1 ? `#${idx + 1}` : ''}
+                                        </span>
+                                        <span className="text-xs text-slate-500 dark:text-slate-400">
+                                          {activeInspectedEntry.rule.textMode === 'raw'
+                                            ? 'Raw XML preserved'
+                                            : activeInspectedEntry.rule.textMode === 'diplomatic'
+                                            ? 'Diplomatic (editorial <ex>/<supplied> stripped)'
+                                            : 'Interpretive (normalized text)'}
+                                        </span>
+                                      </div>
+                                      <textarea
+                                        readOnly
+                                        aria-label="Extracted JSON Value"
+                                        rows={Math.min(6, Math.max(2, Math.ceil(m.value.length / 44)))}
+                                        value={m.value}
+                                        className="w-full text-base font-serif text-slate-950 dark:text-slate-100 bg-amber-50/50 dark:bg-slate-950 border border-stone-300 dark:border-slate-700 rounded-lg p-3 leading-relaxed resize-y focus:outline-none focus:border-indigo-600"
+                                      />
+                                    </div>
+                                  )}
+
+                                  {(verifierViewMode === 'split' || verifierViewMode === 'raw') && (
+                                    <div>
+                                      <div className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                                        Original {inputMode === 'XML' ? 'EpiDoc XML Element' : 'RDF Triple'} Context
+                                      </div>
+                                      <pre className="p-3 rounded-lg bg-slate-900 dark:bg-slate-950 text-stone-100 font-mono text-xs leading-relaxed whitespace-pre-wrap break-all overflow-x-auto max-h-48 border border-slate-800">
+                                        {m.rawSource}
+                                      </pre>
+                                    </div>
+                                  )}
+
+                                  {(m.uri || m.certainty || m.placeType) && (
+                                    <div className="pt-1 flex flex-wrap items-center gap-2 text-xs">
+                                      {m.placeType && (
+                                        <span className="inline-flex items-center gap-1.5 text-amber-950 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/60 px-3 py-1 rounded-lg border border-amber-300 dark:border-amber-700 font-semibold text-xs">
+                                          type: {m.placeType}
+                                        </span>
+                                      )}
+                                      {m.uri && (
+                                        <span className="inline-flex items-center gap-1.5 text-indigo-900 dark:text-indigo-200 bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1 rounded-lg border border-indigo-300 dark:border-indigo-700 break-all font-mono text-xs">
+                                          <LinkIcon className="w-3.5 h-3.5 shrink-0 text-indigo-700 dark:text-indigo-400" />
+                                          {m.uri}
+                                        </span>
+                                      )}
+                                      {m.certainty && (
+                                        <span className="inline-flex items-center gap-1.5 text-purple-900 dark:text-purple-200 bg-purple-50 dark:bg-purple-950/60 px-3 py-1 rounded-lg border border-purple-300 dark:border-purple-700 font-semibold text-xs">
+                                          <HelpCircle className="w-3.5 h-3.5 shrink-0 text-purple-700 dark:text-purple-400" />
+                                          certainty: {m.certainty}
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        ))
                       )}
                     </div>
                   )}
@@ -3343,17 +3768,17 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
               </div>
 
               {/* =================================================================== */}
-              {/* BOTTOM FULL-WIDTH PANEL: STEP 4B — LIVE GENERATED JSON OUTPUT       */}
+              {/* BOTTOM FULL-WIDTH PANEL: STEP 4B — BATCH EXPORT & JSON OUTPUT       */}
               {/* =================================================================== */}
               <section
-                className={`bg-[#121927] text-stone-100 rounded-xl border border-slate-800 shadow-sm flex flex-col overflow-hidden min-h-[340px] ${
+                className={`bg-[#121927] dark:bg-slate-900 text-stone-100 rounded-xl border border-slate-800 shadow-sm flex flex-col overflow-hidden min-h-[340px] ${
                   activeTabMobile !== 'output' ? 'hidden lg:flex' : 'flex'
                 }`}
               >
-                <div className="px-4 py-3.5 bg-[#192336] border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                <div className="px-4 py-3.5 bg-[#192336] dark:bg-slate-950 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5 flex-wrap">
                     <span className="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                      Step 4 Output
+                      Step 4 Batch Export
                     </span>
                     <FileJson className="w-5 h-5 text-emerald-400" />
                     <h2 className="text-sm font-bold uppercase tracking-wider text-slate-100">
@@ -3361,7 +3786,7 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                     </h2>
                     <span className="text-xs text-slate-300 hidden sm:inline">
                       — Preserves LOD <code className="text-sky-300">uri</code>,{' '}
-                      <code className="text-purple-300">certainty</code> &amp; LOD-resolved coordinates (
+                      <code className="text-purple-300">certainty</code> &amp; LOD coordinates (
                       {transformedRecords.length} record{transformedRecords.length === 1 ? '' : 's'})
                     </span>
                     {resolvingLodUris && (
@@ -3371,17 +3796,21 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                     )}
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2.5">
+                  <div className="flex flex-wrap items-center gap-2">
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="text-slate-300 font-medium">Preview scope:</span>
+                      <span className="text-slate-300 font-medium">Preview:</span>
                       <select
                         aria-label="Preview scope"
                         value={selectedPreviewIdx}
                         onChange={(e) => setSelectedPreviewIdx(e.target.value)}
-                        className="bg-slate-900 border border-slate-700 text-stone-100 rounded-lg px-3 py-1.5 text-xs font-medium focus:outline-none focus:border-sky-500 max-w-[250px]"
+                        className="bg-slate-900 border border-slate-700 text-stone-100 rounded-lg px-2.5 py-1.5 text-xs font-medium focus:outline-none focus:border-sky-500 max-w-[230px]"
                       >
-                        <option value="ALL">All Records ({transformedRecords.length} files)</option>
-                        {files.map((f, idx) => (
+                        <option value="ALL">
+                          {transformedRecords.length > 25
+                            ? `Batch Preview (First 25 of ${transformedRecords.length})`
+                            : `All Records (${transformedRecords.length} files)`}
+                        </option>
+                        {files.slice(0, 100).map((f, idx) => (
                           <option key={f.id} value={idx}>
                             Record {idx + 1}: {f.name}
                           </option>
@@ -3391,7 +3820,8 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
 
                     <button
                       onClick={handleCopyJson}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition cursor-pointer"
+                      disabled={transformedRecords.length === 0}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 transition cursor-pointer disabled:opacity-50"
                     >
                       {copiedJson ? (
                         <>
@@ -3401,27 +3831,66 @@ rib:RIB00014 a crm:E22_Human-Made_Object ;
                       ) : (
                         <>
                           <Copy className="w-4 h-4" />
-                          Copy
+                          Copy All
                         </>
                       )}
                     </button>
 
+                    {/* Batch Export 1: Combined JSON */}
                     <button
                       onClick={handleDownloadJson}
                       disabled={!isValidForExport}
                       title={
                         isValidForExport
-                          ? 'Download complete JSON dataset'
+                          ? 'Download single combined JSON array containing all batch records'
                           : 'Map all 3 mandatory fields to enable export'
                       }
-                      className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
                         isValidForExport
                           ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-xs'
                           : 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'
                       }`}
                     >
                       <Download className="w-4 h-4" />
-                      Download JSON
+                      Batch JSON ({transformedRecords.length})
+                    </button>
+
+                    {/* Batch Export 2: NDJSON Stream */}
+                    <button
+                      onClick={handleDownloadNdjson}
+                      disabled={!isValidForExport}
+                      title={
+                        isValidForExport
+                          ? 'Download Newline-Delimited JSON (.ndjson) for large corpora'
+                          : 'Map all 3 mandatory fields to enable export'
+                      }
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                        isValidForExport
+                          ? 'bg-sky-600 hover:bg-sky-500 text-white cursor-pointer shadow-xs'
+                          : 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'
+                      }`}
+                    >
+                      <Download className="w-4 h-4" />
+                      NDJSON
+                    </button>
+
+                    {/* Batch Export 3: ZIP of Individual JSON Files */}
+                    <button
+                      onClick={handleDownloadBatchZip}
+                      disabled={!isValidForExport || isExportingZip}
+                      title={
+                        isValidForExport
+                          ? 'Download ZIP archive with one individual JSON file per inscription + manifest'
+                          : 'Map all 3 mandatory fields to enable export'
+                      }
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                        isValidForExport
+                          ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 cursor-pointer shadow-xs'
+                          : 'bg-slate-800 text-slate-400 border border-slate-700 cursor-not-allowed'
+                      }`}
+                    >
+                      <Archive className="w-4 h-4" />
+                      {isExportingZip ? 'Zipping...' : 'Batch ZIP'}
                     </button>
                   </div>
                 </div>
